@@ -63,39 +63,87 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360px); } }
         .cyber-text { font-family: var(--font-code); font-weight: 700; color: var(--primary-blue); font-size: 16px; letter-spacing: 2px;}
 
-        /* ================= LOGIN SCREEN (ID & PASSWORD) ================= */
+        /* ================= LOGIN SCREEN (GLASSMORPHISM & ANIMATED) ================= */
         #loginOverlay {
-            position: fixed; inset: 0; background: var(--bg-body); z-index: 999998;
+            position: fixed; inset: 0; z-index: 999998;
             display: flex; justify-content: center; align-items: center; padding: 20px;
-            background-image: radial-gradient(var(--border-light) 1px, transparent 1px);
-            background-size: 30px 30px;
+            /* Premium Blue Gradient Background */
+            background: linear-gradient(-45deg, #051630, #1e3a8a, #0284c7, #0f172a);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
             transition: opacity 0.5s ease;
         }
-        .login-card {
-            background: var(--bg-white); padding: 40px 30px; border-radius: 20px; width: 100%; max-width: 400px;
-            box-shadow: 0 20px 40px rgba(15, 28, 64, 0.1); border: 1px solid var(--border-light); text-align: center;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
+
+        .login-card {
+            /* Glassmorphism Effect */
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            padding: 40px 30px; border-radius: 24px; width: 100%; max-width: 400px;
+            text-align: center;
+            /* Smooth Entrance Animation */
+            animation: cardPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0; transform: translateY(30px) scale(0.9);
+        }
+        @keyframes cardPopIn {
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         .login-header { margin-bottom: 30px; }
-        .login-header i { font-size: 45px; color: var(--primary-blue); margin-bottom: 15px;}
-        .login-header h2 { color: var(--primary-blue); font-weight: 900; font-size: 24px; margin-bottom: 5px;}
-        .login-header p { color: var(--text-muted); font-size: 14px; font-weight: 600;}
+        .login-header i { 
+            font-size: 45px; color: #60a5fa; margin-bottom: 15px; 
+            filter: drop-shadow(0 0 15px rgba(96,165,250,0.5));
+        }
+        .login-header h2 { color: #ffffff; font-weight: 900; font-size: 24px; margin-bottom: 5px; letter-spacing: 1px;}
+        .login-header p { color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 600;}
         
         .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;}
+        .input-group label { display: block; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 8px;}
         .input-group input {
-            width: 100%; padding: 14px 15px; border: 2px solid var(--border-light); border-radius: 10px;
-            font-size: 15px; font-weight: 600; color: var(--text-dark); outline: none; transition: 0.3s;
+            width: 100%; padding: 14px 15px; border-radius: 10px;
+            font-size: 15px; font-weight: 600; outline: none; transition: 0.3s;
             font-family: var(--font-main); letter-spacing: 1px;
+            /* Glass Input */
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
         }
-        .input-group input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px var(--primary-light);}
-        .input-group input[readonly] { background: #f8fafc; color: var(--accent-green); border-color: var(--border-light); cursor: not-allowed;}
+        .input-group input::placeholder { color: rgba(255, 255, 255, 0.4); }
+        .input-group input:focus { 
+            border-color: #60a5fa; 
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.3);
+        }
+        .input-group input[readonly] { 
+            background: rgba(0, 0, 0, 0.2); 
+            color: #34d399; 
+            border-color: rgba(255, 255, 255, 0.05); 
+            cursor: not-allowed;
+        }
         
         .login-btn {
-            width: 100%; padding: 15px; background: var(--primary-blue); color: #fff; font-size: 16px;
+            width: 100%; padding: 15px; 
+            background: linear-gradient(135deg, #2563eb, #6366f1); 
+            color: #fff; font-size: 16px; letter-spacing: 1px;
             font-weight: 800; border: none; border-radius: 10px; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
         }
-        .login-btn:hover { background: #0c1736; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15, 28, 64, 0.2);}
-        #loginError { color: var(--danger); font-size: 13px; font-weight: 700; text-align: center; margin-top: 15px; display: none;}
+        .login-btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 25px rgba(37, 99, 235, 0.5);
+        }
+        #loginError { 
+            color: #f87171; font-size: 13px; font-weight: 700; 
+            text-align: center; margin-top: 15px; display: none; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
 
         /* ================= PRELOADER 2 (ACCESS GRANTED) ================= */
         #portalPreloader {
@@ -146,7 +194,6 @@
         /* ================= TOP HEADER ================= */
         .top-header { background: var(--bg-white); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 99;}
         .welcome-text { flex-grow: 1; }
-        .welcome-text h2 { font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;}
         
         .header-icons { display: flex; align-items: center; gap: 12px; }
         .header-icon {
@@ -168,13 +215,6 @@
         @keyframes shine { to { background-position: 200% center; } }
         @keyframes swingHanging { 0%, 100% { transform: rotate(-2deg) translateY(0px); } 50% { transform: rotate(2deg) translateY(-8px); } }
         @keyframes pulseBlinkGlow { 0% { opacity: 1; text-shadow: 0 10px 25px rgba(15, 28, 64, 0.4); } 100% { opacity: 0.7; text-shadow: 0 2px 5px rgba(15, 28, 64, 0.1); } }
-
-        /* ================= PILL NAVBAR ================= */
-        .pill-nav { padding: 0 0 20px 0; display: flex; gap: 10px; overflow-x: auto; }
-        .pill-nav::-webkit-scrollbar { display: none; }
-        .pill-btn { background: var(--primary-blue); color: #fff; border: none; padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2);}
-        .pill-btn:hover { background: #1a2f66; }
-        .pill-btn.active { background: var(--bg-white); color: var(--text-dark); border: 1px solid var(--border-light); font-weight: 700; box-shadow: none; }
 
         /* ================= BLUE BANNER ================= */
         .blue-banner { background: var(--primary-blue); color: #fff; padding: 15px 30px; font-size: 16px; font-weight: 700; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2); }
@@ -291,10 +331,13 @@
         th { background: #f8fafc; padding: 16px 20px; text-align: left; font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border-light); }
         td { padding: 15px 20px; text-align: left; border-bottom: 1px solid var(--border-light); font-size: 14px; font-weight: 600; color: var(--text-dark); }
         tbody tr:hover { background: #f1f5f9; }
+        /* Badge Styles */
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-left: 8px; color: white;}
-        .badge-cr { background: var(--primary-blue); } .badge-advisor { background: var(--accent-green); }
+        .badge-cr { background: var(--primary-blue); } 
+        .badge-advisor { background: var(--accent-green); }
+        .badge-core { background: var(--warning); } /* New color for Amirul */
 
-        /* ================= CLASS ROUTINE (NO JOIN LINK) ================= */
+        /* ================= CLASS ROUTINE ================= */
         .day-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 20px; }
         .day-tabs::-webkit-scrollbar { display: none; }
         .day-tab { background: var(--bg-white); border: 2px solid var(--border-light); color: var(--text-muted); padding: 12px 25px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; font-size: 14px;}
@@ -313,7 +356,6 @@
         /* ================= SOCIAL (FIXED RESPONSIVENESS) ================= */
         .community-box { background: var(--bg-white); border: 2px solid rgba(37, 211, 102, 0.3); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);}
         
-        /* Modified for WhatsApp button mobile wrap */
         .community-main { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(37, 211, 102, 0.05); flex-wrap: wrap; }
         .wa-main-icon { width: 55px; height: 55px; background: #25D366; color: #fff; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 28px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
         .community-info { flex: 1 1 200px; }
@@ -359,8 +401,7 @@
             
             .top-header { padding: 15px 20px; gap: 10px;}
             .mobile-toggle { display: block; margin-right: auto;}
-            .welcome-text h2 { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
-            .welcome-text p { display: none; } 
+            .welcome-text h2 { display: none; } /* Ensuring totally hidden on mobile */
             .header-icons { gap: 8px; }
             .header-icon { width: 32px; height: 32px; font-size: 12px; }
 
@@ -426,7 +467,7 @@
         </div>
     </div>
 
-    <!-- ================= MAIN APP WRAPPER (Hidden initially to fix white screen issue) ================= -->
+    <!-- ================= MAIN APP WRAPPER ================= -->
     <div id="appContainer">
         
         <!-- SIDEBAR -->
@@ -459,7 +500,7 @@
             <header class="top-header">
                 <button class="mobile-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
                 <div class="welcome-text">
-                    <h2 id="topNavWelcome">Welcome to the e-Learning Centre!</h2>
+                    <!-- Text completely removed here -->
                 </div>
                 <div class="header-icons">
                     <div class="header-icon"><i class="fas fa-edit"></i></div>
@@ -478,15 +519,6 @@
                     <!-- Subject/Hero moved INSIDE Dashboard so it only shows on Front Page -->
                     <div class="dept-hero" style="padding-top: 0;">
                         <h1>Dep : CSE 65 C</h1>
-                    </div>
-
-                    <!-- PILL NAV (Front page only) -->
-                    <div class="pill-nav" style="padding: 0 0 20px 0;">
-                        <button class="pill-btn">Introduction to Sociology</button>
-                        <button class="pill-btn">Matrices & Geometry</button>
-                        <button class="pill-btn active">Basic EEE Circuits</button>
-                        <button class="pill-btn">Data Structure</button>
-                        <button class="pill-btn">Structured Programming</button>
                     </div>
 
                     <div class="blue-banner" style="margin: 0 0 25px 0;">
@@ -643,88 +675,102 @@
                     </div>
                 </div>
 
-                <!-- ================= MEMBERS SECTION (Photos Added with Correct Paths) ================= -->
+                <!-- ================= MEMBERS SECTION ================= -->
                 <div id="members" class="section">
                     <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Core Members & Representatives</h2>
                     <div class="cards-grid">
                         
-                        <!-- Advisor / Nayeem (Changed title to Management Head) -->
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--accent-green);">
-                            <img src="STUDENT PORTAL MU Filer/nayeem 01.jpg" alt="Nayeem Nur" class="member-img" style="border-color: var(--accent-green);">
+                            <img src="/nayeem.jpg" alt="Nayeem Nur" class="member-img" style="border-color: var(--accent-green);">
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Jannatull Nayeem Nur</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 251-115-183</div>
                             <div style="margin-top: 15px;"><span class="badge badge-advisor" style="font-size: 13px; padding: 6px 15px;">Management Head</span></div>
                         </div>
 
-                        <!-- CR 1 / Sabah -->
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
-                            <img src="STUDENT PORTAL MU Filer/sabah.jpg" alt="Sabah" class="member-img" style="border-color: var(--primary-blue);">
+                            <img src="/sabah .jpeg" alt="Sabah" class="member-img" style="border-color: var(--primary-blue);">
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Zarin Mashud Sabah</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-144</div>
                             <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
                         </div>
 
-                        <!-- CR 2 / Sabbir -->
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
-                            <img src="STUDENT PORTAL MU Filer/sabbir.jpg" alt="Sabbir" class="member-img" style="border-color: var(--primary-blue);">
+                            <img src="/sabbir .jpeg" alt="Sabbir" class="member-img" style="border-color: var(--primary-blue);">
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Muhammad Sabbir Ahmed</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-111</div>
                             <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
                         </div>
                         
-                        <!-- Core Member / Amirul -->
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--warning);">
-                            <img src="STUDENT PORTAL MU Filer/amirul-01.jpeg" alt="Amirul Islam" class="member-img" style="border-color: var(--warning);">
+                            <img src="/amirul.jpeg" alt="Amirul Islam" class="member-img" style="border-color: var(--warning);">
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Amirul Islam</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-141</div>
-                            <div style="margin-top: 15px;"><span class="badge" style="background: var(--warning); font-size: 13px; padding: 6px 15px;">Core Member & Management Lead</span></div>
+                            <div style="margin-top: 15px;"><span class="badge badge-core" style="font-size: 13px; padding: 6px 15px;">Core Member & Management Lead</span></div>
                         </div>
 
                     </div>
                 </div>
 
-                <!-- ================= STUDENTS SECTION ================= -->
+                <!-- ================= STUDENTS SECTION (PASSWORD PROTECTED & BYPASS) ================= -->
                 <div id="students" class="section">
                     
-                    <div class="content-card-main">
-                        <div class="table-header">
-                            <div>
-                                <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue);">Regular Students</h2>
-                                <p style="font-size: 14px; color: var(--text-muted); font-weight: 700;">Total Active: <span id="totalCounter" style="color: var(--accent-orange);">0</span></p>
+                    <!-- Password Protection Prompt -->
+                    <div id="studentAuthPrompt" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; padding: 20px;">
+                        <div style="background: var(--bg-white); border-radius: 20px; padding: 40px 30px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 15px 35px rgba(15, 28, 64, 0.05); border: 1px solid var(--border-light);">
+                            <i class="fas fa-user-lock" style="font-size: 50px; color: var(--primary-blue); margin-bottom: 20px;"></i>
+                            <h2 style="color: var(--text-dark); font-weight: 900; margin-bottom: 10px; font-size: 22px;">Restricted Access</h2>
+                            <p style="color: var(--text-muted); font-size: 14px; font-weight: 600; margin-bottom: 25px;">Please enter the password to view student information.</p>
+                            
+                            <div class="input-group" style="text-align: left;">
+                                <input type="password" id="studentPwd" placeholder="Enter Password" style="background: #f8fafc; color: var(--text-dark); border: 2px solid var(--border-light);">
                             </div>
-                            <div style="display: flex; gap: 10px;">
-                                <div class="search-box">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="searchInput" onkeyup="searchTables()" placeholder="Search by ID or Name..." autocomplete="off" name="no-search-fill">
-                                </div>
-                                <button onclick="window.print()" style="padding: 10px 18px; border-radius: 10px; border: 2px solid var(--border-light); background: #fff; cursor: pointer; font-weight: 800; color: var(--text-dark); transition: 0.3s;"><i class="fas fa-print"></i></button>
-                            </div>
-                        </div>
-
-                        <div class="table-container">
-                            <table id="regularTable">
-                                <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
-                                <tbody id="regularTbody">
-                                    <!-- Populated dynamically via JS -->
-                                </tbody>
-                            </table>
+                            <button class="login-btn" onclick="checkStudentPwd()" style="background: var(--primary-blue); box-shadow: none;">View Information</button>
+                            <div id="studentPwdMsg" style="color: var(--danger); font-size: 13px; font-weight: 700; margin-top: 15px; display: none;">Incorrect Password!</div>
                         </div>
                     </div>
 
-                    <div class="content-card-main">
-                        <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px;">Re-Admission Students</h2>
-                        <div class="table-container">
-                            <table id="reTable">
-                                <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
-                                <tbody id="reTbody">
-                                    <!-- Populated dynamically via JS -->
-                                </tbody>
-                            </table>
+                    <!-- Hidden Data Content (Revealed after password or auto-bypass) -->
+                    <div id="studentDataContent" style="display: none;">
+                        <div class="content-card-main">
+                            <div class="table-header">
+                                <div>
+                                    <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue);">Regular Students</h2>
+                                    <p style="font-size: 14px; color: var(--text-muted); font-weight: 700;">Total Active: <span id="totalCounter" style="color: var(--accent-orange);">0</span></p>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <div class="search-box">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="searchInput" onkeyup="searchTables()" placeholder="Search by ID or Name..." autocomplete="off" name="no-search-fill">
+                                    </div>
+                                    <button onclick="window.print()" style="padding: 10px 18px; border-radius: 10px; border: 2px solid var(--border-light); background: #fff; cursor: pointer; font-weight: 800; color: var(--text-dark); transition: 0.3s;"><i class="fas fa-print"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="table-container">
+                                <table id="regularTable">
+                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <tbody id="regularTbody">
+                                        <!-- Populated dynamically via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="content-card-main">
+                            <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px;">Re-Admission Students</h2>
+                            <div class="table-container">
+                                <table id="reTable">
+                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <tbody id="reTbody">
+                                        <!-- Populated dynamically via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ================= ROUTINE SECTION (Corrected Schedule) ================= -->
+                <!-- ================= ROUTINE SECTION ================= -->
                 <div id="routineTab" class="section">
                     <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Class Routine</h2>
                     <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 25px;">Select a day to view schedule. Live status is synced dynamically.</p>
@@ -760,7 +806,7 @@
                     </div>
                 </div>
 
-                <!-- ================= FACULTY SECTION (Updated Teachers) ================= -->
+                <!-- ================= FACULTY SECTION ================= -->
                 <div id="faculty" class="section">
                     <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Course Teachers</h2>
                     <div class="cards-grid">
@@ -858,7 +904,7 @@
     </div>
 
     <script>
-        // ================= STUDENT DATABASE =================
+        // ================= STUDENT DATABASE (Updated with Amirul's Badge) =================
         const studentDatabase = [
             {id: "261-115-101", name: "Mariya Akther"}, {id: "261-115-102", name: "Md Nasirul Islam Chowdhury"},
             {id: "261-115-103", name: "Mustafizur Rahman Adil"}, {id: "261-115-104", name: "Rihma Ahmed"},
@@ -879,7 +925,7 @@
             {id: "261-115-135", name: "Tamzidur Rahman"}, {id: "261-115-136", name: "Yousuf Ahmed Sunny"},
             {id: "261-115-137", name: "Sunjida Akter"}, {id: "261-115-138", name: "Tajbid Ahmed Chowdhury"},
             {id: "261-115-139", name: "Sadia Akther"}, {id: "261-115-140", name: "Maisha Tasnim Chowdhury"},
-            {id: "261-115-141", name: "Amirul Islam"}, {id: "261-115-142", name: "Arjumand Ara Liza"},
+            {id: "261-115-141", name: "Amirul Islam", badge: "Core Member"}, {id: "261-115-142", name: "Arjumand Ara Liza"},
             {id: "261-115-144", name: "Zarin Mashud Sabah", badge: "CR"}, {id: "261-115-145", name: "Sagufta Nasrin Luthfa"},
             {id: "261-115-146", name: "Afrida Anjum"}, {id: "261-115-147", name: "Md. Ariful Haque"},
             {id: "261-115-148", name: "Puspita Sinha"}, {id: "261-115-149", name: "Farhana Noor Shumi"},
@@ -892,8 +938,9 @@
         ];
 
         let loggedInUser = "Student";
+        let loggedInId = "";
 
-        // ================= PRELOADER 1 & LOGIN LOGIC (Fixed White screen issue completely) =================
+        // ================= PRELOADER 1 & LOGIN LOGIC =================
         window.onload = () => {
             setTimeout(() => {
                 document.getElementById('initialPreloader').style.opacity = '0';
@@ -915,7 +962,7 @@
             }
         });
 
-        // Submit on Enter
+        // Submit on Enter (Main Login)
         document.getElementById('loginPwd').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') attemptLogin();
         });
@@ -939,15 +986,30 @@
             }
 
             // Success 
-            loggedInUser = student.name.split(" ")[0]; // Get first name
-            document.getElementById('topNavWelcome').innerText = `Welcome, ${loggedInUser}, to the e-Learning Centre!`;
+            loggedInUser = student.name.split(" ")[0]; 
+            loggedInId = student.id; // Store ID for bypass logic
+            
             err.style.display = 'none';
             document.getElementById('loginOverlay').style.opacity = '0';
+
+            // ================= BYPASS LOGIC FOR CORE MEMBERS =================
+            // Nayeem, Sabah, Sabbir, Amirul
+            const coreMemberIDs = ["251-115-183", "261-115-144", "261-115-111", "261-115-141"];
+            if (coreMemberIDs.includes(loggedInId)) {
+                // Instantly bypass the password prompt for these members
+                document.getElementById('studentAuthPrompt').style.display = 'none';
+                document.getElementById('studentDataContent').style.display = 'block';
+            } else {
+                // Ensure the password prompt shows for everyone else
+                document.getElementById('studentAuthPrompt').style.display = 'flex';
+                document.getElementById('studentDataContent').style.display = 'none';
+                document.getElementById('studentPwd').value = '';
+            }
+            // =================================================================
             
             setTimeout(() => {
                 document.getElementById('loginOverlay').style.display = 'none';
                 
-                // Trigger Preloader 2
                 const p2 = document.getElementById('portalPreloader');
                 p2.style.display = 'flex';
                 p2.style.opacity = '1';
@@ -958,12 +1020,9 @@
                         p2.style.opacity = '0';
                         setTimeout(() => { 
                             p2.style.display = 'none'; 
-                            
-                            // EXTREMELY IMPORTANT: Reveal the Portal UI and allow scrolling
                             document.getElementById('appContainer').style.display = 'flex';
                             document.body.style.overflowY = 'auto'; 
-                            
-                            initPortal(); // Initialize tables & logic
+                            initPortal(); 
                         }, 500);
                     }, 1000);
                 }, 1500);
@@ -979,6 +1038,23 @@
             setInterval(updateLiveTimer, 1000); 
             updateLiveTimer();
             loadAttendance();
+        }
+
+        // ================= STUDENT INFO PASSWORD LOGIC =================
+        document.getElementById('studentPwd').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkStudentPwd();
+        });
+
+        function checkStudentPwd() {
+            const pwd = document.getElementById('studentPwd').value;
+            const msg = document.getElementById('studentPwdMsg');
+            if (pwd === 'MU@2026') {
+                msg.style.display = 'none';
+                document.getElementById('studentAuthPrompt').style.display = 'none';
+                document.getElementById('studentDataContent').style.display = 'block';
+            } else {
+                msg.style.display = 'block';
+            }
         }
 
         // ================= TABS & SIDEBAR =================
@@ -1002,7 +1078,13 @@
             let regCount = 0; let reCount = 0;
             
             studentDatabase.forEach(s => {
-                let badgeHtml = s.badge ? (s.badge === 'CR' ? `<span class="badge badge-cr">CR</span>` : `<span class="badge badge-advisor">${s.badge}</span>`) : "";
+                // Dynamic Badge HTML generation
+                let badgeClass = "badge-advisor"; // default
+                if(s.badge === 'CR') badgeClass = "badge-cr";
+                else if(s.badge === 'Core Member') badgeClass = "badge-core";
+                
+                let badgeHtml = s.badge ? `<span class="badge ${badgeClass}">${s.badge}</span>` : "";
+
                 if(s.type === 're') {
                     reCount++;
                     reTbody.innerHTML += `<tr><td>${reCount}</td><td>${s.id}</td><td>${s.name} ${badgeHtml}</td></tr>`;
@@ -1021,7 +1103,7 @@
             });
         }
 
-        // ================= ROUTINE LOGIC (CORRECTED DATA FROM PROMPT) =================
+        // ================= ROUTINE LOGIC =================
         const routineData = {
             0: [ // Sunday
                 {sub: "Basic EEE Circuits (109)", start: "12:00", end: "13:30", teacher: "Anika Tabassum [ATB]"}, 
