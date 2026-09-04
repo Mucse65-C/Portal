@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dep : CSE 65 C - Premium Portal</title>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================= LIGHT THEME VARIABLES ================= */
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-white: #ffffff;
+            
+            --primary-blue: #0f1c40; /* Deep Navy Blue */
+            --primary-light: #e0e7ff;
+            --accent-orange: #c2410c; /* Deep Orange */
+            --accent-green: #047857; /* Deep Emerald Green */
+            --danger: #b91c1c; /* Deep Red */
+            --warning: #b45309; /* Deep Yellow/Orange */
+            
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border-light: #cbd5e1;
+            
+            --font-main: 'Outfit', sans-serif;
+            --font-code: 'Fira Code', monospace;
+            --sidebar-width: 260px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-dark);
+            margin: 0; padding: 0;
+            overflow: hidden; /* Prevent scrolling during overlays */
+        }
+
+        /* App Container (Hidden until login finishes) */
+        #appContainer {
+            display: none; 
+            width: 100%;
+            min-height: 100vh;
+            flex-direction: row;
+        }
+
+        /* ================= PRELOADER 1 (INITIAL BOOT) ================= */
+        #initialPreloader {
+            position: fixed; inset: 0; background: var(--bg-white); z-index: 9999999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .cyber-spinner {
+            width: 60px; height: 60px; border: 4px solid var(--border-light);
+            border-top: 4px solid var(--primary-blue); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360px); } }
+        .cyber-text { font-family: var(--font-code); font-weight: 700; color: var(--primary-blue); font-size: 16px; letter-spacing: 2px;}
+
+        /* ================= LOGIN SCREEN (ID & PASSWORD) ================= */
+        #loginOverlay {
+            position: fixed; inset: 0; background: var(--bg-body); z-index: 999998;
+            display: flex; justify-content: center; align-items: center; padding: 20px;
+            background-image: radial-gradient(var(--border-light) 1px, transparent 1px);
+            background-size: 30px 30px;
+            transition: opacity 0.5s ease;
+        }
+        .login-card {
+            background: var(--bg-white); padding: 40px 30px; border-radius: 20px; width: 100%; max-width: 400px;
+            box-shadow: 0 20px 40px rgba(15, 28, 64, 0.1); border: 1px solid var(--border-light); text-align: center;
+        }
+        .login-header { margin-bottom: 30px; }
+        .login-header i { font-size: 45px; color: var(--primary-blue); margin-bottom: 15px;}
+        .login-header h2 { color: var(--primary-blue); font-weight: 900; font-size: 24px; margin-bottom: 5px;}
+        .login-header p { color: var(--text-muted); font-size: 14px; font-weight: 600;}
+        
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;}
+        .input-group input {
+            width: 100%; padding: 14px 15px; border: 2px solid var(--border-light); border-radius: 10px;
+            font-size: 15px; font-weight: 600; color: var(--text-dark); outline: none; transition: 0.3s;
+            font-family: var(--font-main); letter-spacing: 1px;
+        }
+        .input-group input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px var(--primary-light);}
+        .input-group input[readonly] { background: #f8fafc; color: var(--accent-green); border-color: var(--border-light); cursor: not-allowed;}
+        
+        .login-btn {
+            width: 100%; padding: 15px; background: var(--primary-blue); color: #fff; font-size: 16px;
+            font-weight: 800; border: none; border-radius: 10px; cursor: pointer; transition: 0.3s;
+        }
+        .login-btn:hover { background: #0c1736; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15, 28, 64, 0.2);}
+        #loginError { color: var(--danger); font-size: 13px; font-weight: 700; text-align: center; margin-top: 15px; display: none;}
+
+        /* ================= PRELOADER 2 (ACCESS GRANTED) ================= */
+        #portalPreloader {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); z-index: 999997;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        .terminal-loader { width: 90%; max-width: 400px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; }
+        .terminal-header { background: #020617; padding: 12px 15px; display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
+        .terminal-header .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; } .dot.yellow { background: #f59e0b; } .dot.green { background: #10b981; }
+        .terminal-header .title { margin-left: 10px; font-size: 13px; color: #cbd5e1; font-family: var(--font-code); font-weight: 600;}
+        .terminal-body { padding: 25px 20px; font-family: var(--font-code); font-size: 15px; color: #e2e8f0; line-height: 1.6; text-align: left;}
+        .typing-text { margin-top: 15px; color: #60a5fa; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        .success-flash { margin-top: 15px; color: #34d399; font-weight: bold; display: none; text-align: center; }
+        .cursor { display: inline-block; width: 8px; height: 16px; background: #60a5fa; animation: blink 1s step-end infinite; margin-left: 5px;}
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            width: var(--sidebar-width); background: var(--bg-white); height: 100vh; position: fixed; top: 0; left: 0;
+            display: flex; flex-direction: column; border-right: 1px solid var(--border-light); z-index: 1000; transition: transform 0.3s ease;
+        }
+        .sidebar-brand { padding: 25px 20px; font-size: 24px; font-weight: 800; color: var(--primary-blue); display: flex; align-items: center; gap: 10px; letter-spacing: 1px; }
+        .sidebar-brand span { color: var(--accent-orange); }
+
+        .sidebar-menu { list-style: none; padding: 0 15px; flex-grow: 1; overflow-y: auto; }
+        .sidebar-menu::-webkit-scrollbar { display: none; }
+        .sidebar-menu li { margin-bottom: 5px; }
+        .sidebar-menu button {
+            width: 100%; background: transparent; border: none; color: var(--text-dark); padding: 12px 20px;
+            border-radius: 25px; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer;
+            display: flex; align-items: center; gap: 15px; transition: all 0.3s;
+        }
+        .sidebar-menu button i { font-size: 16px; color: var(--text-muted); width: 20px; text-align: center;}
+        .sidebar-menu button:hover { background: #f8fafc; color: var(--primary-blue);}
+        .sidebar-menu button:hover i { color: var(--primary-blue); }
+        .sidebar-menu button.active { background: var(--primary-blue); color: #fff; font-weight: 700; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2);}
+        .sidebar-menu button.active i { color: #fff; }
+
+        .dev-badge { margin: 15px; padding: 15px; background: #f8fafc; border: 1px solid var(--border-light); border-radius: 16px; text-align: center; }
+        .dev-badge p { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px;}
+        .dev-badge h4 { font-size: 13px; color: var(--primary-blue); font-weight: 900; line-height: 1.4;}
+
+        /* ================= MAIN CONTENT AREA ================= */
+        .main-wrapper { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; width: calc(100% - var(--sidebar-width)); }
+
+        /* ================= TOP HEADER ================= */
+        .top-header { background: var(--bg-white); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 99;}
+        .welcome-text { flex-grow: 1; }
+        .welcome-text h2 { font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;}
+        
+        .header-icons { display: flex; align-items: center; gap: 12px; }
+        .header-icon {
+            width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; justify-content: center; align-items: center;
+            color: var(--text-muted); cursor: pointer; border: 1px solid var(--border-light); font-size: 14px; transition: 0.3s;
+        }
+        .header-icon:hover { background: var(--primary-light); color: var(--primary-blue); border-color: var(--primary-blue); }
+        .mobile-toggle { display: none; background: transparent; border: none; font-size: 22px; color: var(--primary-blue); cursor: pointer;}
+
+        /* ================= DEPT HERO ANIMATION ================= */
+        .dept-hero { display: flex; justify-content: center; align-items: center; padding: 0 0 20px 0; text-align: center;}
+        .dept-hero h1 {
+            font-size: 50px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px;
+            background: linear-gradient(to right, var(--primary-blue), #2563eb, var(--accent-orange), var(--primary-blue));
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 0; transform-origin: top center;
+            animation: shine 4s linear infinite, swingHanging 4s ease-in-out infinite, pulseBlinkGlow 2.5s infinite alternate;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+        @keyframes swingHanging { 0%, 100% { transform: rotate(-2deg) translateY(0px); } 50% { transform: rotate(2deg) translateY(-8px); } }
+        @keyframes pulseBlinkGlow { 0% { opacity: 1; text-shadow: 0 10px 25px rgba(15, 28, 64, 0.4); } 100% { opacity: 0.7; text-shadow: 0 2px 5px rgba(15, 28, 64, 0.1); } }
+
+        /* ================= PILL NAVBAR ================= */
+        .pill-nav { padding: 0 0 20px 0; display: flex; gap: 10px; overflow-x: auto; }
+        .pill-nav::-webkit-scrollbar { display: none; }
+        .pill-btn { background: var(--primary-blue); color: #fff; border: none; padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2);}
+        .pill-btn:hover { background: #1a2f66; }
+        .pill-btn.active { background: var(--bg-white); color: var(--text-dark); border: 1px solid var(--border-light); font-weight: 700; box-shadow: none; }
+
+        /* ================= BLUE BANNER ================= */
+        .blue-banner { background: var(--primary-blue); color: #fff; padding: 15px 30px; font-size: 16px; font-weight: 700; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2); }
+
+        /* ================= SECTIONS & ANIMATION ================= */
+        .dashboard-container { padding: 25px 30px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ================= MAIN PROGRESS CARD ================= */
+        .progress-banner-card { background: var(--bg-white); border-radius: 16px; padding: 30px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-light); }
+        .progress-left { display: flex; align-items: center; gap: 20px; }
+        .circle-chart-lg { width: 80px; height: 80px; border-radius: 50%; background: conic-gradient(var(--accent-orange) 65%, #f1f5f9 0); display: flex; justify-content: center; align-items: center; position: relative; }
+        .circle-chart-lg::before { content: ""; position: absolute; width: 65px; height: 65px; background: #fff; border-radius: 50%; }
+        .circle-chart-lg span { position: relative; z-index: 2; font-weight: 800; font-size: 18px; color: var(--accent-orange);}
+        .progress-left-text h3 { font-size: 20px; font-weight: 800; color: var(--text-dark); margin-bottom: 5px;}
+        .progress-left-text p { font-size: 14px; color: var(--text-muted); font-weight: 600;}
+        
+        .progress-right { display: flex; align-items: center; gap: 20px; }
+        .progress-right-text { text-align: right; }
+        .progress-right-text h4 { font-size: 16px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px;}
+        .progress-right-text p { font-size: 14px; color: var(--primary-blue); font-weight: 800; display: flex; align-items: center; gap: 8px; justify-content: flex-end;}
+        .progress-right-text p i { background: var(--primary-blue); color: #fff; padding: 3px; border-radius: 4px; font-size: 12px;}
+        .trophy-icon { width: 60px; height: 60px; border-radius: 50%; background: #d1fae5; color: var(--accent-green); display: flex; justify-content: center; align-items: center; font-size: 24px; border: 2px solid #a7f3d0;}
+
+        /* ================= GRID CARDS ================= */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .dash-card { background: var(--bg-white); border-radius: 12px; padding: 20px; border: 1px solid var(--border-light); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; cursor: pointer; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
+        .dash-card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.06); border-color: var(--primary-blue);}
+        .dash-card.active-blue { background: var(--primary-blue); color: #fff; border: none; box-shadow: 0 10px 25px rgba(15, 28, 64, 0.3);}
+        .dash-card.active-blue .card-title, .dash-card.active-blue .card-sub { color: #fff; }
+        .dash-card.live-alert { background: var(--danger); color: #fff; border: none; box-shadow: 0 10px 25px rgba(185, 28, 28, 0.3);}
+        .dash-card.live-alert .card-title, .dash-card.live-alert .card-sub { color: #fff; }
+        
+        .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px;}
+        .card-icon { width: 40px; height: 40px; border-radius: 50%; background: #f1f5f9; color: var(--primary-blue); display: flex; justify-content: center; align-items: center; font-size: 16px; border: 1px solid var(--border-light);}
+        .dash-card.active-blue .card-icon, .dash-card.live-alert .card-icon { background: rgba(255,255,255,0.2); color: #fff; border: none;}
+        .card-title { font-size: 16px; font-weight: 800; color: var(--text-dark);}
+        .card-sub { font-size: 13px; color: var(--text-muted); font-weight: 600;}
+
+        .line-progress-container { margin-bottom: 20px; display: flex; align-items: center; gap: 10px;}
+        .line-progress-track { flex: 1; height: 5px; background: #cbd5e1; border-radius: 5px; overflow: hidden; }
+        .dash-card.active-blue .line-progress-track, .dash-card.live-alert .line-progress-track { background: rgba(255,255,255,0.3); }
+        .line-progress-fill { height: 100%; background: var(--primary-blue); border-radius: 5px;}
+        .dash-card.active-blue .line-progress-fill, .dash-card.live-alert .line-progress-fill { background: #fff; }
+        .line-progress-text { font-size: 12px; font-weight: 800; color: var(--text-dark);}
+        .dash-card.active-blue .line-progress-text, .dash-card.live-alert .line-progress-text { color: #fff; }
+
+        .card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; border-top: 1px solid var(--border-light); padding-top: 15px;}
+        .dash-card.active-blue .card-footer, .dash-card.live-alert .card-footer { border-top-color: rgba(255,255,255,0.15); }
+        .btn-deadline { color: var(--text-muted); display: flex; align-items: center; gap: 5px;}
+        .dash-card.active-blue .btn-deadline, .dash-card.live-alert .btn-deadline { color: #e2e8f0; }
+        .btn-view { color: var(--accent-orange); font-weight: 800;}
+        .dash-card.active-blue .btn-view { color: #fff; }
+        .dash-card.live-alert .btn-view { color: var(--danger); background: #fff; padding: 6px 12px; border-radius: 6px;}
+
+        .live-timer-content { display: flex; flex-direction: column; gap: 5px; text-align: center; padding: 10px 0;}
+        .timer-countdown { font-family: var(--font-code); font-size: 32px; font-weight: 800; letter-spacing: 2px; }
+        .timer-subject { font-size: 16px; font-weight: 700; }
+
+        /* Icon Colors Base */
+        .bg-blue { background: rgba(15, 28, 64, 0.1); color: var(--primary-blue); border-color: transparent;}
+        .bg-orange { background: rgba(194, 65, 12, 0.1); color: var(--accent-orange); border-color: transparent;}
+        .bg-green { background: rgba(4, 120, 87, 0.1); color: var(--accent-green); border-color: transparent;}
+        .bg-purple { background: rgba(139, 92, 246, 0.1); color: #7c3aed; border-color: transparent;}
+
+        /* ================= BOTTOM METRICS (Aptitude Engine) ================= */
+        .engine-header { font-size: 18px; font-weight: 800; color: var(--text-dark); margin-bottom: 15px;}
+        .engine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .engine-card { background: #fffaf5; border: 1px solid #fed7aa; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
+        .engine-card.white-bg { background: #fff; border: 1px solid var(--border-light); }
+        
+        .tool-title { font-size: 16px; font-weight: 800; color: var(--text-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
+        
+        /* SGPA Component */
+        .sgpa-inputs { display: flex; gap: 10px; margin-bottom: 15px; width: 100%;}
+        .sgpa-inputs select { flex: 1; padding: 10px; border: 1px solid var(--border-light); border-radius: 8px; outline: none; font-size: 13px; font-weight: 600; background: #fff;}
+        .sgpa-inputs select:focus { border-color: var(--primary-blue); }
+        .sgpa-inputs button { padding: 10px 15px; background: var(--primary-blue); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 800; transition: 0.3s;}
+        .sgpa-inputs button:hover { background: #1a2f66; }
+        .sgpa-list { max-height: 80px; overflow-y: auto; font-size: 12px; color: var(--text-muted); margin-bottom: 10px; font-weight: 600;}
+        .sgpa-list div { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-light); padding: 5px 0;}
+        .sgpa-result { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px 15px; border-radius: 8px; border: 1px solid #fed7aa;}
+        .sgpa-result h3 { font-size: 24px; font-weight: 900; color: var(--primary-blue);}
+
+        /* Attendance Component */
+        .attendance-container { display: flex; align-items: center; justify-content: space-between; }
+        .circle-chart-sm { width: 80px; height: 80px; border-radius: 50%; background: conic-gradient(var(--accent-green) var(--perc, 0%), #e2e8f0 0); display: flex; justify-content: center; align-items: center; position: relative; }
+        .circle-chart-sm::before { content: ""; position: absolute; width: 65px; height: 65px; background: #fffaf5; border-radius: 50%; }
+        .circle-chart-sm span { position: relative; z-index: 2; font-weight: 900; font-size: 16px; color: var(--accent-green);}
+        .att-stats { display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 700; color: var(--text-muted);}
+        .att-btns { display: flex; gap: 8px; margin-top: 10px;}
+        .att-btn { border: 1px solid var(--border-light); background: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; transition: 0.3s;}
+        .att-btn.present { color: var(--accent-green); } .att-btn.absent { color: var(--danger); }
+        .att-btn.present:hover { background: #d1fae5; border-color: var(--accent-green);} .att-btn.absent:hover { background: #fee2e2; border-color: var(--danger);}
+
+        .engine-card.white-bg { flex-direction: row; align-items: center; justify-content: space-between; padding: 20px;}
+        .engine-title { font-size: 15px; font-weight: 700; color: var(--text-dark);}
+        .engine-check { width: 22px; height: 22px; border-radius: 4px; background: var(--primary-blue); color: #fff; display: flex; justify-content: center; align-items: center; font-size: 12px; }
+        .engine-uncheck { width: 22px; height: 22px; border-radius: 4px; border: 2px solid var(--border-light); background: transparent; cursor: pointer; }
+
+        /* ================= MEMBERS SECTION ================= */
+        .member-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-blue); margin: 0 auto 15px auto; display: block; box-shadow: 0 5px 15px rgba(15,28,64,0.15); background: #fff;}
+        
+        /* ================= TABLES ================= */
+        .content-card-main { background: var(--bg-white); border-radius: 16px; padding: 25px; border: 1px solid var(--border-light); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);}
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;}
+        .search-box { border-radius: 10px; padding: 12px 15px; display: flex; align-items: center; gap: 10px; width: 100%; max-width: 350px; border: 2px solid var(--border-light); background: #f8fafc; transition: 0.3s;}
+        .search-box:focus-within { border-color: var(--primary-blue); background: #fff;}
+        .search-box input { border: none; background: transparent; outline: none; color: var(--text-dark); width: 100%; font-size: 14px; font-weight: 600;}
+        .table-container { overflow-x: auto; border: 1px solid var(--border-light); border-radius: 12px;}
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { background: #f8fafc; padding: 16px 20px; text-align: left; font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border-light); }
+        td { padding: 15px 20px; text-align: left; border-bottom: 1px solid var(--border-light); font-size: 14px; font-weight: 600; color: var(--text-dark); }
+        tbody tr:hover { background: #f1f5f9; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-left: 8px; color: white;}
+        .badge-cr { background: var(--primary-blue); } .badge-advisor { background: var(--accent-green); }
+
+        /* ================= CLASS ROUTINE (NO JOIN LINK) ================= */
+        .day-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 20px; }
+        .day-tabs::-webkit-scrollbar { display: none; }
+        .day-tab { background: var(--bg-white); border: 2px solid var(--border-light); color: var(--text-muted); padding: 12px 25px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; font-size: 14px;}
+        .day-tab:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
+        .day-tab.active { background: var(--primary-blue); border-color: var(--primary-blue); color: #fff; box-shadow: 0 4px 15px rgba(29, 59, 148, 0.3);}
+        
+        .routine-card { background: var(--bg-white); border: 1px solid var(--border-light); border-left: 6px solid var(--subject-color, var(--primary-blue)); padding: 20px 25px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.3s;}
+        .routine-card:hover { transform: translateX(5px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-color: var(--border-light);}
+        .time-block { text-align: center; padding-right: 25px; border-right: 2px solid var(--border-light); min-width: 120px; }
+        .time-block .time { font-size: 24px; font-weight: 900; font-family: var(--font-code); color: var(--text-dark); }
+        .time-block .ampm { font-size: 13px; color: var(--text-muted); font-weight: 800;}
+        .info-block { flex-grow: 1; }
+        .info-block h4 { font-size: 17px; color: var(--text-dark); margin-bottom: 5px; font-weight: 800;}
+        .info-block p { font-size: 13px; color: var(--text-muted); font-weight: 600;}
+
+        /* ================= SOCIAL (FIXED RESPONSIVENESS) ================= */
+        .community-box { background: var(--bg-white); border: 2px solid rgba(37, 211, 102, 0.3); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);}
+        
+        /* Modified for WhatsApp button mobile wrap */
+        .community-main { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(37, 211, 102, 0.05); flex-wrap: wrap; }
+        .wa-main-icon { width: 55px; height: 55px; background: #25D366; color: #fff; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 28px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
+        .community-info { flex: 1 1 200px; }
+        
+        .community-info h4 { color: var(--text-dark); font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+        .community-info p { color: var(--text-muted); font-size: 13px; font-weight: 600;}
+        .btn-join-main { background: #25D366; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 800; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); display: inline-block; }
+        .btn-join-main:hover { background: #16a34a; transform: translateY(-2px);}
+        
+        .sub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 25px;}
+        .sub-card { background: #fff; border: 2px solid var(--border-light); border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+        .sub-card:hover { border-color: #25D366; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(37,211,102,0.15);}
+        .sub-icon { color: #25D366; font-size: 18px; width: 35px; height: 35px; background: rgba(37,211,102,0.1); border-radius: 8px; display:flex; justify-content:center; align-items:center;}
+        .sub-name { color: var(--text-dark); font-size: 14px; font-weight: 800; flex:1;}
+
+        .fb-link-card { background: var(--bg-white); border: 2px solid rgba(24, 119, 242, 0.3); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 18px; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 450px; margin-top: 20px;}
+        .fb-link-card:hover { border-color: #1877F2; box-shadow: 0 10px 25px rgba(24, 119, 242, 0.15); transform: translateY(-3px);}
+        .fb-icon-wrapper { width: 50px; height: 50px; border-radius: 12px; background: rgba(24, 119, 242, 0.1); color: #1877F2; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.3s;}
+        .fb-link-card:hover .fb-icon-wrapper { background: #1877F2; color: #fff;}
+        .fb-text-content h4 { color: var(--text-dark); font-size: 16px; font-weight: 900; margin-bottom: 4px; }
+        .fb-text-content p { color: var(--text-muted); font-size: 13px; font-weight: 600;}
+
+        /* ================= DISCUSSION ================= */
+        .chat-container { background: var(--bg-white); border-radius: 16px; padding: 25px; border: 1px solid var(--border-light); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);}
+        .comment-input { width: 100%; border-radius: 12px; padding: 18px; border: 2px solid var(--border-light); min-height: 120px; resize: vertical; outline: none; margin-bottom: 15px; font-size: 15px; font-weight: 500; background: #f8fafc; transition: 0.3s;}
+        .comment-input:focus { border-color: var(--primary-blue); background: #fff;}
+        .wa-btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-send { background: rgba(37, 211, 102, 0.1); color: #16a34a; border: 2px solid rgba(37, 211, 102, 0.3); padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; font-size: 14px;}
+        .btn-send:hover { background: #25D366; color: #fff; border-color: #25D366; transform: translateY(-2px);}
+        
+        .public-comments { margin-top: 25px; display: flex; flex-direction: column; gap: 15px; }
+        .comment-msg { border-radius: 16px; padding: 20px; display: flex; gap: 15px; background: #f8fafc; border: 1px solid var(--border-light);}
+        .comment-avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; color: #fff; background: var(--primary-blue); flex-shrink: 0; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2);}
+        .comment-content h5 { color: var(--text-dark); font-size: 15px; margin-bottom: 5px; font-weight: 900;}
+        .comment-content span { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-left: 10px; }
+        .comment-content p { color: var(--text-dark); font-size: 14px; line-height: 1.6; font-weight: 600;}
+
+        /* ================= RESPONSIVE ================= */
+        @media screen and (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.1);}
+            .main-wrapper { margin-left: 0; width: 100%; }
+            
+            .top-header { padding: 15px 20px; gap: 10px;}
+            .mobile-toggle { display: block; margin-right: auto;}
+            .welcome-text h2 { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+            .welcome-text p { display: none; } 
+            .header-icons { gap: 8px; }
+            .header-icon { width: 32px; height: 32px; font-size: 12px; }
+
+            .progress-banner-card { flex-direction: column; align-items: flex-start; gap: 20px;}
+            .progress-right { width: 100%; justify-content: flex-start; margin-top: 10px;}
+            .dept-hero h1 { font-size: 32px; letter-spacing: 2px;}
+            
+            .table-header { flex-direction: column; align-items: flex-start;}
+            .search-box { max-width: 100%; }
+            .routine-card { flex-direction: column; align-items: flex-start; gap: 10px; padding: 15px; }
+            .time-block { border-right: none; border-bottom: 2px solid var(--border-light); padding-right: 0; padding-bottom: 10px; width: 100%; text-align: left;}
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= PRELOADER 1 (SYSTEM INITIALIZATION) ================= -->
+    <div id="initialPreloader">
+        <div class="cyber-spinner"></div>
+        <div class="cyber-text">INITIALIZING SYSTEM...</div>
+    </div>
+
+    <!-- ================= SECURE LOGIN SCREEN ================= -->
+    <div id="loginOverlay" style="display: none;">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-user-shield"></i>
+                <h2>Secure Portal Login</h2>
+                <p>Enter your details to access CSE 65-C</p>
+            </div>
+            
+            <div class="input-group">
+                <label>Student ID</label>
+                <!-- Disabled Auto Fill completely -->
+                <input type="text" id="loginId" placeholder="e.g. 261-115-111" autocomplete="off" name="no-fill-id">
+            </div>
+            <div class="input-group">
+                <label>Student Name</label>
+                <input type="text" id="loginName" placeholder="Auto-filled via Database" readonly tabindex="-1">
+            </div>
+            <div class="input-group">
+                <label>Portal Password</label>
+                <input type="password" id="loginPwd" placeholder="Enter Password" autocomplete="new-password">
+            </div>
+            
+            <button class="login-btn" onclick="attemptLogin()">Grant Access</button>
+            <div id="loginError">Invalid ID or Password!</div>
+        </div>
+    </div>
+
+    <!-- ================= PRELOADER 2 (DATA DECRYPTION) ================= -->
+    <div id="portalPreloader">
+        <div class="terminal-loader">
+            <div class="terminal-header">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                <span class="title">security_check.exe</span>
+            </div>
+            <div class="terminal-body" style="height: 160px; padding: 20px;">
+                <div class="typing-text" style="color: #10b981; margin-top:0;">> Decrypting Student Data...</div>
+                <div class="typing-text" style="margin-top: 15px;">> Authenticating Token<span class="cursor"></span></div>
+                <div class="success-flash" id="postLoginSuccess" style="text-align: center; margin-top: 15px;">[ ✓ ] Access Granted!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MAIN APP WRAPPER (Hidden initially to fix white screen issue) ================= -->
+    <div id="appContainer">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                🔥 <span>Dep:</span> CSE 65 C
+            </div>
+            <ul class="sidebar-menu">
+                <li><button class="active" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> Dashboard</button></li>
+                <li><button onclick="switchTab('members')"><i class="fas fa-id-badge"></i> Members</button></li>
+                <li><button onclick="switchTab('students')"><i class="fas fa-users"></i> Students Info</button></li>
+                <li><button onclick="switchTab('routineTab')"><i class="fas fa-calendar-alt"></i> Class Routine</button></li>
+                <li><button onclick="switchTab('materials')"><i class="fas fa-book"></i> Course</button></li>
+                <li><button onclick="switchTab('faculty')"><i class="fas fa-chalkboard-teacher"></i> Faculty</button></li>
+                <li><button onclick="switchTab('social')"><i class="fas fa-hashtag"></i> Social Media</button></li>
+                <li><button onclick="switchTab('discussion')"><i class="fas fa-comments"></i> Discussion</button></li>
+                <li><button onclick="switchTab('notices')"><i class="fas fa-bell"></i> Notices</button></li>
+            </ul>
+            
+            <div style="margin: 15px; padding: 15px; background: #f8fafc; border: 2px solid var(--border-light); border-radius: 16px; text-align: center;">
+                <p style="font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px;"><i class="fas fa-code"></i> Developed by</p>
+                <h4 style="font-size: 14px; color: var(--primary-blue); font-weight: 900; line-height: 1.4;">Nayeem, Sabbir, Sabah, Amirul</h4>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-wrapper">
+            
+            <!-- Top Nav -->
+            <header class="top-header">
+                <button class="mobile-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <div class="welcome-text">
+                    <h2 id="topNavWelcome">Welcome to the e-Learning Centre!</h2>
+                </div>
+                <div class="header-icons">
+                    <div class="header-icon"><i class="fas fa-edit"></i></div>
+                    <div class="header-icon" onclick="window.open('https://www.facebook.com/profile.php?id=61590490967600', '_blank')" style="color: #1877F2; border-color: #1877F2;"><i class="fab fa-facebook-f"></i></div>
+                    <div class="header-icon"><i class="fas fa-bell"></i></div>
+                    <div class="header-icon"><i class="fas fa-user"></i></div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Container -->
+            <div class="dashboard-container">
+
+                <!-- ================= DASHBOARD TAB ================= -->
+                <div id="dashboard" class="section active">
+                    
+                    <!-- Subject/Hero moved INSIDE Dashboard so it only shows on Front Page -->
+                    <div class="dept-hero" style="padding-top: 0;">
+                        <h1>Dep : CSE 65 C</h1>
+                    </div>
+
+                    <!-- PILL NAV (Front page only) -->
+                    <div class="pill-nav" style="padding: 0 0 20px 0;">
+                        <button class="pill-btn">Introduction to Sociology</button>
+                        <button class="pill-btn">Matrices & Geometry</button>
+                        <button class="pill-btn active">Basic EEE Circuits</button>
+                        <button class="pill-btn">Data Structure</button>
+                        <button class="pill-btn">Structured Programming</button>
+                    </div>
+
+                    <div class="blue-banner" style="margin: 0 0 25px 0;">
+                        Student Activity Overview
+                    </div>
+
+                    <div class="progress-banner-card">
+                        <div class="progress-left">
+                            <div class="circle-chart-lg"><span>65%</span></div>
+                            <div class="progress-left-text">
+                                <h3>Your Journey Progress</h3>
+                                <p>Overall Semester Progress</p>
+                            </div>
+                        </div>
+                        <div class="progress-right">
+                            <div class="progress-right-text">
+                                <h4>Target CGPA Secured</h4>
+                                <p><i class="fas fa-check-square"></i> I Got the Target!</p>
+                            </div>
+                            <div class="trophy-icon"><i class="fas fa-trophy"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="cards-grid">
+                        <!-- Live Timer Card -->
+                        <div class="dash-card active-blue" id="liveClassCard" onclick="switchTab('routineTab')" style="cursor: pointer;">
+                            <div class="card-header" style="justify-content: space-between;">
+                                <div style="display:flex; align-items:center; gap:15px;">
+                                    <div class="card-icon" id="timerIcon" style="width: 50px; height: 50px; font-size: 20px;"><i class="fas fa-sync fa-spin"></i></div>
+                                    <div>
+                                        <div class="card-title" id="timerSubtitle" style="font-size: 14px; opacity: 0.9;">Loading...</div>
+                                        <div class="card-sub" style="color: #dbeafe; font-size: 13px;">Live Routine Tracker</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="live-timer-content">
+                                <div class="timer-countdown" id="classCountdown" style="font-size: 40px; margin: 10px 0;">--:--:--</div>
+                                <div class="timer-subject" id="classSubject" style="font-size: 20px;">Fetching schedule...</div>
+                            </div>
+                        </div>
+
+                        <!-- ERP Link 1 -->
+                        <a href="https://metrouni.edu.bd/" target="_blank" class="dash-card">
+                            <div>
+                                <div class="card-header">
+                                    <div class="card-icon bg-blue"><i class="fas fa-globe"></i></div>
+                                    <div><div class="card-title">Main Website</div><div class="card-sub">Official Portal</div></div>
+                                </div>
+                                <div class="line-progress-container">
+                                    <div class="line-progress-track"><div class="line-progress-fill" style="width: 100%;"></div></div>
+                                    <span class="line-progress-text">100%</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span class="btn-deadline"><i class="fas fa-link"></i> Link</span>
+                                <span class="btn-view">Visit Details</span>
+                            </div>
+                        </a>
+
+                        <!-- ERP Link 2 -->
+                        <a href="https://student.metrouni.edu.bd/" target="_blank" class="dash-card">
+                            <div>
+                                <div class="card-header">
+                                    <div class="card-icon bg-orange"><i class="fas fa-user-graduate"></i></div>
+                                    <div><div class="card-title">Student Portal</div><div class="card-sub">ERP System</div></div>
+                                </div>
+                                <div class="line-progress-container">
+                                    <div class="line-progress-track"><div class="line-progress-fill" style="width: 80%;"></div></div>
+                                    <span class="line-progress-text">80%</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span class="btn-deadline"><i class="fas fa-link"></i> Link</span>
+                                <span class="btn-view">Visit Details</span>
+                            </div>
+                        </a>
+
+                        <!-- ERP Link 3 -->
+                        <a href="https://library.metrouni.edu.bd/" target="_blank" class="dash-card">
+                            <div>
+                                <div class="card-header">
+                                    <div class="card-icon bg-green"><i class="fas fa-book-reader"></i></div>
+                                    <div><div class="card-title">Library Portal</div><div class="card-sub">Digital Resources</div></div>
+                                </div>
+                                <div class="line-progress-container">
+                                    <div class="line-progress-track"><div class="line-progress-fill" style="width: 45%;"></div></div>
+                                    <span class="line-progress-text">45%</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span class="btn-deadline"><i class="fas fa-link"></i> Link</span>
+                                <span class="btn-view">Visit Details</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Academic Engine -->
+                    <h3 class="engine-header">Academic Tools Engine</h3>
+                    <div class="engine-grid">
+                        
+                        <div class="engine-card">
+                            <div class="tool-title"><i class="fas fa-calculator" style="color:var(--accent-orange);"></i> SGPA Calculator</div>
+                            <div class="sgpa-inputs">
+                                <select id="gradeSelect">
+                                    <option value="4.00">A+ (4.00)</option><option value="3.75">A (3.75)</option><option value="3.50">A- (3.50)</option><option value="3.25">B+ (3.25)</option><option value="3.00">B (3.00)</option><option value="2.75">B- (2.75)</option><option value="2.50">C+ (2.50)</option><option value="2.25">C (2.25)</option><option value="2.00">D (2.00)</option><option value="0.00">F (0.00)</option>
+                                </select>
+                                <select id="creditSelect"><option value="3">3 Cr</option><option value="1.5">1.5 Cr</option></select>
+                                <button onclick="addCourseToSGPA()"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="sgpa-list" id="sgpaCourseList"></div>
+                            <div class="sgpa-result">
+                                <div>
+                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Estimated SGPA</span>
+                                    <div style="margin-top: 5px;"><button onclick="resetSGPA()" style="background:transparent; border:none; color:var(--danger); font-size:11px; font-weight:800; cursor:pointer;">Reset Data</button></div>
+                                </div>
+                                <h3 id="sgpaDisplay">0.00</h3>
+                            </div>
+                        </div>
+
+                        <div class="engine-card">
+                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                <div class="circle-chart-sm" id="attChart" style="--perc: 100%;"><span id="attPercent">100%</span></div>
+                                <div style="flex:1; padding-left:15px;">
+                                    <div class="tool-title" style="margin-bottom:5px;"><i class="fas fa-clipboard-check" style="color:var(--accent-green);"></i> Attendance</div>
+                                    <div class="att-stats">
+                                        <span>Total: <span id="attTotal" style="color:var(--text-dark);">0</span></span>
+                                        <span>Present: <span id="attPresent" style="color:var(--accent-green);">0</span></span>
+                                    </div>
+                                    <div class="att-btns">
+                                        <button class="att-btn present" onclick="updateAttendance('present')">Present</button>
+                                        <button class="att-btn absent" onclick="updateAttendance('absent')">Absent</button>
+                                    </div>
+                                    <div style="text-align:right; margin-top:5px;"><button onclick="resetAttendance()" style="background:transparent; border:none; color:var(--danger); font-size:11px; font-weight:800; cursor:pointer;">Reset</button></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="engine-card white-bg" style="flex-direction: row; align-items: center; justify-content: space-between; padding: 20px;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <i class="fas fa-users engine-icon-bg"></i>
+                                <div class="engine-title">Attended group sessions</div>
+                            </div>
+                            <div class="engine-check"><i class="fas fa-check"></i></div>
+                        </div>
+
+                        <div class="engine-card white-bg" style="flex-direction: row; align-items: center; justify-content: space-between; padding: 20px;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <i class="fas fa-book engine-icon-bg"></i>
+                                <div class="engine-title">Booked Tasks</div>
+                            </div>
+                            <div class="engine-uncheck"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ================= MEMBERS SECTION (Photos Added with Correct Paths) ================= -->
+                <div id="members" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Core Members & Representatives</h2>
+                    <div class="cards-grid">
+                        
+                        <!-- Advisor / Nayeem (Changed title to Management Head) -->
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--accent-green);">
+                            <img src="STUDENT PORTAL MU Filer/nayeem 01.jpg" alt="Nayeem Nur" class="member-img" style="border-color: var(--accent-green);">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Jannatull Nayeem Nur</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 251-115-183</div>
+                            <div style="margin-top: 15px;"><span class="badge badge-advisor" style="font-size: 13px; padding: 6px 15px;">Management Head</span></div>
+                        </div>
+
+                        <!-- CR 1 / Sabah -->
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
+                            <img src="STUDENT PORTAL MU Filer/sabah.jpg" alt="Sabah" class="member-img" style="border-color: var(--primary-blue);">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Zarin Mashud Sabah</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-144</div>
+                            <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
+                        </div>
+
+                        <!-- CR 2 / Sabbir -->
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
+                            <img src="STUDENT PORTAL MU Filer/sabbir.jpg" alt="Sabbir" class="member-img" style="border-color: var(--primary-blue);">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Muhammad Sabbir Ahmed</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-111</div>
+                            <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
+                        </div>
+                        
+                        <!-- Core Member / Amirul -->
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--warning);">
+                            <img src="STUDENT PORTAL MU Filer/amirul-01.jpeg" alt="Amirul Islam" class="member-img" style="border-color: var(--warning);">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Amirul Islam</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-141</div>
+                            <div style="margin-top: 15px;"><span class="badge" style="background: var(--warning); font-size: 13px; padding: 6px 15px;">Core Member & Management Lead</span></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ================= STUDENTS SECTION ================= -->
+                <div id="students" class="section">
+                    
+                    <div class="content-card-main">
+                        <div class="table-header">
+                            <div>
+                                <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue);">Regular Students</h2>
+                                <p style="font-size: 14px; color: var(--text-muted); font-weight: 700;">Total Active: <span id="totalCounter" style="color: var(--accent-orange);">0</span></p>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="searchInput" onkeyup="searchTables()" placeholder="Search by ID or Name..." autocomplete="off" name="no-search-fill">
+                                </div>
+                                <button onclick="window.print()" style="padding: 10px 18px; border-radius: 10px; border: 2px solid var(--border-light); background: #fff; cursor: pointer; font-weight: 800; color: var(--text-dark); transition: 0.3s;"><i class="fas fa-print"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="regularTable">
+                                <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                <tbody id="regularTbody">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="content-card-main">
+                        <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px;">Re-Admission Students</h2>
+                        <div class="table-container">
+                            <table id="reTable">
+                                <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                <tbody id="reTbody">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= ROUTINE SECTION (Corrected Schedule) ================= -->
+                <div id="routineTab" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Class Routine</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 25px;">Select a day to view schedule. Live status is synced dynamically.</p>
+                    
+                    <div class="day-tabs" id="routineTabs"></div>
+                    <div id="routineContent"></div>
+                </div>
+
+                <!-- ================= COURSE SECTION ================= -->
+                <div id="materials" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Course & Folders</h2>
+                    <div class="cards-grid">
+                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1yA0vN80p_ZxOuM-I4uX-D4oK0ieF7nPK?usp=drive_link', '_blank')">
+                            <div class="card-icon bg-orange" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-file-pdf"></i></div>
+                            <div class="card-title">Course Outlines</div><div class="card-sub" style="margin-top: 5px;">All Subjects Syllabus</div>
+                        </div>
+                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1Ki_0A8ZHLQg554Ry7wdsnKlvwU0AWfIw?usp=drive_link', '_blank')">
+                            <div class="card-icon bg-blue" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-users"></i></div>
+                            <div class="card-title">Introduction to Sociology</div><div class="card-sub" style="margin-top: 5px;">SOC 0314 1311</div>
+                        </div>
+                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1dhMTNuMwSTq1NRIhjndApGAPs244tYuB?usp=drive_link', '_blank')">
+                            <div class="card-icon bg-green" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-cube"></i></div>
+                            <div class="card-title">Matrices, Geometry & Vector</div><div class="card-sub" style="margin-top: 5px;">MAT 0541 1307</div>
+                        </div>
+                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1dcRHHcK8aY4hELfIbbSj_EA-EKpiDZHq?usp=drive_link', '_blank')">
+                            <div class="card-icon bg-orange" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-bolt"></i></div>
+                            <div class="card-title">Basic EEE Circuits</div><div class="card-sub" style="margin-top: 5px;">EEE 0713 1305 / 1306</div>
+                        </div>
+                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1irwSaNiACWvmIxh3bk4veLDTCDUjZ6a3?usp=drive_link', '_blank')">
+                            <div class="card-icon bg-purple" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-database"></i></div>
+                            <div class="card-title">Data Structure</div><div class="card-sub" style="margin-top: 5px;">CSE 0613 1307 / 1308</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= FACULTY SECTION (Updated Teachers) ================= -->
+                <div id="faculty" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Course Teachers</h2>
+                    <div class="cards-grid">
+                        <div class="dash-card" style="text-align: center; padding: 30px 20px;">
+                            <div class="card-icon bg-blue" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-user-tie"></i></div>
+                            <div class="card-title">Arfatul Islam Asif / Archi Arani Basak</div><div class="card-sub" style="margin-top: 5px;">Introduction to Sociology</div>
+                        </div>
+                        <div class="dash-card" style="text-align: center; padding: 30px 20px;">
+                            <div class="card-icon bg-green" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-user-tie"></i></div>
+                            <div class="card-title">Ruma Das</div><div class="card-sub" style="margin-top: 5px;">Matrices, Geometry & Vector</div>
+                        </div>
+                        <div class="dash-card" style="text-align: center; padding: 30px 20px;">
+                            <div class="card-icon bg-orange" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-user-tie"></i></div>
+                            <div class="card-title">Anika Tabassum / Md. Shadman Shakib</div><div class="card-sub" style="margin-top: 5px;">Basic EEE Circuits</div>
+                        </div>
+                        <div class="dash-card" style="text-align: center; padding: 30px 20px;">
+                            <div class="card-icon bg-purple" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-user-tie"></i></div>
+                            <div class="card-title">Nayem Ahmed / Nasif Istiak Remon</div><div class="card-sub" style="margin-top: 5px;">Data Structure</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= SOCIAL MEDIA SECTION ================= -->
+                <div id="social" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Social Media Connectivity</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 30px;">Direct access to main and subject-wise WhatsApp groups.</p>
+                    
+                    <div class="community-box" style="margin-bottom: 30px;">
+                        <div class="community-main">
+                            <div class="wa-main-icon"><i class="fab fa-whatsapp"></i></div>
+                            <div class="community-info">
+                                <h4>MU CSE 65-C</h4>
+                                <p>Official WhatsApp Community</p>
+                            </div>
+                            <div class="community-actions">
+                                <a href="https://chat.whatsapp.com/H2RDTDUHJkN1c8EmEUPsKM?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="btn-join-main">Join Main Group</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 18px; margin-bottom: 15px; color: var(--text-dark); font-weight: 800;">Subject-wise Subgroups</h3>
+                    <div class="sub-grid">
+                        <a href="https://chat.whatsapp.com/E6RNLgQXEKU1GCOoObaB6X?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="sub-card">
+                            <div class="sub-icon"><i class="fas fa-users"></i></div>
+                            <div class="sub-name">Introduction to Sociology</div>
+                        </a>
+                        <a href="https://chat.whatsapp.com/CJNvPADi1CpDMQejEJYD1x?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="sub-card">
+                            <div class="sub-icon"><i class="fas fa-cube"></i></div>
+                            <div class="sub-name">Matrices, Geometry & Vector</div>
+                        </a>
+                        <a href="https://chat.whatsapp.com/FDU32W2017ID2E7rhplSxT?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="sub-card">
+                            <div class="sub-icon"><i class="fas fa-bolt"></i></div>
+                            <div class="sub-name">Basic EEE Circuits</div>
+                        </a>
+                        <a href="https://chat.whatsapp.com/CvSG8FI4EDSDxxZzQeVqDT?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="sub-card">
+                            <div class="sub-icon"><i class="fas fa-database"></i></div>
+                            <div class="sub-name">Data Structure</div>
+                        </a>
+                    </div>
+
+                    <a href="https://www.facebook.com/profile.php?id=61590490967600" target="_blank" class="fb-link-card" style="margin-top: 30px;">
+                        <div class="fb-icon-wrapper"><i class="fab fa-facebook-f"></i></div>
+                        <div class="fb-text-content">
+                            <h4>Facebook Page</h4>
+                            <p>Follow for official events and university news.</p>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:var(--text-muted)"></i>
+                    </a>
+                </div>
+
+                <!-- Notices Section -->
+                <div id="notices" class="section"></div>
+
+                <!-- ================= DISCUSSION SECTION ================= -->
+                <div id="discussion" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Discussion & Comments</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 30px;">Send suggestions directly via WhatsApp and post locally.</p>
+
+                    <div class="chat-container">
+                        <textarea class="comment-input" id="commentInput" placeholder="Write your suggestion or message here..."></textarea>
+                        <p style="margin-bottom: 15px; font-size: 13px; color: var(--warning); font-weight: 700;">* Note: Your comment will be visible publicly on this device and sent to the selected WhatsApp.</p>
+                        <div class="wa-btn-group">
+                            <button class="btn-send" onclick="submitComment('advisor')"><i class="fab fa-whatsapp" style="font-size:16px;"></i> Advisor (Nayeem)</button>
+                            <button class="btn-send" onclick="submitComment('cr1')"><i class="fab fa-whatsapp" style="font-size:16px;"></i> CR 1 (Sabah)</button>
+                            <button class="btn-send" onclick="submitComment('cr2')"><i class="fab fa-whatsapp" style="font-size:16px;"></i> CR 2 (Sabbir)</button>
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 20px; margin-top: 30px; margin-bottom: 15px; font-weight: 800; color: var(--text-dark);">Public Comments</h3>
+                    <div class="public-comments" id="commentList"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================= STUDENT DATABASE =================
+        const studentDatabase = [
+            {id: "261-115-101", name: "Mariya Akther"}, {id: "261-115-102", name: "Md Nasirul Islam Chowdhury"},
+            {id: "261-115-103", name: "Mustafizur Rahman Adil"}, {id: "261-115-104", name: "Rihma Ahmed"},
+            {id: "261-115-105", name: "Suraiya Akhter"}, {id: "261-115-106", name: "Mahfuza Ahmed Lima"},
+            {id: "261-115-107", name: "Anika Hussain"}, {id: "261-115-108", name: "Mehruba Rahman Meem"},
+            {id: "261-115-109", name: "Marjan Alam Rahi"}, {id: "261-115-110", name: "Kazi Tawhidur Rahman"},
+            {id: "261-115-111", name: "Muhammad Sabbir Ahmed Kamaly", badge: "CR"}, {id: "261-115-112", name: "Dewan Tasawar Mazid"},
+            {id: "261-115-113", name: "Saliha Bhuiyan Rupa"}, {id: "261-115-114", name: "Blison Pohsyad"},
+            {id: "261-115-115", name: "Niloy Patro"}, {id: "261-115-116", name: "Tuli Datta"},
+            {id: "261-115-117", name: "Samia Mahbub"}, {id: "261-115-118", name: "Mouli Roy"},
+            {id: "261-115-119", name: "Shah Nusrat Jahan"}, {id: "261-115-120", name: "Suprova Hossain Obonti"},
+            {id: "261-115-122", name: "Jannatul Mawa"}, {id: "261-115-123", name: "Namrota Sarty"},
+            {id: "261-115-124", name: "Khadiza Akther Tarin"}, {id: "261-115-125", name: "Tasnim Ahmed Maliha"},
+            {id: "261-115-126", name: "MST Samira Jannat Lavoni"}, {id: "261-115-128", name: "Sanjida Jannat"},
+            {id: "261-115-129", name: "Shanjida Fateha Lima"}, {id: "261-115-130", name: "Sajeda Nur Chowdhury"},
+            {id: "261-115-131", name: "Fayja Islam Chowdhury"}, {id: "261-115-132", name: "Fahi Muhtadee"},
+            {id: "261-115-133", name: "Nafisha Akter Trisha"}, {id: "261-115-134", name: "Nowshin Nawal Khan"},
+            {id: "261-115-135", name: "Tamzidur Rahman"}, {id: "261-115-136", name: "Yousuf Ahmed Sunny"},
+            {id: "261-115-137", name: "Sunjida Akter"}, {id: "261-115-138", name: "Tajbid Ahmed Chowdhury"},
+            {id: "261-115-139", name: "Sadia Akther"}, {id: "261-115-140", name: "Maisha Tasnim Chowdhury"},
+            {id: "261-115-141", name: "Amirul Islam"}, {id: "261-115-142", name: "Arjumand Ara Liza"},
+            {id: "261-115-144", name: "Zarin Mashud Sabah", badge: "CR"}, {id: "261-115-145", name: "Sagufta Nasrin Luthfa"},
+            {id: "261-115-146", name: "Afrida Anjum"}, {id: "261-115-147", name: "Md. Ariful Haque"},
+            {id: "261-115-148", name: "Puspita Sinha"}, {id: "261-115-149", name: "Farhana Noor Shumi"},
+            {id: "261-115-150", name: "Sanjida Tasnim Lisa"},
+            // Re-admission
+            {id: "252-115-120", name: "ABDULLAH AL MAHI CHOWDHURY", type:"re"}, {id: "253-115-103", name: "PORAG CHOWDHURY", type:"re"},
+            {id: "251-115-183", name: "JANNATULL NAYEEM NUR", badge: "Advisor", type:"re"}, {id: "252-115-116", name: "MD ABDUL AHAD SAIEDY", type:"re"},
+            {id: "231-115-324", name: "MD AL WALID SAMAUN", type:"re"}, {id: "252-115-176", name: "Samiha Mahjabin Jarin", type:"re"},
+            {id: "222-115-017", name: "Razia Sultana Shammi (Mukti)", type:"re"}
+        ];
+
+        let loggedInUser = "Student";
+
+        // ================= PRELOADER 1 & LOGIN LOGIC (Fixed White screen issue completely) =================
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('initialPreloader').style.opacity = '0';
+                setTimeout(() => { 
+                    document.getElementById('initialPreloader').style.display = 'none'; 
+                    document.getElementById('loginOverlay').style.display = 'flex';
+                }, 500);
+            }, 1500);
+        };
+
+        // Auto-fill name based on ID
+        document.getElementById('loginId').addEventListener('input', function() {
+            const val = this.value.trim();
+            const student = studentDatabase.find(s => s.id === val);
+            if(student) {
+                document.getElementById('loginName').value = student.name;
+            } else {
+                document.getElementById('loginName').value = "";
+            }
+        });
+
+        // Submit on Enter
+        document.getElementById('loginPwd').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') attemptLogin();
+        });
+
+        function attemptLogin() {
+            const idVal = document.getElementById('loginId').value.trim();
+            const pwdVal = document.getElementById('loginPwd').value;
+            const err = document.getElementById('loginError');
+            
+            const student = studentDatabase.find(s => s.id === idVal);
+            
+            if(!student) {
+                err.innerText = "Error: Student ID not found in database!";
+                err.style.display = 'block';
+                return;
+            }
+            if(pwdVal !== 'CSE65/C++') {
+                err.innerText = "Error: Incorrect Password!";
+                err.style.display = 'block';
+                return;
+            }
+
+            // Success 
+            loggedInUser = student.name.split(" ")[0]; // Get first name
+            document.getElementById('topNavWelcome').innerText = `Welcome, ${loggedInUser}, to the e-Learning Centre!`;
+            err.style.display = 'none';
+            document.getElementById('loginOverlay').style.opacity = '0';
+            
+            setTimeout(() => {
+                document.getElementById('loginOverlay').style.display = 'none';
+                
+                // Trigger Preloader 2
+                const p2 = document.getElementById('portalPreloader');
+                p2.style.display = 'flex';
+                p2.style.opacity = '1';
+                
+                setTimeout(() => {
+                    document.getElementById('postLoginSuccess').style.display = 'block';
+                    setTimeout(() => {
+                        p2.style.opacity = '0';
+                        setTimeout(() => { 
+                            p2.style.display = 'none'; 
+                            
+                            // EXTREMELY IMPORTANT: Reveal the Portal UI and allow scrolling
+                            document.getElementById('appContainer').style.display = 'flex';
+                            document.body.style.overflowY = 'auto'; 
+                            
+                            initPortal(); // Initialize tables & logic
+                        }, 500);
+                    }, 1000);
+                }, 1500);
+            }, 500);
+        }
+
+        // ================= INIT PORTAL (After Login) =================
+        function initPortal() {
+            populateTables();
+            loadComments();
+            fetchNotices(); 
+            initRoutine(); 
+            setInterval(updateLiveTimer, 1000); 
+            updateLiveTimer();
+            loadAttendance();
+        }
+
+        // ================= TABS & SIDEBAR =================
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            if(window.innerWidth <= 992) {
+                document.getElementById('sidebar').classList.remove('show');
+            }
+        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
+
+        // ================= TABLE POPULATION & SEARCH =================
+        function populateTables() {
+            const regTbody = document.getElementById('regularTbody');
+            const reTbody = document.getElementById('reTbody');
+            regTbody.innerHTML = ''; reTbody.innerHTML = '';
+            
+            let regCount = 0; let reCount = 0;
+            
+            studentDatabase.forEach(s => {
+                let badgeHtml = s.badge ? (s.badge === 'CR' ? `<span class="badge badge-cr">CR</span>` : `<span class="badge badge-advisor">${s.badge}</span>`) : "";
+                if(s.type === 're') {
+                    reCount++;
+                    reTbody.innerHTML += `<tr><td>${reCount}</td><td>${s.id}</td><td>${s.name} ${badgeHtml}</td></tr>`;
+                } else {
+                    regCount++;
+                    regTbody.innerHTML += `<tr><td>${regCount}</td><td>${s.id}</td><td>${s.name} ${badgeHtml}</td></tr>`;
+                }
+            });
+            document.getElementById("totalCounter").innerText = regCount + reCount;
+        }
+
+        function searchTables() {
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            document.querySelectorAll("#regularTable tbody tr, #reTable tbody tr").forEach(row => {
+                row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
+            });
+        }
+
+        // ================= ROUTINE LOGIC (CORRECTED DATA FROM PROMPT) =================
+        const routineData = {
+            0: [ // Sunday
+                {sub: "Basic EEE Circuits (109)", start: "12:00", end: "13:30", teacher: "Anika Tabassum [ATB]"}, 
+                {sub: "Introduction to Sociology (GL2)", start: "13:30", end: "15:00", teacher: "AIA / AAB"}
+            ],
+            1: [ // Monday
+                {sub: "Basic EEE Circuits (109)", start: "09:00", end: "10:30", teacher: "Anika Tabassum [ATB]"}, 
+                {sub: "Data Structure Lab (311)", start: "12:00", end: "15:00", teacher: "Nasif Istiak Remon [NIR]"}
+            ],
+            2: [ // Tuesday
+                {sub: "Introduction to Sociology (GL2)", start: "13:30", end: "15:00", teacher: "AIA / AAB"}, 
+                {sub: "Data Structure (109)", start: "16:30", end: "18:00", teacher: "Nayem Ahmed [NMA]"}
+            ],
+            3: [ // Wednesday
+                {sub: "Basic EEE Circuits Lab (311)", start: "09:00", end: "12:00", teacher: "Md. Shadman Shakib [MSS]"}, 
+                {sub: "Matrices, Geometry & Vector (306)", start: "12:00", end: "13:30", teacher: "Ruma Das [RMD]"}
+            ],
+            4: [ // Thursday
+                {sub: "Matrices, Geometry & Vector (403)", start: "12:00", end: "13:30", teacher: "Ruma Das [RMD]"}, 
+                {sub: "Data Structure (306)", start: "16:30", end: "18:00", teacher: "Nayem Ahmed [NMA]"}
+            ],
+            5: [], 6: [] // Friday, Saturday Off
+        };
+        const daysArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        
+        function initRoutine() {
+            const tabsContainer = document.getElementById('routineTabs');
+            tabsContainer.innerHTML = '';
+            daysArray.forEach((day, i) => {
+                tabsContainer.innerHTML += `<div class="day-tab ${i === new Date().getDay() ? 'active' : ''}" onclick="selectRoutineDay(${i}, this)">${day}</div>`;
+            });
+            selectRoutineDay(new Date().getDay(), tabsContainer.querySelector('.active'));
+        }
+
+        function selectRoutineDay(dayIndex, element) {
+            document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+            if(element) element.classList.add('active');
+            
+            const content = document.getElementById('routineContent');
+            content.innerHTML = '';
+            
+            if(!routineData[dayIndex] || routineData[dayIndex].length === 0) {
+                content.innerHTML = `<div style="text-align:center; padding: 40px; background:#fff; border-radius:16px; border:2px dashed var(--border-light);"><p style="color:var(--text-muted); font-size:16px; font-weight:600;">No classes scheduled for this day.</p></div>`;
+                return;
+            }
+
+            routineData[dayIndex].forEach(cls => {
+                let timeDisplay = `${cls.start} - ${cls.end}`;
+                content.innerHTML += `
+                <div class="routine-card">
+                    <div class="time-block" style="min-width: 150px;">
+                        <div class="time" style="font-size: 20px;">${timeDisplay}</div>
+                    </div>
+                    <div class="info-block" style="flex:1;">
+                        <h4 style="color: var(--primary-blue); font-size: 20px;">${cls.sub}</h4>
+                        <p style="font-size: 14px; margin-top: 5px; color: var(--text-dark); font-weight: 700;">Teacher: <span style="color: var(--text-muted); font-weight: 500;">${cls.teacher}</span></p>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // Live Timer in Dashboard
+        function getNextClass(now) {
+            let day = now.getDay();
+            let currentMins = now.getHours() * 60 + now.getMinutes();
+
+            if (routineData[day]) {
+                for (let cls of routineData[day]) {
+                    let startParts = cls.start.split(":");
+                    let endParts = cls.end.split(":");
+                    let startMins = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
+                    let endMins = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
+
+                    if (currentMins >= startMins && currentMins < endMins) {
+                        return { status: 'ongoing', sub: cls.sub, endsIn: endMins - currentMins };
+                    } else if (currentMins < startMins) {
+                        let targetDate = new Date();
+                        targetDate.setHours(parseInt(startParts[0]), parseInt(startParts[1]), 0, 0);
+                        return { status: 'upcoming', sub: cls.sub, time: targetDate };
+                    }
+                }
+            }
+            return { status: 'none' };
+        }
+
+        function updateLiveTimer() {
+            const now = new Date();
+            const modernCard = document.getElementById('liveClassCard');
+            const countdownEl = document.getElementById('classCountdown');
+            const subjectEl = document.getElementById('classSubject');
+            const subtitleEl = document.getElementById('timerSubtitle');
+            const iconEl = document.getElementById('timerIcon');
+            let nextCls = getNextClass(now);
+            
+            if (modernCard && countdownEl && subjectEl) {
+                if (nextCls.status === 'ongoing') {
+                    modernCard.className = 'dash-card live-alert';
+                    let h = Math.floor(nextCls.endsIn / 60); let m = nextCls.endsIn % 60;
+                    subtitleEl.innerText = `Ends in ${h > 0 ? h+'h ':''}${m}m`;
+                    subjectEl.innerText = nextCls.sub;
+                    countdownEl.innerText = "ON AIR"; 
+                    iconEl.innerHTML = '<i class="fas fa-broadcast-tower fa-beat"></i>';
+                } else if (nextCls.status === 'upcoming') {
+                    modernCard.className = 'dash-card active-blue';
+                    let diff = nextCls.time - now;
+                    let h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                    let m = Math.floor((diff / 1000 / 60) % 60);
+                    let s = Math.floor((diff / 1000) % 60);
+                    let timeStr = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                    subtitleEl.innerText = `Next class in`;
+                    subjectEl.innerText = nextCls.sub;
+                    countdownEl.innerText = timeStr;
+                    iconEl.innerHTML = '<i class="fas fa-hourglass-half"></i>';
+                } else {
+                    modernCard.className = 'dash-card active-blue';
+                    subtitleEl.innerText = `Status`;
+                    subjectEl.innerText = "No classes left today";
+                    countdownEl.innerText = "--:--:--";
+                    iconEl.innerHTML = '<i class="fas fa-calendar-check"></i>';
+                }
+            }
+        }
+
+        // ================= SGPA CALCULATOR =================
+        let addedCourses = [];
+        function addCourseToSGPA() {
+            const grade = parseFloat(document.getElementById('gradeSelect').value);
+            const credit = parseFloat(document.getElementById('creditSelect').value);
+            const gradeText = document.getElementById('gradeSelect').options[document.getElementById('gradeSelect').selectedIndex].text;
+            addedCourses.push({grade, credit, text: `${credit} Cr | ${gradeText}`});
+            updateSGPADisplay();
+        }
+        function updateSGPADisplay() {
+            const listDiv = document.getElementById('sgpaCourseList');
+            const resultDiv = document.getElementById('sgpaDisplay');
+            listDiv.innerHTML = "";
+            let totalCredits = 0, totalPoints = 0;
+            addedCourses.forEach((c, i) => {
+                totalCredits += c.credit; totalPoints += (c.credit * c.grade);
+                listDiv.innerHTML += `<div><span style="font-weight:800; color:var(--primary-blue);">C-${i+1}</span> <span style="font-weight:700; color:var(--text-dark);">${c.text}</span></div>`;
+            });
+            resultDiv.innerText = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "0.00";
+        }
+        function resetSGPA() { addedCourses = []; updateSGPADisplay(); }
+
+        // ================= ATTENDANCE =================
+        let attData = { present: 0, absent: 0 };
+        function loadAttendance() {
+            let saved = localStorage.getItem('cse65c_att_v7');
+            if(saved) attData = JSON.parse(saved);
+            renderAttendance();
+        }
+        function updateAttendance(type) {
+            if(type === 'present') attData.present++;
+            if(type === 'absent') attData.absent++;
+            localStorage.setItem('cse65c_att_v7', JSON.stringify(attData));
+            renderAttendance();
+        }
+        function resetAttendance() {
+            attData = { present: 0, absent: 0 };
+            localStorage.setItem('cse65c_att_v7', JSON.stringify(attData));
+            renderAttendance();
+        }
+        function renderAttendance() {
+            const total = attData.present + attData.absent;
+            const pct = total === 0 ? 0 : Math.round((attData.present / total) * 100);
+            document.getElementById('attTotal').innerText = total;
+            document.getElementById('attPresent').innerText = attData.present;
+            document.getElementById('attPercent').innerText = `${pct}%`;
+            document.getElementById('attChart').style.setProperty('--perc', `${pct}%`);
+            
+            if(pct >= 70) document.getElementById('attChart').style.background = `conic-gradient(var(--accent-green) var(--perc), #e2e8f0 0)`;
+            else if(pct >= 50) document.getElementById('attChart').style.background = `conic-gradient(var(--warning) var(--perc), #e2e8f0 0)`;
+            else document.getElementById('attChart').style.background = `conic-gradient(var(--danger) var(--perc), #e2e8f0 0)`;
+        }
+
+        // ================= OTHER LOGICS =================
+        function submitComment(target) {
+            const text = document.getElementById('commentInput').value.trim();
+            if(!text) { alert("Please write a message!"); return; }
+            let phone = target === 'advisor' ? "8801609360033" : target === 'cr1' ? "8801334966474" : "8801727489737";
+            
+            let comments = JSON.parse(localStorage.getItem('portalComments_v7')) || [];
+            comments.unshift({ text, time: new Date().toLocaleString(), author: loggedInUser });
+            localStorage.setItem('portalComments_v7', JSON.stringify(comments));
+
+            loadComments();
+            document.getElementById('commentInput').value = "";
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent("Message from " + loggedInUser + ": \n" + text)}`, '_blank');
+        }
+
+        function loadComments() {
+            const clist = document.getElementById('commentList');
+            let comments = JSON.parse(localStorage.getItem('portalComments_v7')) || [];
+            clist.innerHTML = comments.length === 0 ? `<p style="color:var(--text-muted); font-size:14px; font-weight: 500;">No comments yet.</p>` : "";
+            comments.forEach(c => {
+                let authorName = c.author ? c.author : "Student";
+                clist.innerHTML += `
+                    <div class="comment-msg" style="padding: 15px; border-radius: 12px; background: #f8fafc; border: 1px solid var(--border-light); margin-bottom: 15px; display: flex; gap: 15px;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; color: #fff; background: var(--primary-blue); flex-shrink: 0;"><i class="fas fa-user"></i></div>
+                        <div>
+                            <h5 style="color: var(--text-dark); font-size: 14px; margin-bottom: 5px; font-weight: 800;">${authorName} <span style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-left: 10px;">${c.time}</span></h5>
+                            <p style="color: var(--text-dark); font-size: 13px; line-height: 1.5; font-weight: 500;">${c.text}</p>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function fetchNotices() {
+            const noticeContainer = document.getElementById('notices');
+            const noticesData = [
+                { title: "Class Representatives (CR)", body: "Current Class Representatives are Sabbir Kamaly and Zarin Mashud Sabah.", icon: "fa-star", color: "var(--warning)" },
+                { title: "Security Update", body: "The portal is now secured with database-linked password protection.", icon: "fa-lock", color: "var(--primary-blue)" }
+            ];
+            noticeContainer.innerHTML = `<h2 style="font-size: 26px; font-weight: 900; margin-bottom: 25px; color: var(--text-dark);">Notice Board</h2>`;
+            noticesData.forEach(notice => {
+                noticeContainer.innerHTML += `
+                    <div class="content-card-main" style="border-left: 6px solid ${notice.color}; margin-bottom: 20px;">
+                        <h4 style="font-size: 18px; margin-bottom: 10px; color: var(--text-dark); display: flex; align-items: center; gap:12px; font-weight: 900;">
+                            <div style="width:35px; height:35px; font-size:16px; border-radius:10px; display:flex; justify-content:center; align-items:center; background: ${notice.color}20;"><i class="fas ${notice.icon}" style="color: ${notice.color};"></i></div> 
+                            <span>${notice.title}</span>
+                        </h4>
+                        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; font-weight: 600;">${notice.body}</p>
+                    </div>`;
+            });
+        }
+    </script>
+</body>
+</html>
