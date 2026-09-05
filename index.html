@@ -283,6 +283,37 @@
         .att-btn.present { color: var(--accent-green); } .att-btn.absent { color: var(--danger); }
         .att-btn.present:hover { background: #d1fae5; border-color: var(--accent-green);} .att-btn.absent:hover { background: #fee2e2; border-color: var(--danger);}
 
+        /* ================= BUS SCHEDULE (FULL WIDTH SLIDER) ================= */
+        .bus-hero {
+            position: relative; background: url('image_6eee79.jpg') center center/cover no-repeat; border-radius: 16px;
+            padding: 60px 30px; text-align: center; color: #fff; margin-bottom: 25px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .bus-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15, 28, 64, 0.95), rgba(30, 58, 138, 0.8)); z-index: 1; }
+        .bus-hero-content { position: relative; z-index: 2; }
+        .bus-hero h2 { font-size: 32px; font-weight: 900; margin-bottom: 10px; }
+        .bus-hero p { font-size: 16px; font-weight: 500; margin-bottom: 25px; opacity: 0.9;}
+        .btn-drive { display: inline-block; background: var(--accent-orange); color: #fff; padding: 14px 28px; border-radius: 30px; font-weight: 800; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(194, 65, 12, 0.4); font-size: 15px;}
+        .btn-drive:hover { transform: translateY(-3px); background: #9a340a; }
+
+        .slider-container { position: relative; width: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); background: #0f172a; border: 2px solid var(--border-light); }
+        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; height: 75vh; min-height: 450px; }
+        .slide { min-width: 100%; height: 100%; object-fit: contain; }
+        .slider-nav { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; transform: translateY(-50%); padding: 0 20px; pointer-events: none; z-index: 10;}
+        .slider-nav button { pointer-events: auto; width: 50px; height: 50px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); color: var(--primary-blue); font-size: 22px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; }
+        .slider-nav button:hover { background: var(--primary-blue); color: #fff; transform: scale(1.1);}
+
+        /* ================= PHOTO ALBUM (PREMIUM CARD DESIGN) ================= */
+        .album-card { background: var(--bg-white); border-radius: 16px; border: 1px solid var(--border-light); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: 0.3s; max-width: 500px; margin: 0 auto; }
+        .album-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: var(--primary-blue);}
+        .album-cover { height: 240px; background: linear-gradient(135deg, #1e3a8a, #3b82f6); position: relative; display: flex; align-items: center; justify-content: center;}
+        .album-cover::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.1) 2px, transparent 2px); background-size: 20px 20px; opacity: 0.5;}
+        .album-cover i { font-size: 65px; color: #fff; position: relative; z-index: 2; text-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: pulseGlow 2.5s infinite alternate;}
+        .album-info { padding: 35px 30px; text-align: center; }
+        .album-info h3 { font-size: 24px; font-weight: 900; color: var(--text-dark); margin-bottom: 12px;}
+        .album-info p { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6;}
+        .btn-drive-album { background: linear-gradient(135deg, var(--primary-blue), #2563eb); color: #fff; padding: 15px 35px; border-radius: 30px; font-size: 15px; font-weight: 800; text-decoration: none; display: inline-block; transition: 0.3s; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);}
+        .btn-drive-album:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(37, 99, 235, 0.4);}
+
         /* ================= MEMBERS SECTION ================= */
         .member-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-blue); margin: 0 auto 15px auto; display: block; box-shadow: 0 5px 15px rgba(15,28,64,0.15); background: #fff;}
         
@@ -312,14 +343,12 @@
         .routine-card { background: var(--bg-white); border: 1px solid var(--border-light); border-left: 6px solid var(--primary-blue); padding: 25px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.3s;}
         .routine-card:hover { transform: translateX(5px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: var(--primary-blue);}
         .time-block { text-align: center; padding-right: 25px; border-right: 2px dashed var(--border-light); min-width: 170px; }
-        /* Attractive Font for Time */
         .time-block .time { font-size: 26px; font-weight: 900; font-family: var(--font-code); color: var(--accent-orange); letter-spacing: 1px;}
         .info-block { flex-grow: 1; }
-        /* Attractive Font for Subject */
         .info-block h4 { font-size: 22px; color: var(--primary-blue); margin-bottom: 8px; font-weight: 900; letter-spacing: 0.5px;}
         .info-block p { font-size: 14px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
 
-        /* ================= SOCIAL & DISCUSSION (FIXED RESPONSIVENESS) ================= */
+        /* ================= SOCIAL & DISCUSSION ================= */
         .community-box { background: var(--bg-white); border: 2px solid rgba(37, 211, 102, 0.3); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); width: 100%;}
         .community-main { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(37, 211, 102, 0.05); flex-wrap: wrap; }
         .wa-main-icon { width: 55px; height: 55px; background: #25D366; color: #fff; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 28px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
@@ -375,28 +404,28 @@
             .time-block { border-right: none; border-bottom: 2px dashed var(--border-light); padding-right: 0; padding-bottom: 10px; width: 100%; text-align: left;}
             .time-block .time { font-size: 22px; }
             .info-block h4 { font-size: 18px; }
+            .slider-wrapper { height: 400px; }
+            .bus-hero { padding: 40px 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ================= PRELOADER 1 (MODERN SPINNER) ================= -->
+    <!-- ================= PRELOADER 1 ================= -->
     <div id="initialPreloader">
         <div class="modern-spinner"></div>
         <div class="cyber-text">System Booting</div>
     </div>
 
-    <!-- ================= SECURE LOGIN SCREEN (Premium Split Design) ================= -->
+    <!-- ================= SECURE LOGIN SCREEN ================= -->
     <div id="loginOverlay" style="display: none;">
         <div class="login-wrapper">
-            <!-- Left Branding Side -->
             <div class="login-left">
                 <i class="fas fa-fingerprint"></i>
                 <h2>Dep: CSE 65 C</h2>
                 <p>Welcome to the secure e-Learning Portal. Access course materials, assignments, and routines seamlessly.</p>
             </div>
             
-            <!-- Right Form Side -->
             <div class="login-right">
                 <h3>Sign In</h3>
                 <p>Enter your credentials to continue</p>
@@ -421,7 +450,7 @@
         </div>
     </div>
 
-    <!-- ================= PRELOADER 2 (ACCESS GRANTED) ================= -->
+    <!-- ================= PRELOADER 2 ================= -->
     <div id="portalPreloader">
         <div class="terminal-loader">
             <div class="terminal-header">
@@ -448,7 +477,17 @@
                 <li><button class="active" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> Dashboard</button></li>
                 <li><button onclick="switchTab('members')"><i class="fas fa-id-badge"></i> Members</button></li>
                 <li><button onclick="switchTab('students')"><i class="fas fa-users"></i> Students Info</button></li>
-                <li><button onclick="switchTab('routineTab')"><i class="fas fa-calendar-alt"></i> Class Routine</button></li>
+                
+                <!-- Schedules Dropdown (Routine + Bus) -->
+                <li class="nav-item-dropdown">
+                    <button onclick="toggleDropdown('routineDropdown', this)">
+                        <i class="fas fa-calendar-alt"></i> Schedules <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </button>
+                    <ul class="dropdown-menu" id="routineDropdown">
+                        <li><button onclick="switchTab('routineTab')"><i class="fas fa-clock"></i> Class Routine</button></li>
+                        <li><button onclick="switchTab('busScheduleTab')"><i class="fas fa-bus"></i> Bus Schedule</button></li>
+                    </ul>
+                </li>
                 
                 <!-- Course Dropdown -->
                 <li class="nav-item-dropdown">
@@ -458,9 +497,11 @@
                     <ul class="dropdown-menu" id="courseDropdown">
                         <li><button onclick="switchTab('materials')"><i class="fas fa-folder"></i> Materials</button></li>
                         <li><button onclick="switchTab('assignmentsTab')"><i class="fas fa-tasks"></i> Assignments</button></li>
+                        <li><button onclick="window.open('https://docs.google.com/spreadsheets/d/1JKqW5xuK5d9in0uEBhnrJrGHvE-TAtlg_XqAXQl4v-Q/edit?gid=0#gid=0', '_blank')"><i class="fas fa-chalkboard"></i> Classroom Code</button></li>
                     </ul>
                 </li>
-
+                
+                <li><button onclick="switchTab('photoAlbumTab')"><i class="fas fa-images"></i> Photo Album</button></li>
                 <li><button onclick="switchTab('faculty')"><i class="fas fa-chalkboard-teacher"></i> Faculty</button></li>
                 <li><button onclick="switchTab('social')"><i class="fas fa-hashtag"></i> Social Media</button></li>
                 <li><button onclick="switchTab('discussion')"><i class="fas fa-comments"></i> Discussion</button></li>
@@ -476,7 +517,6 @@
         <!-- MAIN CONTENT -->
         <div class="main-wrapper">
             
-            <!-- Top Nav -->
             <header class="top-header">
                 <button class="mobile-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
                 <div class="header-spacer"></div>
@@ -488,7 +528,6 @@
                 </div>
             </header>
 
-            <!-- Dashboard Content Container -->
             <div class="dashboard-container">
 
                 <!-- ================= DASHBOARD TAB ================= -->
@@ -499,7 +538,6 @@
                     </div>
 
                     <div class="cards-grid">
-                        <!-- Live Timer Card -->
                         <div class="dash-card active-blue" id="liveClassCard" onclick="switchTab('routineTab')" style="cursor: pointer;">
                             <div class="card-header" style="justify-content: space-between;">
                                 <div style="display:flex; align-items:center; gap:15px;">
@@ -516,7 +554,6 @@
                             </div>
                         </div>
 
-                        <!-- ERP Link 1 -->
                         <a href="https://metrouni.edu.bd/" target="_blank" class="dash-card">
                             <div>
                                 <div class="card-header">
@@ -534,7 +571,6 @@
                             </div>
                         </a>
 
-                        <!-- ERP Link 2 -->
                         <a href="https://student.metrouni.edu.bd/" target="_blank" class="dash-card">
                             <div>
                                 <div class="card-header">
@@ -553,13 +589,10 @@
                         </a>
                     </div>
 
-                    <!-- ================= DASHBOARD SPLIT (LEFT / RIGHT) ================= -->
                     <div class="dashboard-split">
                         
                         <!-- LEFT COLUMN -->
                         <div class="dash-left">
-                            
-                            <!-- Traffic Stats Box (LIVE SIMULATOR) -->
                             <div class="traffic-card">
                                 <h3 class="engine-header"><i class="fas fa-chart-line" style="color:var(--primary-blue);"></i> Live Traffic Analytics</h3>
                                 <div class="traffic-chart-container">
@@ -576,13 +609,10 @@
                                     <div style="text-align: right;"><h4>Active Users</h4><p id="activeUsersCount"><span class="live-dot"></span> --</p></div>
                                 </div>
                             </div>
-
                         </div>
 
-                        <!-- RIGHT COLUMN: Calendar & Academic Tools -->
+                        <!-- RIGHT COLUMN -->
                         <div class="dash-right">
-                            
-                            <!-- Compact Live Calendar -->
                             <div class="calendar-container">
                                 <div class="calendar-header">
                                     <button onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
@@ -639,7 +669,50 @@
                     </div>
                 </div>
 
-                <!-- ================= ASSIGNMENTS SECTION (DROPDOWN MENU TAB) ================= -->
+                <!-- ================= BUS SCHEDULE SECTION ================= -->
+                <div id="busScheduleTab" class="section">
+                    <div class="bus-hero">
+                        <div class="bus-hero-content">
+                            <h2><i class="fas fa-bus-alt"></i> Metropolitan University Bus Schedule</h2>
+                            <p>Official transportation schedule for students and faculty.</p>
+                            <a href="https://drive.google.com/file/d/1E3RUbQwE4rSoHjEkj41otofPKdA9f_DW/view" target="_blank" class="btn-drive">View More <i class="fas fa-external-link-alt" style="margin-left:5px;"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-wrapper" id="busSlider">
+                            <img src="bus image .jpeg" class="slide" alt="Bus Schedule 1">
+                            <img src="bus image -02.jpg" class="slide" alt="Bus Schedule 2">
+                            <img src="bus image -03.jpg" class="slide" alt="Bus Schedule 3">
+                            <img src="bus image -04.jpg" class="slide" alt="Bus Schedule 4">
+                        </div>
+                        <div class="slider-nav">
+                            <button onclick="moveSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <button onclick="moveSlide(1)"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= PHOTO ALBUM SECTION ================= -->
+                <div id="photoAlbumTab" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Photo Album</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 30px;">Explore our class memories, event photos, and tour galleries.</p>
+                    
+                    <div class="album-card">
+                        <div class="album-cover">
+                            <i class="fas fa-camera-retro"></i>
+                        </div>
+                        <div class="album-info">
+                            <h3>CSE 65 C Gallery</h3>
+                            <p>All official and unofficial photos of our batch are stored securely in this Google Drive folder. Relive the moments!</p>
+                            <a href="https://drive.google.com/drive/folders/1P-qZJYfSG0Rq5pqJOV9XTw5lPAv73Z_C?usp=drive_link" target="_blank" class="btn-drive-album">
+                                <i class="fas fa-folder-open" style="margin-right: 8px;"></i> Open Gallery
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= ASSIGNMENTS SECTION ================= -->
                 <div id="assignmentsTab" class="section">
                     <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Assignments & Submissions</h2>
                     <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 30px;">Manage and submit your course assignments via Google Drive folders.</p>
@@ -704,14 +777,14 @@
                         </div>
 
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
-                            <img src="sabah .jpeg" alt="Sabah" class="member-img" style="border-color: var(--primary-blue);">
+                            <img src="sabah.jpeg" alt="Sabah" class="member-img" style="border-color: var(--primary-blue);">
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Zarin Mashud Sabah</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-144</div>
                             <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
                         </div>
 
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
-                            <img src="sabbir .jpeg" alt="Sabbir" class="member-img" style="border-color: var(--primary-blue);">
+                            <img src="sabbir.jpeg" alt="Sabbir" class="member-img" style="border-color: var(--primary-blue);">
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Muhammad Sabbir Ahmed</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-111</div>
                             <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
@@ -754,7 +827,7 @@
                                 <div style="display: flex; gap: 10px;">
                                     <div class="search-box">
                                         <i class="fas fa-search"></i>
-                                        <input type="text" id="searchInput" onkeyup="searchTables()" placeholder="Search by ID or Name..." autocomplete="off" name="no-search-fill">
+                                        <input type="text" id="searchInput" onkeyup="searchTables()" placeholder="Search by ID or Name..." autocomplete="off">
                                     </div>
                                     <button onclick="window.print()" style="padding: 10px 18px; border-radius: 10px; border: 2px solid var(--border-light); background: #fff; cursor: pointer; font-weight: 800; color: var(--text-dark); transition: 0.3s;"><i class="fas fa-print"></i></button>
                                 </div>
@@ -954,7 +1027,6 @@
         let loggedInUser = "Student";
         let loggedInId = "";
 
-        // ================= PRELOADER 1 & LOGIN LOGIC =================
         window.onload = () => {
             setTimeout(() => {
                 document.getElementById('initialPreloader').style.opacity = '0';
@@ -965,7 +1037,6 @@
             }, 1500);
         };
 
-        // Auto-format ID input & Auto-Suggest Logic
         document.getElementById('loginId').addEventListener('input', function(e) {
             let val = e.target.value.replace(/\D/g, ''); 
             let formattedVal = '';
@@ -975,7 +1046,6 @@
             }
             e.target.value = formattedVal;
 
-            // Handle Suggestions
             const suggestionsBox = document.getElementById('idSuggestions');
             if (formattedVal.length > 0) {
                 const matches = studentDatabase.filter(s => s.id.startsWith(formattedVal));
@@ -1001,7 +1071,6 @@
                 suggestionsBox.style.display = 'none';
             }
 
-            // Auto-fill Name if typed completely manually
             const student = studentDatabase.find(s => s.id === formattedVal);
             if(student) {
                 document.getElementById('loginName').value = student.name;
@@ -1011,14 +1080,12 @@
             }
         });
 
-        // Hide suggestions when clicking outside
         document.addEventListener('click', function(e) {
             if(e.target.id !== 'loginId') {
                 document.getElementById('idSuggestions').style.display = 'none';
             }
         });
 
-        // Submit on Enter
         document.getElementById('loginPwd').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') attemptLogin();
         });
@@ -1047,7 +1114,6 @@
             err.style.display = 'none';
             document.getElementById('loginOverlay').style.opacity = '0';
 
-            // ================= BYPASS LOGIC FOR CORE MEMBERS =================
             const coreMemberIDs = ["251-115-183", "261-115-144", "261-115-111", "261-115-141"];
             if (coreMemberIDs.includes(loggedInId)) {
                 document.getElementById('studentAuthPrompt').style.display = 'none';
@@ -1080,7 +1146,6 @@
             }, 500);
         }
 
-        // ================= INIT PORTAL =================
         function initPortal() {
             populateTables();
             loadComments();
@@ -1093,7 +1158,14 @@
             initLiveTraffic();
         }
 
-        // ================= LIVE TRAFFIC SIMULATOR =================
+        let currentSlide = 0;
+        function moveSlide(direction) {
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            document.getElementById('busSlider').style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
         function initLiveTraffic() {
             let totalVisits = localStorage.getItem('portal_total_visits') || 1425;
             totalVisits = parseInt(totalVisits) + 1; 
@@ -1107,7 +1179,6 @@
             document.getElementById('activeUsersCount').innerHTML = `<span class="live-dot"></span> ${Math.floor(Math.random() * (28 - 12 + 1)) + 12}`;
         }
 
-        // ================= STUDENT INFO PASSWORD LOGIC =================
         function checkStudentPwd() {
             const pwd = document.getElementById('studentPwd').value;
             const msg = document.getElementById('studentPwdMsg');
@@ -1120,7 +1191,6 @@
             }
         }
 
-        // ================= LIVE CALENDAR WIDGET =================
         let currDate = new Date();
         let currMonth = currDate.getMonth();
         let currYear = currDate.getFullYear();
@@ -1151,7 +1221,6 @@
             renderCalendar();
         }
 
-        // ================= TABS, SIDEBAR & DROPDOWN =================
         function switchTab(tabId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
@@ -1180,7 +1249,6 @@
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
 
-        // ================= TABLE POPULATION & SEARCH =================
         function populateTables() {
             const regTbody = document.getElementById('regularTbody');
             const reTbody = document.getElementById('reTbody');
@@ -1213,18 +1281,17 @@
             });
         }
 
-        // ================= ROUTINE LOGIC (WITH 12-HOUR FORMATTING) =================
         const routineData = {
             0: [ // Sunday
                 {sub: "Basic EEE Circuits (109)", start: "12:00", end: "13:30", teacher: "Anika Tabassum [ATB]"}, 
-                {sub: "Introduction to Sociology (GL2)", start: "13:30", end: "15:00", teacher: "AR"}
+                {sub: "Introduction to Sociology (GL2)", start: "13:30", end: "15:00", teacher: "AIA / AAB"}
             ],
             1: [ // Monday
                 {sub: "Basic EEE Circuits (109)", start: "09:00", end: "10:30", teacher: "Anika Tabassum [ATB]"}, 
                 {sub: "Data Structure Lab (311)", start: "12:00", end: "15:00", teacher: "Nasif Istiak Remon [NIR]"}
             ],
             2: [ // Tuesday
-                {sub: "Introduction to Sociology (GL2)", start: "13:30", end: "15:00", teacher: "AR"}, 
+                {sub: "Introduction to Sociology (GL2)", start: "13:30", end: "15:00", teacher: "AIA / AAB"}, 
                 {sub: "Data Structure (109)", start: "16:30", end: "18:00", teacher: "Nayem Ahmed [NMA]"}
             ],
             3: [ // Wednesday
@@ -1234,10 +1301,15 @@
             4: [ // Thursday
                 {sub: "Matrices, Geometry & Vector (403)", start: "12:00", end: "13:30", teacher: "Ruma Das [RMD]"}, 
                 {sub: "Data Structure (306)", start: "16:30", end: "18:00", teacher: "Nayem Ahmed [NMA]"}
-            ],
-            5: [], 6: [] // Friday, Saturday Off
+            ]
         };
-        const daysArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const activeDays = [
+            { index: 0, name: "Sunday" },
+            { index: 1, name: "Monday" },
+            { index: 2, name: "Tuesday" },
+            { index: 3, name: "Wednesday" },
+            { index: 4, name: "Thursday" }
+        ];
         
         function format12Hour(time24) {
             let [h, m] = time24.split(":");
@@ -1251,10 +1323,15 @@
         function initRoutine() {
             const tabsContainer = document.getElementById('routineTabs');
             tabsContainer.innerHTML = '';
-            daysArray.forEach((day, i) => {
-                tabsContainer.innerHTML += `<div class="day-tab ${i === new Date().getDay() ? 'active' : ''}" onclick="selectRoutineDay(${i}, this)">${day}</div>`;
+            
+            let currentDay = new Date().getDay();
+            if (currentDay === 5 || currentDay === 6) currentDay = 0;
+
+            activeDays.forEach(dayObj => {
+                tabsContainer.innerHTML += `<div class="day-tab ${dayObj.index === currentDay ? 'active' : ''}" onclick="selectRoutineDay(${dayObj.index}, this)">${dayObj.name}</div>`;
             });
-            selectRoutineDay(new Date().getDay(), tabsContainer.querySelector('.active'));
+            
+            selectRoutineDay(currentDay, tabsContainer.querySelector('.active'));
         }
 
         function selectRoutineDay(dayIndex, element) {
@@ -1345,7 +1422,6 @@
             }
         }
 
-        // ================= SGPA CALCULATOR =================
         let addedCourses = [];
         function addCourseToSGPA() {
             const grade = parseFloat(document.getElementById('gradeSelect').value);
@@ -1367,7 +1443,6 @@
         }
         function resetSGPA() { addedCourses = []; updateSGPADisplay(); }
 
-        // ================= ATTENDANCE =================
         let attData = { present: 0, absent: 0 };
         function loadAttendance() {
             let saved = localStorage.getItem('cse65c_att_v7');
@@ -1398,7 +1473,6 @@
             else document.getElementById('attChart').style.background = `conic-gradient(var(--danger) var(--perc), #e2e8f0 0)`;
         }
 
-        // ================= OTHER LOGICS =================
         function submitComment(target) {
             const text = document.getElementById('commentInput').value.trim();
             if(!text) { alert("Please write a message!"); return; }
