@@ -8,20 +8,20 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         /* ================= LIGHT THEME VARIABLES ================= */
         :root {
-            --bg-body: #f1f5f9;
+            --bg-body: #f4f7f6;
             --bg-white: #ffffff;
             
-            --primary-blue: #0f1c40; /* Deep Navy Blue */
+            --primary-blue: #0f1c40; 
             --primary-light: #e0e7ff;
-            --accent-orange: #c2410c; /* Deep Orange */
-            --accent-green: #047857; /* Deep Emerald Green */
-            --danger: #b91c1c; /* Deep Red */
-            --warning: #b45309; /* Deep Yellow/Orange */
+            --accent-orange: #c2410c; 
+            --accent-green: #047857; 
+            --danger: #b91c1c; 
+            --warning: #b45309; 
             
             --text-dark: #0f172a;
             --text-muted: #475569;
@@ -37,189 +37,134 @@
         body { 
             background-color: var(--bg-body); 
             color: var(--text-dark);
-            margin: 0; padding: 0;
-            overflow: hidden; /* Prevent scrolling during overlays */
+            overflow: hidden; 
         }
 
-        /* App Container (Hidden until login finishes) */
-        #appContainer {
-            display: none; 
-            width: 100%;
-            min-height: 100vh;
-            flex-direction: row;
-        }
+        #appContainer { display: none; width: 100%; min-height: 100vh; flex-direction: row; }
 
-        /* ================= PRELOADER 1 (INITIAL BOOT) ================= */
+        /* ================= MODERN PRELOADER 1 ================= */
         #initialPreloader {
             position: fixed; inset: 0; background: var(--bg-white); z-index: 9999999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: opacity 0.5s ease;
         }
-        .cyber-spinner {
-            width: 60px; height: 60px; border: 4px solid var(--border-light);
-            border-top: 4px solid var(--primary-blue); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
+        .modern-spinner {
+            width: 70px; height: 70px; border-radius: 50%;
+            border: 4px solid transparent; border-top-color: var(--primary-blue);
+            border-bottom-color: var(--accent-orange);
+            animation: modernSpin 1.2s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+            margin-bottom: 25px;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360px); } }
-        .cyber-text { font-family: var(--font-code); font-weight: 700; color: var(--primary-blue); font-size: 16px; letter-spacing: 2px;}
+        @keyframes modernSpin { 100% { transform: rotate(360deg); } }
+        .cyber-text { font-family: var(--font-main); font-weight: 800; color: var(--primary-blue); font-size: 16px; letter-spacing: 3px; text-transform: uppercase; animation: pulseGlow 1.5s infinite;}
+        @keyframes pulseGlow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        /* ================= LOGIN SCREEN (GLASSMORPHISM & ANIMATED) ================= */
+        /* ================= PREMIUM LOGIN SCREEN ================= */
         #loginOverlay {
             position: fixed; inset: 0; z-index: 999998;
             display: flex; justify-content: center; align-items: center; padding: 20px;
-            /* Premium Blue Gradient Background */
             background: linear-gradient(-45deg, #051630, #1e3a8a, #0284c7, #0f172a);
-            background-size: 400% 400%;
-            animation: gradientBG 10s ease infinite;
-            transition: opacity 0.5s ease;
+            background-size: 400% 400%; animation: gradientBG 10s ease infinite; transition: opacity 0.5s ease;
         }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        .login-card {
-            /* Glassmorphism Effect */
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            padding: 40px 30px; border-radius: 24px; width: 100%; max-width: 400px;
-            text-align: center;
-            /* Smooth Entrance Animation */
-            animation: cardPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            opacity: 0; transform: translateY(30px) scale(0.9);
+        .login-wrapper {
+            display: flex; width: 100%; max-width: 850px; background: var(--bg-white); border-radius: 20px; overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); animation: cardPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0; transform: translateY(30px) scale(0.95);
         }
-        @keyframes cardPopIn {
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .login-header { margin-bottom: 30px; }
-        .login-header i { 
-            font-size: 45px; color: #60a5fa; margin-bottom: 15px; 
-            filter: drop-shadow(0 0 15px rgba(96,165,250,0.5));
-        }
-        .login-header h2 { color: #ffffff; font-weight: 900; font-size: 24px; margin-bottom: 5px; letter-spacing: 1px;}
-        .login-header p { color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 600;}
+        @keyframes cardPopIn { to { opacity: 1; transform: translateY(0) scale(1); } }
         
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 8px;}
-        .input-group input {
-            width: 100%; padding: 14px 15px; border-radius: 10px;
-            font-size: 15px; font-weight: 600; outline: none; transition: 0.3s;
-            font-family: var(--font-main); letter-spacing: 1px;
-            /* Glass Input */
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #fff;
+        .login-left {
+            width: 45%; background: linear-gradient(135deg, var(--primary-blue), #1e3a8a); padding: 50px 30px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #fff; position: relative;
         }
-        .input-group input::placeholder { color: rgba(255, 255, 255, 0.4); }
-        .input-group input:focus { 
-            border-color: #60a5fa; 
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 15px rgba(96, 165, 250, 0.3);
-        }
-        .input-group input[readonly] { 
-            background: rgba(0, 0, 0, 0.2); 
-            color: #34d399; 
-            border-color: rgba(255, 255, 255, 0.05); 
-            cursor: not-allowed;
-        }
+        .login-left::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.5; }
+        .login-left i { font-size: 60px; color: #60a5fa; margin-bottom: 20px; z-index: 1;}
+        .login-left h2 { font-size: 28px; font-weight: 900; margin-bottom: 10px; z-index: 1; line-height: 1.2;}
+        .login-left p { font-size: 14px; font-weight: 500; opacity: 0.8; z-index: 1;}
+
+        .login-right { width: 55%; padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; background: var(--bg-white); }
+        .login-right h3 { font-size: 24px; color: var(--text-dark); font-weight: 800; margin-bottom: 5px; }
+        .login-right > p { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 30px; }
+
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group label { display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;}
+        .input-group input { width: 100%; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 600; border: 2px solid var(--border-light); background: #f8fafc; color: var(--text-dark); outline: none; transition: 0.3s; font-family: var(--font-main); letter-spacing: 1px;}
+        .input-group input::placeholder { color: #94a3b8; font-weight: 500; }
+        .input-group input:focus { border-color: var(--primary-blue); background: #fff; box-shadow: 0 4px 15px rgba(15, 28, 64, 0.05);}
+        .input-group input[readonly] { background: #e2e8f0; color: var(--accent-green); cursor: not-allowed;}
         
-        .login-btn {
-            width: 100%; padding: 15px; 
-            background: linear-gradient(135deg, #2563eb, #6366f1); 
-            color: #fff; font-size: 16px; letter-spacing: 1px;
-            font-weight: 800; border: none; border-radius: 10px; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
-        }
-        .login-btn:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 15px 25px rgba(37, 99, 235, 0.5);
-        }
-        #loginError { 
-            color: #f87171; font-size: 13px; font-weight: 700; 
-            text-align: center; margin-top: 15px; display: none; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        /* Auto-Suggest Dropdown Box CSS */
+        .suggestions-box { position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 1px solid var(--border-light); border-radius: 8px; margin-top: 5px; max-height: 150px; overflow-y: auto; z-index: 10; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .suggestion-item { padding: 10px 15px; font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center;}
+        .suggestion-item:hover { background: var(--primary-light); color: var(--primary-blue); }
+        .suggestion-item span { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+        .login-btn { width: 100%; padding: 16px; margin-top: 10px; background: var(--primary-blue); color: #fff; font-size: 16px; letter-spacing: 1px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .login-btn:hover { background: #1e3a8a; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(15, 28, 64, 0.2);}
+        #loginError { color: var(--danger); font-size: 13px; font-weight: 700; text-align: center; margin-top: 15px; display: none; }
+
+        @media screen and (max-width: 768px) {
+            .login-wrapper { flex-direction: column; max-width: 400px; }
+            .login-left { width: 100%; padding: 40px 20px; }
+            .login-right { width: 100%; padding: 40px 25px; }
         }
 
-        /* ================= PRELOADER 2 (ACCESS GRANTED) ================= */
+        /* ================= MODERN PRELOADER 2 ================= */
         #portalPreloader {
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.98); z-index: 999997;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease;
+            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); z-index: 999997;
+            display: none; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease;
         }
-        .terminal-loader { width: 90%; max-width: 400px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); overflow: hidden; }
+        .terminal-loader { width: 90%; max-width: 420px; background: #0f172a; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; box-shadow: 0 0 40px rgba(16, 185, 129, 0.2); overflow: hidden; }
         .terminal-header { background: #020617; padding: 12px 15px; display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
         .terminal-header .dot { width: 12px; height: 12px; border-radius: 50%; }
         .dot.red { background: #ef4444; } .dot.yellow { background: #f59e0b; } .dot.green { background: #10b981; }
-        .terminal-header .title { margin-left: 10px; font-size: 13px; color: #cbd5e1; font-family: var(--font-code); font-weight: 600;}
-        .terminal-body { padding: 25px 20px; font-family: var(--font-code); font-size: 15px; color: #e2e8f0; line-height: 1.6; text-align: left;}
-        .typing-text { margin-top: 15px; color: #60a5fa; font-weight: bold; display: flex; align-items: center; justify-content: center; }
-        .success-flash { margin-top: 15px; color: #34d399; font-weight: bold; display: none; text-align: center; }
+        .terminal-header .title { margin-left: 10px; font-size: 13px; color: #10b981; font-family: var(--font-code); font-weight: 600;}
+        .terminal-body { padding: 30px 25px; font-family: var(--font-code); font-size: 15px; color: #e2e8f0; line-height: 1.8; text-align: left;}
+        .typing-text { color: #60a5fa; font-weight: bold; margin-bottom: 10px;}
+        .success-flash { margin-top: 20px; color: #10b981; font-weight: bold; display: none; text-align: center; font-size: 18px; text-shadow: 0 0 10px rgba(16,185,129,0.5);}
         .cursor { display: inline-block; width: 8px; height: 16px; background: #60a5fa; animation: blink 1s step-end infinite; margin-left: 5px;}
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* ================= SIDEBAR ================= */
-        .sidebar {
-            width: var(--sidebar-width); background: var(--bg-white); height: 100vh; position: fixed; top: 0; left: 0;
-            display: flex; flex-direction: column; border-right: 1px solid var(--border-light); z-index: 1000; transition: transform 0.3s ease;
-        }
+        /* ================= SIDEBAR & DROPDOWN ================= */
+        .sidebar { width: var(--sidebar-width); background: var(--bg-white); height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; border-right: 1px solid var(--border-light); z-index: 1000; transition: transform 0.3s ease; }
         .sidebar-brand { padding: 25px 20px; font-size: 24px; font-weight: 800; color: var(--primary-blue); display: flex; align-items: center; gap: 10px; letter-spacing: 1px; }
         .sidebar-brand span { color: var(--accent-orange); }
 
         .sidebar-menu { list-style: none; padding: 0 15px; flex-grow: 1; overflow-y: auto; }
         .sidebar-menu::-webkit-scrollbar { display: none; }
         .sidebar-menu li { margin-bottom: 5px; }
-        .sidebar-menu button {
-            width: 100%; background: transparent; border: none; color: var(--text-dark); padding: 12px 20px;
-            border-radius: 25px; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer;
-            display: flex; align-items: center; gap: 15px; transition: all 0.3s;
-        }
+        .sidebar-menu button { width: 100%; background: transparent; border: none; color: var(--text-dark); padding: 12px 20px; border-radius: 25px; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: all 0.3s; }
         .sidebar-menu button i { font-size: 16px; color: var(--text-muted); width: 20px; text-align: center;}
         .sidebar-menu button:hover { background: #f8fafc; color: var(--primary-blue);}
         .sidebar-menu button:hover i { color: var(--primary-blue); }
         .sidebar-menu button.active { background: var(--primary-blue); color: #fff; font-weight: 700; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2);}
         .sidebar-menu button.active i { color: #fff; }
 
+        .nav-item-dropdown { flex-direction: column; align-items: stretch !important; }
+        .dropdown-menu { list-style: none; padding-left: 15px; display: none; margin-top: 5px;}
+        .dropdown-menu.show { display: block; animation: slideDown 0.3s ease;}
+        .dropdown-arrow { margin-left: auto; transition: transform 0.3s; font-size: 12px !important; }
+        .show-dropdown .dropdown-arrow { transform: rotate(180deg); }
+        .dropdown-menu button { padding: 10px 20px; font-size: 14px; opacity: 0.8;}
+        @keyframes slideDown { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+
         .dev-badge { margin: 15px; padding: 15px; background: #f8fafc; border: 1px solid var(--border-light); border-radius: 16px; text-align: center; }
         .dev-badge p { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px;}
         .dev-badge h4 { font-size: 13px; color: var(--primary-blue); font-weight: 900; line-height: 1.4;}
 
-        /* ================= MAIN CONTENT AREA ================= */
+        /* ================= MAIN CONTENT & HEADER ================= */
         .main-wrapper { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; width: calc(100% - var(--sidebar-width)); }
-
-        /* ================= TOP HEADER ================= */
         .top-header { background: var(--bg-white); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 99;}
-        
-        /* Flex spacer to push icons to the right since text is removed */
         .header-spacer { flex-grow: 1; }
-        
         .header-icons { display: flex; align-items: center; gap: 12px; }
-        .header-icon {
-            width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; justify-content: center; align-items: center;
-            color: var(--text-muted); cursor: pointer; border: 1px solid var(--border-light); font-size: 14px; transition: 0.3s;
-        }
+        .header-icon { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; justify-content: center; align-items: center; color: var(--text-muted); cursor: pointer; border: 1px solid var(--border-light); font-size: 14px; transition: 0.3s; }
         .header-icon:hover { background: var(--primary-light); color: var(--primary-blue); border-color: var(--primary-blue); }
         .mobile-toggle { display: none; background: transparent; border: none; font-size: 22px; color: var(--primary-blue); cursor: pointer;}
 
-        /* ================= DEPT HERO ANIMATION ================= */
         .dept-hero { display: flex; justify-content: center; align-items: center; padding: 0 0 20px 0; text-align: center;}
-        .dept-hero h1 {
-            font-size: 50px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px;
-            background: linear-gradient(to right, var(--primary-blue), #2563eb, var(--accent-orange), var(--primary-blue));
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin: 0; transform-origin: top center;
-            animation: shine 4s linear infinite, swingHanging 4s ease-in-out infinite, pulseBlinkGlow 2.5s infinite alternate;
-        }
+        .dept-hero h1 { font-size: 50px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; background: linear-gradient(to right, var(--primary-blue), #2563eb, var(--accent-orange), var(--primary-blue)); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; animation: shine 4s linear infinite;}
         @keyframes shine { to { background-position: 200% center; } }
-        @keyframes swingHanging { 0%, 100% { transform: rotate(-2deg) translateY(0px); } 50% { transform: rotate(2deg) translateY(-8px); } }
-        @keyframes pulseBlinkGlow { 0% { opacity: 1; text-shadow: 0 10px 25px rgba(15, 28, 64, 0.4); } 100% { opacity: 0.7; text-shadow: 0 2px 5px rgba(15, 28, 64, 0.1); } }
-
-        /* ================= BLUE BANNER ================= */
-        .blue-banner { background: var(--primary-blue); color: #fff; padding: 15px 30px; font-size: 16px; font-weight: 700; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2); }
 
         /* ================= SECTIONS & ANIMATION ================= */
         .dashboard-container { padding: 25px 30px; max-width: 1400px; margin: 0 auto; width: 100%; }
@@ -235,7 +180,6 @@
         .circle-chart-lg span { position: relative; z-index: 2; font-weight: 800; font-size: 18px; color: var(--accent-orange);}
         .progress-left-text h3 { font-size: 20px; font-weight: 800; color: var(--text-dark); margin-bottom: 5px;}
         .progress-left-text p { font-size: 14px; color: var(--text-muted); font-weight: 600;}
-        
         .progress-right { display: flex; align-items: center; gap: 20px; }
         .progress-right-text { text-align: right; }
         .progress-right-text h4 { font-size: 16px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px;}
@@ -251,13 +195,11 @@
         .dash-card.active-blue .card-title, .dash-card.active-blue .card-sub { color: #fff; }
         .dash-card.live-alert { background: var(--danger); color: #fff; border: none; box-shadow: 0 10px 25px rgba(185, 28, 28, 0.3);}
         .dash-card.live-alert .card-title, .dash-card.live-alert .card-sub { color: #fff; }
-        
         .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px;}
         .card-icon { width: 40px; height: 40px; border-radius: 50%; background: #f1f5f9; color: var(--primary-blue); display: flex; justify-content: center; align-items: center; font-size: 16px; border: 1px solid var(--border-light);}
         .dash-card.active-blue .card-icon, .dash-card.live-alert .card-icon { background: rgba(255,255,255,0.2); color: #fff; border: none;}
         .card-title { font-size: 16px; font-weight: 800; color: var(--text-dark);}
         .card-sub { font-size: 13px; color: var(--text-muted); font-weight: 600;}
-
         .line-progress-container { margin-bottom: 20px; display: flex; align-items: center; gap: 10px;}
         .line-progress-track { flex: 1; height: 5px; background: #cbd5e1; border-radius: 5px; overflow: hidden; }
         .dash-card.active-blue .line-progress-track, .dash-card.live-alert .line-progress-track { background: rgba(255,255,255,0.3); }
@@ -265,7 +207,6 @@
         .dash-card.active-blue .line-progress-fill, .dash-card.live-alert .line-progress-fill { background: #fff; }
         .line-progress-text { font-size: 12px; font-weight: 800; color: var(--text-dark);}
         .dash-card.active-blue .line-progress-text, .dash-card.live-alert .line-progress-text { color: #fff; }
-
         .card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; border-top: 1px solid var(--border-light); padding-top: 15px;}
         .dash-card.active-blue .card-footer, .dash-card.live-alert .card-footer { border-top-color: rgba(255,255,255,0.15); }
         .btn-deadline { color: var(--text-muted); display: flex; align-items: center; gap: 5px;}
@@ -278,21 +219,50 @@
         .timer-countdown { font-family: var(--font-code); font-size: 32px; font-weight: 800; letter-spacing: 2px; }
         .timer-subject { font-size: 16px; font-weight: 700; }
 
-        /* Icon Colors Base */
         .bg-blue { background: rgba(15, 28, 64, 0.1); color: var(--primary-blue); border-color: transparent;}
         .bg-orange { background: rgba(194, 65, 12, 0.1); color: var(--accent-orange); border-color: transparent;}
         .bg-green { background: rgba(4, 120, 87, 0.1); color: var(--accent-green); border-color: transparent;}
         .bg-purple { background: rgba(139, 92, 246, 0.1); color: #7c3aed; border-color: transparent;}
 
+        /* ================= DASHBOARD SPLIT LAYOUT ================= */
+        .dashboard-split { display: flex; gap: 25px; margin-bottom: 30px; align-items: stretch; }
+        .dash-left { flex: 1.6; min-width: 0; display: flex; flex-direction: column; gap: 25px; }
+        .dash-right { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 25px; }
+
+        /* ================= TRAFFIC CHART (LIVE SIMULATOR) ================= */
+        .traffic-card { background: var(--bg-white); border-radius: 16px; padding: 25px; border: 1px solid var(--border-light); box-shadow: 0 4px 15px rgba(0,0,0,0.02); height: 100%; display: flex; flex-direction: column;}
+        .traffic-chart-container { flex: 1; display: flex; align-items: flex-end; justify-content: space-between; padding: 20px 10px 10px 10px; border-bottom: 1px solid var(--border-light); margin-bottom: 15px; min-height: 180px;}
+        .traffic-bar-group { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 12%; height: 100%; justify-content: flex-end;}
+        .traffic-bar { width: 100%; max-width: 25px; background: linear-gradient(to top, var(--primary-light), var(--primary-blue)); border-radius: 6px 6px 0 0; position: relative; animation: growUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; transform-origin: bottom;}
+        .day-label { font-size: 12px; font-weight: 800; color: var(--text-muted); }
+        @keyframes growUp { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+        .traffic-info { display: flex; justify-content: space-between; align-items: center; padding: 0 10px;}
+        .traffic-info h4 { font-size: 13px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px; text-transform: uppercase;}
+        .traffic-info p { font-size: 28px; color: var(--primary-blue); font-weight: 900; font-family: var(--font-code);}
+        .live-dot { display: inline-block; width: 12px; height: 12px; background: var(--danger); border-radius: 50%; animation: pulseLive 1.5s infinite; margin-right: 8px; vertical-align: middle;}
+        @keyframes pulseLive { 0% { box-shadow: 0 0 0 0 rgba(185, 28, 28, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(185, 28, 28, 0); } 100% { box-shadow: 0 0 0 0 rgba(185, 28, 28, 0); } }
+
+        /* ================= COMPACT CALENDAR ================= */
+        .calendar-container { background: var(--bg-white); border-radius: 16px; padding: 20px; border: 1px solid var(--border-light); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .calendar-header h3 { font-size: 18px; font-weight: 800; color: var(--primary-blue); margin: 0; }
+        .calendar-header button { background: #f1f5f9; border: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; color: var(--text-dark); font-size: 12px; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .calendar-header button:hover { background: var(--primary-blue); color: #fff; }
+        .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 800; color: var(--text-muted); font-size: 11px; margin-bottom: 8px; }
+        .calendar-dates { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .calendar-date { padding: 8px 0; text-align: center; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: 0.3s; color: var(--text-dark); }
+        .calendar-date:hover:not(.empty) { background: var(--primary-light); color: var(--primary-blue); }
+        .calendar-date.empty { background: transparent; cursor: default; }
+        .calendar-date.today { background: var(--danger); color: #fff; font-weight: 800; box-shadow: 0 4px 10px rgba(185, 28, 28, 0.3); }
+
         /* ================= BOTTOM METRICS (Aptitude Engine) ================= */
-        .engine-header { font-size: 18px; font-weight: 800; color: var(--text-dark); margin-bottom: 15px;}
-        .engine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .engine-header { font-size: 18px; font-weight: 800; color: var(--text-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
+        .engine-grid { display: flex; flex-direction: column; gap: 20px; }
+        
         .engine-card { background: #fffaf5; border: 1px solid #fed7aa; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
         .engine-card.white-bg { background: #fff; border: 1px solid var(--border-light); }
-        
         .tool-title { font-size: 16px; font-weight: 800; color: var(--text-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
         
-        /* SGPA Component */
         .sgpa-inputs { display: flex; gap: 10px; margin-bottom: 15px; width: 100%;}
         .sgpa-inputs select { flex: 1; padding: 10px; border: 1px solid var(--border-light); border-radius: 8px; outline: none; font-size: 13px; font-weight: 600; background: #fff;}
         .sgpa-inputs select:focus { border-color: var(--primary-blue); }
@@ -303,7 +273,6 @@
         .sgpa-result { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px 15px; border-radius: 8px; border: 1px solid #fed7aa;}
         .sgpa-result h3 { font-size: 24px; font-weight: 900; color: var(--primary-blue);}
 
-        /* Attendance Component */
         .attendance-container { display: flex; align-items: center; justify-content: space-between; }
         .circle-chart-sm { width: 80px; height: 80px; border-radius: 50%; background: conic-gradient(var(--accent-green) var(--perc, 0%), #e2e8f0 0); display: flex; justify-content: center; align-items: center; position: relative; }
         .circle-chart-sm::before { content: ""; position: absolute; width: 65px; height: 65px; background: #fffaf5; border-radius: 50%; }
@@ -313,11 +282,6 @@
         .att-btn { border: 1px solid var(--border-light); background: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; transition: 0.3s;}
         .att-btn.present { color: var(--accent-green); } .att-btn.absent { color: var(--danger); }
         .att-btn.present:hover { background: #d1fae5; border-color: var(--accent-green);} .att-btn.absent:hover { background: #fee2e2; border-color: var(--danger);}
-
-        .engine-card.white-bg { flex-direction: row; align-items: center; justify-content: space-between; padding: 20px;}
-        .engine-title { font-size: 15px; font-weight: 700; color: var(--text-dark);}
-        .engine-check { width: 22px; height: 22px; border-radius: 4px; background: var(--primary-blue); color: #fff; display: flex; justify-content: center; align-items: center; font-size: 12px; }
-        .engine-uncheck { width: 22px; height: 22px; border-radius: 4px; border: 2px solid var(--border-light); background: transparent; cursor: pointer; }
 
         /* ================= MEMBERS SECTION ================= */
         .member-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-blue); margin: 0 auto 15px auto; display: block; box-shadow: 0 5px 15px rgba(15,28,64,0.15); background: #fff;}
@@ -333,64 +297,63 @@
         th { background: #f8fafc; padding: 16px 20px; text-align: left; font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border-light); }
         td { padding: 15px 20px; text-align: left; border-bottom: 1px solid var(--border-light); font-size: 14px; font-weight: 600; color: var(--text-dark); }
         tbody tr:hover { background: #f1f5f9; }
-        /* Badge Styles */
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-left: 8px; color: white;}
         .badge-cr { background: var(--primary-blue); } 
         .badge-advisor { background: var(--accent-green); }
-        .badge-core { background: var(--warning); }
+        .badge-core { background: var(--warning); } 
 
-        /* ================= CLASS ROUTINE ================= */
+        /* ================= CLASS ROUTINE (IMPROVED FONTS) ================= */
         .day-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 20px; }
         .day-tabs::-webkit-scrollbar { display: none; }
         .day-tab { background: var(--bg-white); border: 2px solid var(--border-light); color: var(--text-muted); padding: 12px 25px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; font-size: 14px;}
         .day-tab:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
         .day-tab.active { background: var(--primary-blue); border-color: var(--primary-blue); color: #fff; box-shadow: 0 4px 15px rgba(29, 59, 148, 0.3);}
         
-        .routine-card { background: var(--bg-white); border: 1px solid var(--border-light); border-left: 6px solid var(--subject-color, var(--primary-blue)); padding: 20px 25px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.3s;}
-        .routine-card:hover { transform: translateX(5px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-color: var(--border-light);}
-        .time-block { text-align: center; padding-right: 25px; border-right: 2px solid var(--border-light); min-width: 120px; }
-        .time-block .time { font-size: 24px; font-weight: 900; font-family: var(--font-code); color: var(--text-dark); }
-        .time-block .ampm { font-size: 13px; color: var(--text-muted); font-weight: 800;}
+        .routine-card { background: var(--bg-white); border: 1px solid var(--border-light); border-left: 6px solid var(--primary-blue); padding: 25px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.3s;}
+        .routine-card:hover { transform: translateX(5px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: var(--primary-blue);}
+        .time-block { text-align: center; padding-right: 25px; border-right: 2px dashed var(--border-light); min-width: 170px; }
+        /* Attractive Font for Time */
+        .time-block .time { font-size: 26px; font-weight: 900; font-family: var(--font-code); color: var(--accent-orange); letter-spacing: 1px;}
         .info-block { flex-grow: 1; }
-        .info-block h4 { font-size: 17px; color: var(--text-dark); margin-bottom: 5px; font-weight: 800;}
-        .info-block p { font-size: 13px; color: var(--text-muted); font-weight: 600;}
+        /* Attractive Font for Subject */
+        .info-block h4 { font-size: 22px; color: var(--primary-blue); margin-bottom: 8px; font-weight: 900; letter-spacing: 0.5px;}
+        .info-block p { font-size: 14px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
 
-        /* ================= SOCIAL (FIXED RESPONSIVENESS) ================= */
-        .community-box { background: var(--bg-white); border: 2px solid rgba(37, 211, 102, 0.3); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);}
-        
+        /* ================= SOCIAL & DISCUSSION (FIXED RESPONSIVENESS) ================= */
+        .community-box { background: var(--bg-white); border: 2px solid rgba(37, 211, 102, 0.3); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); width: 100%;}
         .community-main { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(37, 211, 102, 0.05); flex-wrap: wrap; }
         .wa-main-icon { width: 55px; height: 55px; background: #25D366; color: #fff; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 28px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
         .community-info { flex: 1 1 200px; }
-        
         .community-info h4 { color: var(--text-dark); font-size: 18px; font-weight: 900; margin-bottom: 4px; }
         .community-info p { color: var(--text-muted); font-size: 13px; font-weight: 600;}
-        .btn-join-main { background: #25D366; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 800; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); display: inline-block; }
+        .btn-join-main { background: #25D366; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 800; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); display: inline-block; white-space: nowrap;}
         .btn-join-main:hover { background: #16a34a; transform: translateY(-2px);}
         
-        .sub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 25px;}
+        .sub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 25px; width: 100%;}
         .sub-card { background: #fff; border: 2px solid var(--border-light); border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
         .sub-card:hover { border-color: #25D366; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(37,211,102,0.15);}
-        .sub-icon { color: #25D366; font-size: 18px; width: 35px; height: 35px; background: rgba(37,211,102,0.1); border-radius: 8px; display:flex; justify-content:center; align-items:center;}
+        .sub-icon { color: #25D366; font-size: 18px; width: 35px; height: 35px; background: rgba(37,211,102,0.1); border-radius: 8px; display:flex; justify-content:center; align-items:center; flex-shrink: 0;}
         .sub-name { color: var(--text-dark); font-size: 14px; font-weight: 800; flex:1;}
 
-        .fb-link-card { background: var(--bg-white); border: 2px solid rgba(24, 119, 242, 0.3); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 18px; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 450px; margin-top: 20px;}
+        .fb-link-card { background: var(--bg-white); border: 2px solid rgba(24, 119, 242, 0.3); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 18px; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 450px; margin-top: 20px; width: 100%;}
         .fb-link-card:hover { border-color: #1877F2; box-shadow: 0 10px 25px rgba(24, 119, 242, 0.15); transform: translateY(-3px);}
-        .fb-icon-wrapper { width: 50px; height: 50px; border-radius: 12px; background: rgba(24, 119, 242, 0.1); color: #1877F2; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.3s;}
+        .fb-icon-wrapper { width: 50px; height: 50px; border-radius: 12px; background: rgba(24, 119, 242, 0.1); color: #1877F2; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.3s; flex-shrink: 0;}
         .fb-link-card:hover .fb-icon-wrapper { background: #1877F2; color: #fff;}
+        .fb-text-content { flex: 1; }
         .fb-text-content h4 { color: var(--text-dark); font-size: 16px; font-weight: 900; margin-bottom: 4px; }
         .fb-text-content p { color: var(--text-muted); font-size: 13px; font-weight: 600;}
 
-        /* ================= DISCUSSION ================= */
-        .chat-container { background: var(--bg-white); border-radius: 16px; padding: 25px; border: 1px solid var(--border-light); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);}
+        .chat-container { background: var(--bg-white); border-radius: 16px; padding: 25px; border: 1px solid var(--border-light); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); width: 100%;}
         .comment-input { width: 100%; border-radius: 12px; padding: 18px; border: 2px solid var(--border-light); min-height: 120px; resize: vertical; outline: none; margin-bottom: 15px; font-size: 15px; font-weight: 500; background: #f8fafc; transition: 0.3s;}
         .comment-input:focus { border-color: var(--primary-blue); background: #fff;}
         .wa-btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-send { background: rgba(37, 211, 102, 0.1); color: #16a34a; border: 2px solid rgba(37, 211, 102, 0.3); padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; font-size: 14px;}
+        .btn-send { background: rgba(37, 211, 102, 0.1); color: #16a34a; border: 2px solid rgba(37, 211, 102, 0.3); padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; font-size: 14px; white-space: nowrap;}
         .btn-send:hover { background: #25D366; color: #fff; border-color: #25D366; transform: translateY(-2px);}
         
-        .public-comments { margin-top: 25px; display: flex; flex-direction: column; gap: 15px; }
-        .comment-msg { border-radius: 16px; padding: 20px; display: flex; gap: 15px; background: #f8fafc; border: 1px solid var(--border-light);}
+        .public-comments { margin-top: 25px; display: flex; flex-direction: column; gap: 15px; width: 100%;}
+        .comment-msg { border-radius: 16px; padding: 20px; display: flex; gap: 15px; background: #f8fafc; border: 1px solid var(--border-light); width: 100%;}
         .comment-avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; color: #fff; background: var(--primary-blue); flex-shrink: 0; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2);}
+        .comment-content { flex: 1; }
         .comment-content h5 { color: var(--text-dark); font-size: 15px; margin-bottom: 5px; font-weight: 900;}
         .comment-content span { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-left: 10px; }
         .comment-content p { color: var(--text-dark); font-size: 14px; line-height: 1.6; font-weight: 600;}
@@ -400,71 +363,75 @@
             .sidebar { transform: translateX(-100%); }
             .sidebar.show { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.1);}
             .main-wrapper { margin-left: 0; width: 100%; }
-            
             .top-header { padding: 15px 20px; gap: 10px;}
             .mobile-toggle { display: block; margin-right: auto;}
-            
             .header-icons { gap: 8px; }
             .header-icon { width: 32px; height: 32px; font-size: 12px; }
-
-            .progress-banner-card { flex-direction: column; align-items: flex-start; gap: 20px;}
-            .progress-right { width: 100%; justify-content: flex-start; margin-top: 10px;}
             .dept-hero h1 { font-size: 32px; letter-spacing: 2px;}
+            .dashboard-split { flex-direction: column; gap: 20px;}
+            .dash-left, .dash-right { width: 100%; }
             
-            .table-header { flex-direction: column; align-items: flex-start;}
-            .search-box { max-width: 100%; }
-            .routine-card { flex-direction: column; align-items: flex-start; gap: 10px; padding: 15px; }
-            .time-block { border-right: none; border-bottom: 2px solid var(--border-light); padding-right: 0; padding-bottom: 10px; width: 100%; text-align: left;}
+            .routine-card { flex-direction: column; align-items: flex-start; gap: 10px; padding: 20px; }
+            .time-block { border-right: none; border-bottom: 2px dashed var(--border-light); padding-right: 0; padding-bottom: 10px; width: 100%; text-align: left;}
+            .time-block .time { font-size: 22px; }
+            .info-block h4 { font-size: 18px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ================= PRELOADER 1 (SYSTEM INITIALIZATION) ================= -->
+    <!-- ================= PRELOADER 1 (MODERN SPINNER) ================= -->
     <div id="initialPreloader">
-        <div class="cyber-spinner"></div>
-        <div class="cyber-text">INITIALIZING SYSTEM...</div>
+        <div class="modern-spinner"></div>
+        <div class="cyber-text">System Booting</div>
     </div>
 
-    <!-- ================= SECURE LOGIN SCREEN ================= -->
+    <!-- ================= SECURE LOGIN SCREEN (Premium Split Design) ================= -->
     <div id="loginOverlay" style="display: none;">
-        <div class="login-card">
-            <div class="login-header">
-                <i class="fas fa-user-shield"></i>
-                <h2>Secure Portal Login</h2>
-                <p>Enter your details to access CSE 65-C</p>
+        <div class="login-wrapper">
+            <!-- Left Branding Side -->
+            <div class="login-left">
+                <i class="fas fa-fingerprint"></i>
+                <h2>Dep: CSE 65 C</h2>
+                <p>Welcome to the secure e-Learning Portal. Access course materials, assignments, and routines seamlessly.</p>
             </div>
             
-            <div class="input-group">
-                <label>Student ID</label>
-                <!-- Disabled Auto Fill completely -->
-                <input type="text" id="loginId" placeholder="e.g. 261-115-111" autocomplete="off" name="no-fill-id">
+            <!-- Right Form Side -->
+            <div class="login-right">
+                <h3>Sign In</h3>
+                <p>Enter your credentials to continue</p>
+                
+                <div class="input-group">
+                    <label>Student ID</label>
+                    <input type="text" id="loginId" placeholder="261-115-111" autocomplete="off" name="no-fill-id" maxlength="11">
+                    <div id="idSuggestions" class="suggestions-box"></div>
+                </div>
+                <div class="input-group">
+                    <label>Student Name</label>
+                    <input type="text" id="loginName" placeholder="Auto-filled via Database" readonly tabindex="-1">
+                </div>
+                <div class="input-group">
+                    <label>Portal Password</label>
+                    <input type="password" id="loginPwd" placeholder="Enter Password" autocomplete="new-password">
+                </div>
+                
+                <button class="login-btn" onclick="attemptLogin()">Secure Login <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
+                <div id="loginError">Invalid ID or Password!</div>
             </div>
-            <div class="input-group">
-                <label>Student Name</label>
-                <input type="text" id="loginName" placeholder="Auto-filled via Database" readonly tabindex="-1">
-            </div>
-            <div class="input-group">
-                <label>Portal Password</label>
-                <input type="password" id="loginPwd" placeholder="Enter Password" autocomplete="new-password">
-            </div>
-            
-            <button class="login-btn" onclick="attemptLogin()">Grant Access</button>
-            <div id="loginError">Invalid ID or Password!</div>
         </div>
     </div>
 
-    <!-- ================= PRELOADER 2 (DATA DECRYPTION) ================= -->
+    <!-- ================= PRELOADER 2 (ACCESS GRANTED) ================= -->
     <div id="portalPreloader">
         <div class="terminal-loader">
             <div class="terminal-header">
                 <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-                <span class="title">security_check.exe</span>
+                <span class="title">Security_Auth.exe</span>
             </div>
-            <div class="terminal-body" style="height: 160px; padding: 20px;">
-                <div class="typing-text" style="color: #10b981; margin-top:0;">> Decrypting Student Data...</div>
-                <div class="typing-text" style="margin-top: 15px;">> Authenticating Token<span class="cursor"></span></div>
-                <div class="success-flash" id="postLoginSuccess" style="text-align: center; margin-top: 15px;">[ ✓ ] Access Granted!</div>
+            <div class="terminal-body">
+                <div class="typing-text">> Connecting to secure server...</div>
+                <div class="typing-text" style="animation: pulseGlow 1s infinite;">> Verifying Student Credentials<span class="cursor"></span></div>
+                <div class="success-flash" id="postLoginSuccess"><i class="fas fa-check-circle"></i> Access Granted!</div>
             </div>
         </div>
     </div>
@@ -482,7 +449,18 @@
                 <li><button onclick="switchTab('members')"><i class="fas fa-id-badge"></i> Members</button></li>
                 <li><button onclick="switchTab('students')"><i class="fas fa-users"></i> Students Info</button></li>
                 <li><button onclick="switchTab('routineTab')"><i class="fas fa-calendar-alt"></i> Class Routine</button></li>
-                <li><button onclick="switchTab('materials')"><i class="fas fa-book"></i> Course</button></li>
+                
+                <!-- Course Dropdown -->
+                <li class="nav-item-dropdown">
+                    <button onclick="toggleDropdown('courseDropdown', this)">
+                        <i class="fas fa-book"></i> Course <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </button>
+                    <ul class="dropdown-menu" id="courseDropdown">
+                        <li><button onclick="switchTab('materials')"><i class="fas fa-folder"></i> Materials</button></li>
+                        <li><button onclick="switchTab('assignmentsTab')"><i class="fas fa-tasks"></i> Assignments</button></li>
+                    </ul>
+                </li>
+
                 <li><button onclick="switchTab('faculty')"><i class="fas fa-chalkboard-teacher"></i> Faculty</button></li>
                 <li><button onclick="switchTab('social')"><i class="fas fa-hashtag"></i> Social Media</button></li>
                 <li><button onclick="switchTab('discussion')"><i class="fas fa-comments"></i> Discussion</button></li>
@@ -516,30 +494,8 @@
                 <!-- ================= DASHBOARD TAB ================= -->
                 <div id="dashboard" class="section active">
                     
-                    <!-- Subject/Hero moved INSIDE Dashboard so it only shows on Front Page -->
                     <div class="dept-hero" style="padding-top: 0;">
                         <h1>Dep : CSE 65 C</h1>
-                    </div>
-
-                    <div class="blue-banner" style="margin: 0 0 25px 0;">
-                        Student Activity Overview
-                    </div>
-
-                    <div class="progress-banner-card">
-                        <div class="progress-left">
-                            <div class="circle-chart-lg"><span>65%</span></div>
-                            <div class="progress-left-text">
-                                <h3>Your Journey Progress</h3>
-                                <p>Overall Semester Progress</p>
-                            </div>
-                        </div>
-                        <div class="progress-right">
-                            <div class="progress-right-text">
-                                <h4>Target CGPA Secured</h4>
-                                <p><i class="fas fa-check-square"></i> I Got the Target!</p>
-                            </div>
-                            <div class="trophy-icon"><i class="fas fa-trophy"></i></div>
-                        </div>
                     </div>
 
                     <div class="cards-grid">
@@ -595,83 +551,143 @@
                                 <span class="btn-view">Visit Details</span>
                             </div>
                         </a>
-
-                        <!-- ERP Link 3 -->
-                        <a href="https://library.metrouni.edu.bd/" target="_blank" class="dash-card">
-                            <div>
-                                <div class="card-header">
-                                    <div class="card-icon bg-green"><i class="fas fa-book-reader"></i></div>
-                                    <div><div class="card-title">Library Portal</div><div class="card-sub">Digital Resources</div></div>
-                                </div>
-                                <div class="line-progress-container">
-                                    <div class="line-progress-track"><div class="line-progress-fill" style="width: 45%;"></div></div>
-                                    <span class="line-progress-text">45%</span>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <span class="btn-deadline"><i class="fas fa-link"></i> Link</span>
-                                <span class="btn-view">Visit Details</span>
-                            </div>
-                        </a>
                     </div>
 
-                    <!-- Academic Engine -->
-                    <h3 class="engine-header">Academic Tools Engine</h3>
-                    <div class="engine-grid">
+                    <!-- ================= DASHBOARD SPLIT (LEFT / RIGHT) ================= -->
+                    <div class="dashboard-split">
                         
-                        <div class="engine-card">
-                            <div class="tool-title"><i class="fas fa-calculator" style="color:var(--accent-orange);"></i> SGPA Calculator</div>
-                            <div class="sgpa-inputs">
-                                <select id="gradeSelect">
-                                    <option value="4.00">A+ (4.00)</option><option value="3.75">A (3.75)</option><option value="3.50">A- (3.50)</option><option value="3.25">B+ (3.25)</option><option value="3.00">B (3.00)</option><option value="2.75">B- (2.75)</option><option value="2.50">C+ (2.50)</option><option value="2.25">C (2.25)</option><option value="2.00">D (2.00)</option><option value="0.00">F (0.00)</option>
-                                </select>
-                                <select id="creditSelect"><option value="3">3 Cr</option><option value="1.5">1.5 Cr</option></select>
-                                <button onclick="addCourseToSGPA()"><i class="fas fa-plus"></i></button>
-                            </div>
-                            <div class="sgpa-list" id="sgpaCourseList"></div>
-                            <div class="sgpa-result">
-                                <div>
-                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Estimated SGPA</span>
-                                    <div style="margin-top: 5px;"><button onclick="resetSGPA()" style="background:transparent; border:none; color:var(--danger); font-size:11px; font-weight:800; cursor:pointer;">Reset Data</button></div>
+                        <!-- LEFT COLUMN -->
+                        <div class="dash-left">
+                            
+                            <!-- Traffic Stats Box (LIVE SIMULATOR) -->
+                            <div class="traffic-card">
+                                <h3 class="engine-header"><i class="fas fa-chart-line" style="color:var(--primary-blue);"></i> Live Traffic Analytics</h3>
+                                <div class="traffic-chart-container">
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 30%;"></div><span class="day-label">Sun</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 60%;"></div><span class="day-label">Mon</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 45%;"></div><span class="day-label">Tue</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 80%;"></div><span class="day-label">Wed</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 65%;"></div><span class="day-label">Thu</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 20%;"></div><span class="day-label">Fri</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 90%;"></div><span class="day-label">Sat</span></div>
                                 </div>
-                                <h3 id="sgpaDisplay">0.00</h3>
-                            </div>
-                        </div>
-
-                        <div class="engine-card">
-                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                                <div class="circle-chart-sm" id="attChart" style="--perc: 100%;"><span id="attPercent">100%</span></div>
-                                <div style="flex:1; padding-left:15px;">
-                                    <div class="tool-title" style="margin-bottom:5px;"><i class="fas fa-clipboard-check" style="color:var(--accent-green);"></i> Attendance</div>
-                                    <div class="att-stats">
-                                        <span>Total: <span id="attTotal" style="color:var(--text-dark);">0</span></span>
-                                        <span>Present: <span id="attPresent" style="color:var(--accent-green);">0</span></span>
-                                    </div>
-                                    <div class="att-btns">
-                                        <button class="att-btn present" onclick="updateAttendance('present')">Present</button>
-                                        <button class="att-btn absent" onclick="updateAttendance('absent')">Absent</button>
-                                    </div>
-                                    <div style="text-align:right; margin-top:5px;"><button onclick="resetAttendance()" style="background:transparent; border:none; color:var(--danger); font-size:11px; font-weight:800; cursor:pointer;">Reset</button></div>
+                                <div class="traffic-info">
+                                    <div><h4>Total Visitors</h4><p id="totalVisitorsCount">Loading...</p></div>
+                                    <div style="text-align: right;"><h4>Active Users</h4><p id="activeUsersCount"><span class="live-dot"></span> --</p></div>
                                 </div>
                             </div>
+
                         </div>
 
-                        <div class="engine-card white-bg" style="flex-direction: row; align-items: center; justify-content: space-between; padding: 20px;">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <i class="fas fa-users engine-icon-bg"></i>
-                                <div class="engine-title">Attended group sessions</div>
+                        <!-- RIGHT COLUMN: Calendar & Academic Tools -->
+                        <div class="dash-right">
+                            
+                            <!-- Compact Live Calendar -->
+                            <div class="calendar-container">
+                                <div class="calendar-header">
+                                    <button onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                                    <h3 id="monthYear">Loading...</h3>
+                                    <button onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                                <div class="calendar-days">
+                                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                </div>
+                                <div class="calendar-dates" id="calendarDates"></div>
                             </div>
-                            <div class="engine-check"><i class="fas fa-check"></i></div>
-                        </div>
 
-                        <div class="engine-card white-bg" style="flex-direction: row; align-items: center; justify-content: space-between; padding: 20px;">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <i class="fas fa-book engine-icon-bg"></i>
-                                <div class="engine-title">Booked Tasks</div>
+                            <h3 class="engine-header"><i class="fas fa-tools" style="color:var(--primary-blue);"></i> Academic Tools</h3>
+                            <div class="engine-grid">
+                                
+                                <div class="engine-card">
+                                    <div class="tool-title"><i class="fas fa-calculator" style="color:var(--accent-orange);"></i> SGPA Calculator</div>
+                                    <div class="sgpa-inputs">
+                                        <select id="gradeSelect">
+                                            <option value="4.00">A+ (4.00)</option><option value="3.75">A (3.75)</option><option value="3.50">A- (3.50)</option><option value="3.25">B+ (3.25)</option><option value="3.00">B (3.00)</option><option value="2.75">B- (2.75)</option><option value="2.50">C+ (2.50)</option><option value="2.25">C (2.25)</option><option value="2.00">D (2.00)</option><option value="0.00">F (0.00)</option>
+                                        </select>
+                                        <select id="creditSelect"><option value="3">3 Cr</option><option value="1.5">1.5 Cr</option></select>
+                                        <button onclick="addCourseToSGPA()"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                    <div class="sgpa-list" id="sgpaCourseList"></div>
+                                    <div class="sgpa-result">
+                                        <div>
+                                            <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Estimated SGPA</span>
+                                            <div style="margin-top: 5px;"><button onclick="resetSGPA()" style="background:transparent; border:none; color:var(--danger); font-size:11px; font-weight:800; cursor:pointer;">Reset Data</button></div>
+                                        </div>
+                                        <h3 id="sgpaDisplay">0.00</h3>
+                                    </div>
+                                </div>
+
+                                <div class="engine-card">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                        <div class="circle-chart-sm" id="attChart" style="--perc: 100%;"><span id="attPercent">100%</span></div>
+                                        <div style="flex:1; padding-left:15px;">
+                                            <div class="tool-title" style="margin-bottom:5px;"><i class="fas fa-clipboard-check" style="color:var(--accent-green);"></i> Attendance</div>
+                                            <div class="att-stats">
+                                                <span>Total: <span id="attTotal" style="color:var(--text-dark);">0</span></span>
+                                                <span>Present: <span id="attPresent" style="color:var(--accent-green);">0</span></span>
+                                            </div>
+                                            <div class="att-btns">
+                                                <button class="att-btn present" onclick="updateAttendance('present')">Present</button>
+                                                <button class="att-btn absent" onclick="updateAttendance('absent')">Absent</button>
+                                            </div>
+                                            <div style="text-align:right; margin-top:5px;"><button onclick="resetAttendance()" style="background:transparent; border:none; color:var(--danger); font-size:11px; font-weight:800; cursor:pointer;">Reset</button></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="engine-uncheck"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= ASSIGNMENTS SECTION (DROPDOWN MENU TAB) ================= -->
+                <div id="assignmentsTab" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Assignments & Submissions</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 30px;">Manage and submit your course assignments via Google Drive folders.</p>
+                    
+                    <div class="cards-grid">
+                        <div class="dash-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-blue"><i class="fas fa-folder-open"></i></div>
+                                <div><div class="card-title">Sociology</div><div class="card-sub">SOC 0314</div></div>
+                            </div>
+                            <div class="card-footer" style="border-top: 1px solid var(--border-light); padding-top: 15px;">
+                                <span class="btn-deadline" style="color:var(--danger)"><i class="fas fa-clock"></i> Pending</span>
+                                <a href="#" target="_blank" class="btn-view" style="text-decoration:none;">Drive Link <i class="fas fa-external-link-alt"></i></a>
+                            </div>
                         </div>
 
+                        <div class="dash-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-green"><i class="fas fa-folder-open"></i></div>
+                                <div><div class="card-title">Matrices & Vector</div><div class="card-sub">MAT 0541</div></div>
+                            </div>
+                            <div class="card-footer" style="border-top: 1px solid var(--border-light); padding-top: 15px;">
+                                <span class="btn-deadline" style="color:var(--danger)"><i class="fas fa-clock"></i> Pending</span>
+                                <a href="#" target="_blank" class="btn-view" style="text-decoration:none;">Drive Link <i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="dash-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-orange"><i class="fas fa-folder-open"></i></div>
+                                <div><div class="card-title">Basic EEE</div><div class="card-sub">EEE 0713</div></div>
+                            </div>
+                            <div class="card-footer" style="border-top: 1px solid var(--border-light); padding-top: 15px;">
+                                <span class="btn-deadline" style="color:var(--danger)"><i class="fas fa-clock"></i> Pending</span>
+                                <a href="#" target="_blank" class="btn-view" style="text-decoration:none;">Drive Link <i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="dash-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-purple"><i class="fas fa-folder-open"></i></div>
+                                <div><div class="card-title">Data Structure</div><div class="card-sub">CSE 0613</div></div>
+                            </div>
+                            <div class="card-footer" style="border-top: 1px solid var(--border-light); padding-top: 15px;">
+                                <span class="btn-deadline" style="color:var(--danger)"><i class="fas fa-clock"></i> Pending</span>
+                                <a href="#" target="_blank" class="btn-view" style="text-decoration:none;">Drive Link <i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -688,14 +704,14 @@
                         </div>
 
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
-                            <img src="sabah .jpeg" alt="Sabah" class="member-img" style="border-color: var(--primary-blue);">
+                            <img src="sabah.jpeg" alt="Sabah" class="member-img" style="border-color: var(--primary-blue);">
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Zarin Mashud Sabah</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-144</div>
                             <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
                         </div>
 
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
-                            <img src="sabbir .jpeg" alt="Sabbir" class="member-img" style="border-color: var(--primary-blue);">
+                            <img src="sabbir.jpeg" alt="Sabbir" class="member-img" style="border-color: var(--primary-blue);">
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Muhammad Sabbir Ahmed</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-111</div>
                             <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
@@ -711,10 +727,9 @@
                     </div>
                 </div>
 
-                <!-- ================= STUDENTS SECTION (PASSWORD PROTECTED & BYPASS) ================= -->
+                <!-- ================= STUDENTS SECTION ================= -->
                 <div id="students" class="section">
                     
-                    <!-- Password Protection Prompt -->
                     <div id="studentAuthPrompt" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; padding: 20px;">
                         <div style="background: var(--bg-white); border-radius: 20px; padding: 40px 30px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 15px 35px rgba(15, 28, 64, 0.05); border: 1px solid var(--border-light);">
                             <i class="fas fa-user-lock" style="font-size: 50px; color: var(--primary-blue); margin-bottom: 20px;"></i>
@@ -729,7 +744,6 @@
                         </div>
                     </div>
 
-                    <!-- Hidden Data Content (Revealed after password or auto-bypass) -->
                     <div id="studentDataContent" style="display: none;">
                         <div class="content-card-main">
                             <div class="table-header">
@@ -904,7 +918,7 @@
     </div>
 
     <script>
-        // ================= STUDENT DATABASE (Updated with Amirul's Badge) =================
+        // ================= STUDENT DATABASE =================
         const studentDatabase = [
             {id: "261-115-101", name: "Mariya Akther"}, {id: "261-115-102", name: "Md Nasirul Islam Chowdhury"},
             {id: "261-115-103", name: "Mustafizur Rahman Adil"}, {id: "261-115-104", name: "Rihma Ahmed"},
@@ -951,18 +965,60 @@
             }, 1500);
         };
 
-        // Auto-fill name based on ID
-        document.getElementById('loginId').addEventListener('input', function() {
-            const val = this.value.trim();
-            const student = studentDatabase.find(s => s.id === val);
+        // Auto-format ID input & Auto-Suggest Logic
+        document.getElementById('loginId').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, ''); 
+            let formattedVal = '';
+            for(let i = 0; i < val.length; i++) {
+                if(i === 3 || i === 6) formattedVal += '-';
+                formattedVal += val[i];
+            }
+            e.target.value = formattedVal;
+
+            // Handle Suggestions
+            const suggestionsBox = document.getElementById('idSuggestions');
+            if (formattedVal.length > 0) {
+                const matches = studentDatabase.filter(s => s.id.startsWith(formattedVal));
+                
+                if (matches.length > 0) {
+                    suggestionsBox.innerHTML = '';
+                    matches.forEach(match => {
+                        let div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.innerHTML = `<span><i class="fas fa-id-card" style="margin-right:5px; color:var(--primary-blue);"></i>${match.id}</span> <span style="color:var(--accent-orange); font-weight:700;">${match.name.split(' ')[0]}</span>`;
+                        div.onclick = function() {
+                            document.getElementById('loginId').value = match.id;
+                            document.getElementById('loginName').value = match.name;
+                            suggestionsBox.style.display = 'none';
+                        };
+                        suggestionsBox.appendChild(div);
+                    });
+                    suggestionsBox.style.display = 'block';
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            } else {
+                suggestionsBox.style.display = 'none';
+            }
+
+            // Auto-fill Name if typed completely manually
+            const student = studentDatabase.find(s => s.id === formattedVal);
             if(student) {
                 document.getElementById('loginName').value = student.name;
+                suggestionsBox.style.display = 'none'; 
             } else {
                 document.getElementById('loginName').value = "";
             }
         });
 
-        // Submit on Enter (Main Login)
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if(e.target.id !== 'loginId') {
+                document.getElementById('idSuggestions').style.display = 'none';
+            }
+        });
+
+        // Submit on Enter
         document.getElementById('loginPwd').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') attemptLogin();
         });
@@ -985,27 +1041,22 @@
                 return;
             }
 
-            // Success 
             loggedInUser = student.name.split(" ")[0]; 
-            loggedInId = student.id; // Store ID for bypass logic
+            loggedInId = student.id; 
             
             err.style.display = 'none';
             document.getElementById('loginOverlay').style.opacity = '0';
 
             // ================= BYPASS LOGIC FOR CORE MEMBERS =================
-            // Nayeem, Sabah, Sabbir, Amirul
             const coreMemberIDs = ["251-115-183", "261-115-144", "261-115-111", "261-115-141"];
             if (coreMemberIDs.includes(loggedInId)) {
-                // Instantly bypass the password prompt for these members
                 document.getElementById('studentAuthPrompt').style.display = 'none';
                 document.getElementById('studentDataContent').style.display = 'block';
             } else {
-                // Ensure the password prompt shows for everyone else
                 document.getElementById('studentAuthPrompt').style.display = 'flex';
                 document.getElementById('studentDataContent').style.display = 'none';
                 document.getElementById('studentPwd').value = '';
             }
-            // =================================================================
             
             setTimeout(() => {
                 document.getElementById('loginOverlay').style.display = 'none';
@@ -1029,7 +1080,7 @@
             }, 500);
         }
 
-        // ================= INIT PORTAL (After Login) =================
+        // ================= INIT PORTAL =================
         function initPortal() {
             populateTables();
             loadComments();
@@ -1038,13 +1089,25 @@
             setInterval(updateLiveTimer, 1000); 
             updateLiveTimer();
             loadAttendance();
+            renderCalendar(); 
+            initLiveTraffic();
+        }
+
+        // ================= LIVE TRAFFIC SIMULATOR =================
+        function initLiveTraffic() {
+            let totalVisits = localStorage.getItem('portal_total_visits') || 1425;
+            totalVisits = parseInt(totalVisits) + 1; 
+            localStorage.setItem('portal_total_visits', totalVisits);
+            document.getElementById('totalVisitorsCount').innerText = totalVisits.toLocaleString();
+
+            setInterval(() => {
+                let activeUsers = Math.floor(Math.random() * (28 - 12 + 1)) + 12;
+                document.getElementById('activeUsersCount').innerHTML = `<span class="live-dot"></span> ${activeUsers}`;
+            }, 5000);
+            document.getElementById('activeUsersCount').innerHTML = `<span class="live-dot"></span> ${Math.floor(Math.random() * (28 - 12 + 1)) + 12}`;
         }
 
         // ================= STUDENT INFO PASSWORD LOGIC =================
-        document.getElementById('studentPwd').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') checkStudentPwd();
-        });
-
         function checkStudentPwd() {
             const pwd = document.getElementById('studentPwd').value;
             const msg = document.getElementById('studentPwdMsg');
@@ -1057,16 +1120,64 @@
             }
         }
 
-        // ================= TABS & SIDEBAR =================
+        // ================= LIVE CALENDAR WIDGET =================
+        let currDate = new Date();
+        let currMonth = currDate.getMonth();
+        let currYear = currDate.getFullYear();
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        function renderCalendar() {
+            document.getElementById('monthYear').innerText = `${months[currMonth]} ${currYear}`;
+            let firstDay = new Date(currYear, currMonth, 1).getDay();
+            let lastDate = new Date(currYear, currMonth + 1, 0).getDate();
+            
+            let datesHtml = "";
+            for (let i = 0; i < firstDay; i++) {
+                datesHtml += `<div class="calendar-date empty"></div>`;
+            }
+            
+            let today = new Date();
+            for (let i = 1; i <= lastDate; i++) {
+                let isToday = i === today.getDate() && currMonth === today.getMonth() && currYear === today.getFullYear() ? "today" : "";
+                datesHtml += `<div class="calendar-date ${isToday}">${i}</div>`;
+            }
+            document.getElementById('calendarDates').innerHTML = datesHtml;
+        }
+
+        function changeMonth(dir) {
+            currMonth += dir;
+            if (currMonth < 0) { currMonth = 11; currYear--; }
+            else if (currMonth > 11) { currMonth = 0; currYear++; }
+            renderCalendar();
+        }
+
+        // ================= TABS, SIDEBAR & DROPDOWN =================
         function switchTab(tabId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
+            
+            if(event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
             if(window.innerWidth <= 992) {
                 document.getElementById('sidebar').classList.remove('show');
             }
         }
+
+        function toggleDropdown(id, element) {
+            const dropdown = document.getElementById(id);
+            const parent = element.parentElement;
+            
+            if(dropdown.classList.contains('show')){
+                dropdown.classList.remove('show');
+                parent.classList.remove('show-dropdown');
+            } else {
+                dropdown.classList.add('show');
+                parent.classList.add('show-dropdown');
+            }
+        }
+
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
 
         // ================= TABLE POPULATION & SEARCH =================
@@ -1078,8 +1189,7 @@
             let regCount = 0; let reCount = 0;
             
             studentDatabase.forEach(s => {
-                // Dynamic Badge HTML generation
-                let badgeClass = "badge-advisor"; // default
+                let badgeClass = "badge-advisor"; 
                 if(s.badge === 'CR') badgeClass = "badge-cr";
                 else if(s.badge === 'Core Member') badgeClass = "badge-core";
                 
@@ -1103,7 +1213,7 @@
             });
         }
 
-        // ================= ROUTINE LOGIC =================
+        // ================= ROUTINE LOGIC (WITH 12-HOUR FORMATTING) =================
         const routineData = {
             0: [ // Sunday
                 {sub: "Basic EEE Circuits (109)", start: "12:00", end: "13:30", teacher: "Anika Tabassum [ATB]"}, 
@@ -1129,6 +1239,15 @@
         };
         const daysArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         
+        function format12Hour(time24) {
+            let [h, m] = time24.split(":");
+            h = parseInt(h);
+            let ampm = h >= 12 ? "PM" : "AM";
+            h = h % 12;
+            h = h ? h : 12; 
+            return `${h}:${m} ${ampm}`;
+        }
+
         function initRoutine() {
             const tabsContainer = document.getElementById('routineTabs');
             tabsContainer.innerHTML = '';
@@ -1151,21 +1270,20 @@
             }
 
             routineData[dayIndex].forEach(cls => {
-                let timeDisplay = `${cls.start} - ${cls.end}`;
+                let timeDisplay = `${format12Hour(cls.start)} - ${format12Hour(cls.end)}`;
                 content.innerHTML += `
                 <div class="routine-card">
-                    <div class="time-block" style="min-width: 150px;">
-                        <div class="time" style="font-size: 20px;">${timeDisplay}</div>
+                    <div class="time-block">
+                        <div class="time">${timeDisplay}</div>
                     </div>
-                    <div class="info-block" style="flex:1;">
-                        <h4 style="color: var(--primary-blue); font-size: 20px;">${cls.sub}</h4>
-                        <p style="font-size: 14px; margin-top: 5px; color: var(--text-dark); font-weight: 700;">Teacher: <span style="color: var(--text-muted); font-weight: 500;">${cls.teacher}</span></p>
+                    <div class="info-block">
+                        <h4>${cls.sub}</h4>
+                        <p>Teacher: <span style="font-weight: 500;">${cls.teacher}</span></p>
                     </div>
                 </div>`;
             });
         }
 
-        // Live Timer in Dashboard
         function getNextClass(now) {
             let day = now.getDay();
             let currentMins = now.getHours() * 60 + now.getMinutes();
@@ -1302,11 +1420,11 @@
             comments.forEach(c => {
                 let authorName = c.author ? c.author : "Student";
                 clist.innerHTML += `
-                    <div class="comment-msg" style="padding: 15px; border-radius: 12px; background: #f8fafc; border: 1px solid var(--border-light); margin-bottom: 15px; display: flex; gap: 15px;">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 16px; color: #fff; background: var(--primary-blue); flex-shrink: 0;"><i class="fas fa-user"></i></div>
-                        <div>
-                            <h5 style="color: var(--text-dark); font-size: 14px; margin-bottom: 5px; font-weight: 800;">${authorName} <span style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-left: 10px;">${c.time}</span></h5>
-                            <p style="color: var(--text-dark); font-size: 13px; line-height: 1.5; font-weight: 500;">${c.text}</p>
+                    <div class="comment-msg">
+                        <div class="comment-avatar"><i class="fas fa-user"></i></div>
+                        <div class="comment-content">
+                            <h5>${authorName} <span>${c.time}</span></h5>
+                            <p>${c.text}</p>
                         </div>
                     </div>`;
             });
