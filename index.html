@@ -951,7 +951,7 @@
         
         // *************************************************************************
         // আপনার নতুন দেওয়া সঠিক লিংকটি এখানে বসানো হলো
-        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbwwifENo-aiFACLE5NVGea-BL1pK8IT6_WzsB0gvj3-xWLxu2Zpvefh75NhuCQmThoQ/exec";
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxHFQW3IxnEszqDsqUjBl9n1-m_DtpwrYS1xPbWwLNWy1lG8jpgtQduEyPl7tX4TsJP/exec";
         // *************************************************************************
 
         let loggedInUser = "Student";
@@ -970,20 +970,34 @@
             }, 1000);
         };
 
-        // গুগল শিট থেকে সব ডেটা একসাথে আনার ফাংশন
+        // গুগল শিট থেকে সব ডেটা একসাথে আনার ফাংশন (Smart Version)
         async function fetchPortalData() {
             try {
                 const response = await fetch(SHEET_API_URL);
                 const data = await response.json();
                 
-                // ১. Students Data
-                studentDatabase = data.Students || [];
+                // ১. Students Data (স্পেস এবং বড়-ছোট হাতের অক্ষরের সমস্যা ফিক্স করা হয়েছে)
+                let rawStudents = data.Students || [];
+                studentDatabase = rawStudents.map(s => {
+                    return {
+                        id: (s.id || s.ID || s.Id || '').toString().trim(),
+                        name: (s.name || s.Name || s.NAME || '').toString().trim(),
+                        badge: (s.badge || s.Badge || '').toString().trim(),
+                        type: (s.type || s.Type || '').toString().trim()
+                    };
+                });
                 
-                // ২. Routine Data (শিট থেকে এনে দিন অনুযায়ী সাজানো)
+                // ২. Routine Data 
                 let rawRoutine = data.Routine || [];
                 rawRoutine.forEach(r => {
-                    if(r.day !== undefined && r.day !== "") {
-                        routineData[r.day].push({ sub: r.sub, start: r.start, end: r.end, teacher: r.teacher });
+                    let dayVal = r.day !== undefined ? r.day : r.Day;
+                    if(dayVal !== undefined && dayVal !== "") {
+                        routineData[dayVal].push({ 
+                            sub: r.sub || r.Sub || '', 
+                            start: r.start || r.Start || '', 
+                            end: r.end || r.End || '', 
+                            teacher: r.teacher || r.Teacher || '' 
+                        });
                     }
                 });
 
@@ -1011,7 +1025,7 @@
 
             const suggestionsBox = document.getElementById('idSuggestions');
             if (formattedVal.length > 0) {
-                const matches = studentDatabase.filter(s => s.id && s.id.toString().startsWith(formattedVal));
+                const matches = studentDatabase.filter(s => s.id && s.id.startsWith(formattedVal));
                 
                 if (matches.length > 0) {
                     suggestionsBox.innerHTML = '';
@@ -1034,7 +1048,7 @@
                 suggestionsBox.style.display = 'none';
             }
 
-            const student = studentDatabase.find(s => s.id && s.id.toString() === formattedVal);
+            const student = studentDatabase.find(s => s.id === formattedVal);
             if(student) {
                 document.getElementById('loginName').value = student.name;
                 suggestionsBox.style.display = 'none'; 
@@ -1058,7 +1072,7 @@
             const pwdVal = document.getElementById('loginPwd').value;
             const err = document.getElementById('loginError');
             
-            const student = studentDatabase.find(s => s.id && s.id.toString() === idVal);
+            const student = studentDatabase.find(s => s.id === idVal);
             
             if(!student) {
                 err.innerText = "Error: Student ID not found in database!";
@@ -1384,8 +1398,8 @@
                     <div class="card-icon ${course.color || 'bg-blue'}" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;">
                         <i class="fas ${course.icon || 'fa-folder'}"></i>
                     </div>
-                    <div class="card-title">${course.title}</div>
-                    <div class="card-sub" style="margin-top: 5px;">${course.code}</div>
+                    <div class="card-title">${course.title || course.Title}</div>
+                    <div class="card-sub" style="margin-top: 5px;">${course.code || course.Code}</div>
                 </div>`;
             });
         }
@@ -1402,14 +1416,14 @@
 
             noticesData.forEach(notice => {
                 noticeContainer.innerHTML += `
-                    <div class="content-card-main" style="border-left: 6px solid ${notice.color || 'var(--primary-blue)'}; margin-bottom: 20px;">
+                    <div class="content-card-main" style="border-left: 6px solid ${notice.color || notice.Color || 'var(--primary-blue)'}; margin-bottom: 20px;">
                         <h4 style="font-size: 18px; margin-bottom: 10px; color: var(--text-dark); display: flex; align-items: center; gap:12px; font-weight: 900;">
-                            <div style="width:35px; height:35px; font-size:16px; border-radius:10px; display:flex; justify-content:center; align-items:center; background: ${notice.color || 'var(--primary-blue)'}20;">
-                                <i class="fas ${notice.icon || 'fa-bell'}" style="color: ${notice.color || 'var(--primary-blue)'};"></i>
+                            <div style="width:35px; height:35px; font-size:16px; border-radius:10px; display:flex; justify-content:center; align-items:center; background: ${notice.color || notice.Color || 'var(--primary-blue)'}20;">
+                                <i class="fas ${notice.icon || notice.Icon || 'fa-bell'}" style="color: ${notice.color || notice.Color || 'var(--primary-blue)'};"></i>
                             </div> 
-                            <span>${notice.title}</span>
+                            <span>${notice.title || notice.Title}</span>
                         </h4>
-                        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; font-weight: 600;">${notice.body}</p>
+                        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; font-weight: 600;">${notice.body || notice.Body}</p>
                     </div>`;
             });
         }
