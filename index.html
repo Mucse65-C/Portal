@@ -478,7 +478,6 @@
                 <li><button onclick="switchTab('members')"><i class="fas fa-id-badge"></i> Members</button></li>
                 <li><button onclick="switchTab('students')"><i class="fas fa-users"></i> Students Info</button></li>
                 
-                <!-- Schedules Dropdown (Routine + Bus) -->
                 <li class="nav-item-dropdown">
                     <button onclick="toggleDropdown('routineDropdown', this)">
                         <i class="fas fa-calendar-alt"></i> Schedules <i class="fas fa-chevron-down dropdown-arrow"></i>
@@ -489,7 +488,6 @@
                     </ul>
                 </li>
                 
-                <!-- Course Dropdown -->
                 <li class="nav-item-dropdown">
                     <button onclick="toggleDropdown('courseDropdown', this)">
                         <i class="fas fa-book"></i> Course <i class="fas fa-chevron-down dropdown-arrow"></i>
@@ -532,7 +530,6 @@
 
                 <!-- ================= DASHBOARD TAB ================= -->
                 <div id="dashboard" class="section active">
-                    
                     <div class="dept-hero" style="padding-top: 0;">
                         <h1>Dep : CSE 65 C</h1>
                     </div>
@@ -590,8 +587,6 @@
                     </div>
 
                     <div class="dashboard-split">
-                        
-                        <!-- LEFT COLUMN -->
                         <div class="dash-left">
                             <div class="traffic-card">
                                 <h3 class="engine-header"><i class="fas fa-chart-line" style="color:var(--primary-blue);"></i> Live Traffic Analytics</h3>
@@ -611,7 +606,6 @@
                             </div>
                         </div>
 
-                        <!-- RIGHT COLUMN -->
                         <div class="dash-right">
                             <div class="calendar-container">
                                 <div class="calendar-header">
@@ -739,28 +733,6 @@
                                 <a href="#" target="_blank" class="btn-view" style="text-decoration:none;">Drive Link <i class="fas fa-external-link-alt"></i></a>
                             </div>
                         </div>
-
-                        <div class="dash-card">
-                            <div class="card-header">
-                                <div class="card-icon bg-orange"><i class="fas fa-folder-open"></i></div>
-                                <div><div class="card-title">Basic EEE</div><div class="card-sub">EEE 0713</div></div>
-                            </div>
-                            <div class="card-footer" style="border-top: 1px solid var(--border-light); padding-top: 15px;">
-                                <span class="btn-deadline" style="color:var(--danger)"><i class="fas fa-clock"></i> Pending</span>
-                                <a href="#" target="_blank" class="btn-view" style="text-decoration:none;">Drive Link <i class="fas fa-external-link-alt"></i></a>
-                            </div>
-                        </div>
-
-                        <div class="dash-card">
-                            <div class="card-header">
-                                <div class="card-icon bg-purple"><i class="fas fa-folder-open"></i></div>
-                                <div><div class="card-title">Data Structure</div><div class="card-sub">CSE 0613</div></div>
-                            </div>
-                            <div class="card-footer" style="border-top: 1px solid var(--border-light); padding-top: 15px;">
-                                <span class="btn-deadline" style="color:var(--danger)"><i class="fas fa-clock"></i> Pending</span>
-                                <a href="#" target="_blank" class="btn-view" style="text-decoration:none;">Drive Link <i class="fas fa-external-link-alt"></i></a>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -768,7 +740,6 @@
                 <div id="members" class="section">
                     <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Core Members & Representatives</h2>
                     <div class="cards-grid">
-                        
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--accent-green);">
                             <img src="nayeem.jpg" alt="Nayeem Nur" class="member-img" style="border-color: var(--accent-green);">
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Jannatull Nayeem Nur</div>
@@ -796,13 +767,11 @@
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-141</div>
                             <div style="margin-top: 15px;"><span class="badge badge-core" style="font-size: 13px; padding: 6px 15px;">Core Member & Management Lead</span></div>
                         </div>
-
                     </div>
                 </div>
 
                 <!-- ================= STUDENTS SECTION ================= -->
                 <div id="students" class="section">
-                    
                     <div id="studentAuthPrompt" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; padding: 20px;">
                         <div style="background: var(--bg-white); border-radius: 20px; padding: 40px 30px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 15px 35px rgba(15, 28, 64, 0.05); border: 1px solid var(--border-light);">
                             <i class="fas fa-user-lock" style="font-size: 50px; color: var(--primary-blue); margin-bottom: 20px;"></i>
@@ -869,27 +838,8 @@
                 <!-- ================= COURSE SECTION ================= -->
                 <div id="materials" class="section">
                     <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Course & Folders</h2>
-                    <div class="cards-grid">
-                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1yA0vN80p_ZxOuM-I4uX-D4oK0ieF7nPK?usp=drive_link', '_blank')">
-                            <div class="card-icon bg-orange" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-file-pdf"></i></div>
-                            <div class="card-title">Course Outlines</div><div class="card-sub" style="margin-top: 5px;">All Subjects Syllabus</div>
-                        </div>
-                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1Ki_0A8ZHLQg554Ry7wdsnKlvwU0AWfIw?usp=drive_link', '_blank')">
-                            <div class="card-icon bg-blue" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-users"></i></div>
-                            <div class="card-title">Introduction to Sociology</div><div class="card-sub" style="margin-top: 5px;">SOC 0314 1311</div>
-                        </div>
-                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1dhMTNuMwSTq1NRIhjndApGAPs244tYuB?usp=drive_link', '_blank')">
-                            <div class="card-icon bg-green" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-cube"></i></div>
-                            <div class="card-title">Matrices, Geometry & Vector</div><div class="card-sub" style="margin-top: 5px;">MAT 0541 1307</div>
-                        </div>
-                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1dcRHHcK8aY4hELfIbbSj_EA-EKpiDZHq?usp=drive_link', '_blank')">
-                            <div class="card-icon bg-orange" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-bolt"></i></div>
-                            <div class="card-title">Basic EEE Circuits</div><div class="card-sub" style="margin-top: 5px;">EEE 0713 1305 / 1306</div>
-                        </div>
-                        <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('https://drive.google.com/drive/folders/1irwSaNiACWvmIxh3bk4veLDTCDUjZ6a3?usp=drive_link', '_blank')">
-                            <div class="card-icon bg-purple" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-database"></i></div>
-                            <div class="card-title">Data Structure</div><div class="card-sub" style="margin-top: 5px;">CSE 0613 1307 / 1308</div>
-                        </div>
+                    <div class="cards-grid" id="coursesGrid">
+                        <!-- Populated Dynamically via Google Sheets -->
                     </div>
                 </div>
 
@@ -965,7 +915,9 @@
                 </div>
 
                 <!-- Notices Section -->
-                <div id="notices" class="section"></div>
+                <div id="notices" class="section">
+                    <!-- Populated Dynamically via Google Sheets -->
+                </div>
 
                 <!-- ================= DISCUSSION SECTION ================= -->
                 <div id="discussion" class="section">
@@ -991,19 +943,23 @@
     </div>
 
     <script>
-        // ================= STUDENT DATABASE (Dynamic from Google Sheets) =================
+        // ================= GLOBAL DATA VARIABLES =================
         let studentDatabase = []; 
+        let routineData = {0: [], 1: [], 2: [], 3: [], 4: []};
+        let coursesData = [];
+        let noticesData = [];
         
-        // এখানে আপনার ওয়েব অ্যাপ URL টি দেওয়া হলো
-        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbw1iYSrNjmkGxRKtHxb3fG7Q7xblI8OdM7jIud2bXHHlYMQ5ydy6wlnW4lQNPj8IvS6/exec";
+        // *************************************************************************
+        // আপনার নতুন দেওয়া সঠিক লিংকটি এখানে বসানো হলো
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxHFQW3IxnEszqDsqUjBl9n1-m_DtpwrYS1xPbWwLNWy1lG8jpgtQduEyPl7tX4TsJP/exec";
+        // *************************************************************************
 
         let loggedInUser = "Student";
         let loggedInId = "";
 
-        // পেজ লোড হওয়ার ফাংশন আপডেট করা হলো
+        // পেজ লোড হওয়ার ফাংশন
         window.onload = async () => {
-            // পেজ লোড হওয়ার সময় ব্যাকগ্রাউন্ডে গুগল শিট থেকে ডেটা আনবে
-            await fetchStudentData();
+            await fetchPortalData();
 
             setTimeout(() => {
                 document.getElementById('initialPreloader').style.opacity = '0';
@@ -1014,15 +970,30 @@
             }, 1000);
         };
 
-        // গুগল শিট থেকে ডেটা আনার ফাংশন
-        async function fetchStudentData() {
+        // গুগল শিট থেকে সব ডেটা একসাথে আনার ফাংশন
+        async function fetchPortalData() {
             try {
                 const response = await fetch(SHEET_API_URL);
                 const data = await response.json();
                 
-                // গুগল শিট থেকে আসা ডেটা আমাদের পোর্টালে সেভ করা
-                studentDatabase = data;
-                console.log("Students loaded from Google Sheets successfully!");
+                // ১. Students Data
+                studentDatabase = data.Students || [];
+                
+                // ২. Routine Data (শিট থেকে এনে দিন অনুযায়ী সাজানো)
+                let rawRoutine = data.Routine || [];
+                rawRoutine.forEach(r => {
+                    if(r.day !== undefined && r.day !== "") {
+                        routineData[r.day].push({ sub: r.sub, start: r.start, end: r.end, teacher: r.teacher });
+                    }
+                });
+
+                // ৩. Courses Data
+                coursesData = data.Courses || [];
+
+                // ৪. Notices Data
+                noticesData = data.Notices || [];
+
+                console.log("All portal data loaded successfully from Google Sheets!");
             } catch (error) {
                 console.error("ডেটা লোড করতে সমস্যা হয়েছে!", error);
                 alert("ডেটাবেস কানেক্ট করা যায়নি। ইন্টারনেট সংযোগ চেক করুন।");
@@ -1141,7 +1112,8 @@
         function initPortal() {
             populateTables();
             loadComments();
-            fetchNotices(); 
+            renderCourses();
+            renderNotices(); 
             initRoutine(); 
             setInterval(updateLiveTimer, 1000); 
             updateLiveTimer();
@@ -1255,7 +1227,6 @@
                 
                 let badgeHtml = s.badge ? `<span class="badge ${badgeClass}">${s.badge}</span>` : "";
 
-                // Checking based on the 'type' column
                 if(s.type === 're' || s.type === 'Re' || s.type === 'RE') {
                     reCount++;
                     reTbody.innerHTML += `<tr><td>${reCount}</td><td>${s.id}</td><td>${s.name} ${badgeHtml}</td></tr>`;
@@ -1273,29 +1244,7 @@
                 row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
             });
         }
-
-        const routineData = {
-            0: [ // Sunday
-                {sub: "Basic EEE Circuits (109)", start: "12:00", end: "13:30", teacher: "Anika Tabassum [ATB]"}, 
-                {sub: "Introduction to Sociology (GL2)", start: "13:30", end: "15:00", teacher: "Ashikur Rahman "}
-            ],
-            1: [ // Monday
-                {sub: "Basic EEE Circuits (109)", start: "09:00", end: "10:30", teacher: "Anika Tabassum [ATB]"}, 
-                {sub: "Data Structure Lab (311)", start: "12:00", end: "15:00", teacher: "Nasif Istiak Remon [NIR]"}
-            ],
-            2: [ // Tuesday
-                {sub: "Introduction to Sociology (GL2)", start: "13:30", end: "15:00", teacher: "Ashikur Rahman"}, 
-                {sub: "Data Structure (109)", start: "16:30", end: "18:00", teacher: "Nayem Ahmed [NMA]"}
-            ],
-            3: [ // Wednesday
-                {sub: "Basic EEE Circuits Lab (311)", start: "09:00", end: "12:00", teacher: "Md. Shadman Shakib [MSS]"}, 
-                {sub: "Matrices, Geometry & Vector (306)", start: "12:00", end: "13:30", teacher: "Ruma Das [RMD]"}
-            ],
-            4: [ // Thursday
-                {sub: "Matrices, Geometry & Vector (403)", start: "12:00", end: "13:30", teacher: "Ruma Das [RMD]"}, 
-                {sub: "Data Structure (306)", start: "16:30", end: "18:00", teacher: "Nayem Ahmed [NMA]"}
-            ]
-        };
+        
         const activeDays = [
             { index: 0, name: "Sunday" },
             { index: 1, name: "Monday" },
@@ -1305,12 +1254,15 @@
         ];
         
         function format12Hour(time24) {
-            let [h, m] = time24.split(":");
-            h = parseInt(h);
-            let ampm = h >= 12 ? "PM" : "AM";
-            h = h % 12;
-            h = h ? h : 12; 
-            return `${h}:${m} ${ampm}`;
+            if (!time24) return "";
+            try {
+                let [h, m] = time24.split(":");
+                h = parseInt(h);
+                let ampm = h >= 12 ? "PM" : "AM";
+                h = h % 12;
+                h = h ? h : 12; 
+                return `${h}:${m} ${ampm}`;
+            } catch(e) { return time24; }
         }
 
         function initRoutine() {
@@ -1360,6 +1312,7 @@
 
             if (routineData[day]) {
                 for (let cls of routineData[day]) {
+                    if(!cls.start || !cls.end) continue;
                     let startParts = cls.start.split(":");
                     let endParts = cls.end.split(":");
                     let startMins = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
@@ -1413,6 +1366,52 @@
                     iconEl.innerHTML = '<i class="fas fa-calendar-check"></i>';
                 }
             }
+        }
+
+        // ================= DYNAMIC COURSES =================
+        function renderCourses() {
+            const coursesContainer = document.getElementById('coursesGrid');
+            coursesContainer.innerHTML = '';
+            
+            if(coursesData.length === 0) {
+                coursesContainer.innerHTML = `<p style="color:var(--text-muted);">No courses loaded.</p>`;
+                return;
+            }
+
+            coursesData.forEach(course => {
+                coursesContainer.innerHTML += `
+                <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('${course.link}', '_blank')">
+                    <div class="card-icon ${course.color || 'bg-blue'}" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;">
+                        <i class="fas ${course.icon || 'fa-folder'}"></i>
+                    </div>
+                    <div class="card-title">${course.title}</div>
+                    <div class="card-sub" style="margin-top: 5px;">${course.code}</div>
+                </div>`;
+            });
+        }
+
+        // ================= DYNAMIC NOTICES =================
+        function renderNotices() {
+            const noticeContainer = document.getElementById('notices');
+            noticeContainer.innerHTML = `<h2 style="font-size: 26px; font-weight: 900; margin-bottom: 25px; color: var(--text-dark);">Notice Board</h2>`;
+            
+            if(noticesData.length === 0) {
+                noticeContainer.innerHTML += `<p style="color:var(--text-muted);">No new notices.</p>`;
+                return;
+            }
+
+            noticesData.forEach(notice => {
+                noticeContainer.innerHTML += `
+                    <div class="content-card-main" style="border-left: 6px solid ${notice.color || 'var(--primary-blue)'}; margin-bottom: 20px;">
+                        <h4 style="font-size: 18px; margin-bottom: 10px; color: var(--text-dark); display: flex; align-items: center; gap:12px; font-weight: 900;">
+                            <div style="width:35px; height:35px; font-size:16px; border-radius:10px; display:flex; justify-content:center; align-items:center; background: ${notice.color || 'var(--primary-blue)'}20;">
+                                <i class="fas ${notice.icon || 'fa-bell'}" style="color: ${notice.color || 'var(--primary-blue)'};"></i>
+                            </div> 
+                            <span>${notice.title}</span>
+                        </h4>
+                        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; font-weight: 600;">${notice.body}</p>
+                    </div>`;
+            });
         }
 
         let addedCourses = [];
@@ -1493,25 +1492,6 @@
                             <h5>${authorName} <span>${c.time}</span></h5>
                             <p>${c.text}</p>
                         </div>
-                    </div>`;
-            });
-        }
-
-        function fetchNotices() {
-            const noticeContainer = document.getElementById('notices');
-            const noticesData = [
-                { title: "Class Representatives (CR)", body: "Current Class Representatives are Sabbir Kamaly and Zarin Mashud Sabah.", icon: "fa-star", color: "var(--warning)" },
-                { title: "Security Update", body: "The portal is now secured with database-linked password protection.", icon: "fa-lock", color: "var(--primary-blue)" }
-            ];
-            noticeContainer.innerHTML = `<h2 style="font-size: 26px; font-weight: 900; margin-bottom: 25px; color: var(--text-dark);">Notice Board</h2>`;
-            noticesData.forEach(notice => {
-                noticeContainer.innerHTML += `
-                    <div class="content-card-main" style="border-left: 6px solid ${notice.color}; margin-bottom: 20px;">
-                        <h4 style="font-size: 18px; margin-bottom: 10px; color: var(--text-dark); display: flex; align-items: center; gap:12px; font-weight: 900;">
-                            <div style="width:35px; height:35px; font-size:16px; border-radius:10px; display:flex; justify-content:center; align-items:center; background: ${notice.color}20;"><i class="fas ${notice.icon}" style="color: ${notice.color};"></i></div> 
-                            <span>${notice.title}</span>
-                        </h4>
-                        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; font-weight: 600;">${notice.body}</p>
                     </div>`;
             });
         }
