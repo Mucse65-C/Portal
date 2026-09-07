@@ -991,51 +991,43 @@
     </div>
 
     <script>
-        // ================= STUDENT DATABASE =================
-        const studentDatabase = [
-            {id: "261-115-101", name: "Mariya Akther"}, {id: "261-115-102", name: "Md Nasirul Islam Chowdhury"},
-            {id: "261-115-103", name: "Mustafizur Rahman Adil"}, {id: "261-115-104", name: "Rihma Ahmed"},
-            {id: "261-115-105", name: "Suraiya Akhter"}, {id: "261-115-106", name: "Mahfuza Ahmed Lima"},
-            {id: "261-115-107", name: "Anika Hussain"}, {id: "261-115-108", name: "Mehruba Rahman Meem"},
-            {id: "261-115-109", name: "Marjan Alam Rahi"}, {id: "261-115-110", name: "Kazi Tawhidur Rahman"},
-            {id: "261-115-111", name: "Muhammad Sabbir Ahmed Kamaly", badge: "CR"}, {id: "261-115-112", name: "Dewan Tasawar Mazid"},
-            {id: "261-115-113", name: "Saliha Bhuiyan Rupa"}, {id: "261-115-114", name: "Blison Pohsyad"},
-            {id: "261-115-115", name: "Niloy Patro"}, {id: "261-115-116", name: "Tuli Datta"},
-            {id: "261-115-117", name: "Samia Mahbub"}, {id: "261-115-118", name: "Mouli Roy"},
-            {id: "261-115-119", name: "Shah Nusrat Jahan"}, {id: "261-115-120", name: "Suprova Hossain Obonti"},
-            {id: "261-115-122", name: "Jannatul Mawa"}, {id: "261-115-123", name: "Namrota Sarty"},
-            {id: "261-115-124", name: "Khadiza Akther Tarin"}, {id: "261-115-125", name: "Tasnim Ahmed Maliha"},
-            {id: "261-115-126", name: "MST Samira Jannat Lavoni"}, {id: "261-115-128", name: "Sanjida Jannat"},
-            {id: "261-115-129", name: "Shanjida Fateha Lima"}, {id: "261-115-130", name: "Sajeda Nur Chowdhury"},
-            {id: "261-115-131", name: "Fayja Islam Chowdhury"}, {id: "261-115-132", name: "Fahi Muhtadee"},
-            {id: "261-115-133", name: "Nafisha Akter Trisha"}, {id: "261-115-134", name: "Nowshin Nawal Khan"},
-            {id: "261-115-135", name: "Tamzidur Rahman"}, {id: "261-115-136", name: "Yousuf Ahmed Sunny"},
-            {id: "261-115-137", name: "Sunjida Akter"}, {id: "261-115-138", name: "Tajbid Ahmed Chowdhury"},
-            {id: "261-115-139", name: "Sadia Akther"}, {id: "261-115-140", name: "Maisha Tasnim Chowdhury"},
-            {id: "261-115-141", name: "Amirul Islam", badge: "Core Member"}, {id: "261-115-142", name: "Arjumand Ara Liza"},
-            {id: "261-115-144", name: "Zarin Mashud Sabah", badge: "CR"}, {id: "261-115-145", name: "Sagufta Nasrin Luthfa"},
-            {id: "261-115-146", name: "Afrida Anjum"}, {id: "261-115-147", name: "Md. Ariful Haque"},
-            {id: "261-115-148", name: "Puspita Sinha"}, {id: "261-115-149", name: "Farhana Noor Shumi"},
-            {id: "261-115-150", name: "Sanjida Tasnim Lisa"},
-            // Re-admission
-            {id: "252-115-120", name: "ABDULLAH AL MAHI CHOWDHURY", type:"re"}, {id: "253-115-103", name: "PORAG CHOWDHURY", type:"re"},
-            {id: "251-115-183", name: "JANNATULL NAYEEM NUR", badge: "Advisor", type:"re"}, {id: "252-115-116", name: "MD ABDUL AHAD SAIEDY", type:"re"},
-            {id: "231-115-324", name: "MD AL WALID SAMAUN", type:"re"}, {id: "252-115-176", name: "Samiha Mahjabin Jarin", type:"re"},
-            {id: "222-115-017", name: "Razia Sultana Shammi (Mukti)", type:"re"}
-        ];
+        // ================= STUDENT DATABASE (Dynamic from Google Sheets) =================
+        let studentDatabase = []; 
+        
+        // এখানে আপনার ওয়েব অ্যাপ URL টি দেওয়া হলো
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbw1iYSrNjmkGxRKtHxb3fG7Q7xblI8OdM7jIud2bXHHlYMQ5ydy6wlnW4lQNPj8IvS6/exec";
 
         let loggedInUser = "Student";
         let loggedInId = "";
 
-        window.onload = () => {
+        // পেজ লোড হওয়ার ফাংশন আপডেট করা হলো
+        window.onload = async () => {
+            // পেজ লোড হওয়ার সময় ব্যাকগ্রাউন্ডে গুগল শিট থেকে ডেটা আনবে
+            await fetchStudentData();
+
             setTimeout(() => {
                 document.getElementById('initialPreloader').style.opacity = '0';
                 setTimeout(() => { 
                     document.getElementById('initialPreloader').style.display = 'none'; 
                     document.getElementById('loginOverlay').style.display = 'flex';
                 }, 500);
-            }, 1500);
+            }, 1000);
         };
+
+        // গুগল শিট থেকে ডেটা আনার ফাংশন
+        async function fetchStudentData() {
+            try {
+                const response = await fetch(SHEET_API_URL);
+                const data = await response.json();
+                
+                // গুগল শিট থেকে আসা ডেটা আমাদের পোর্টালে সেভ করা
+                studentDatabase = data;
+                console.log("Students loaded from Google Sheets successfully!");
+            } catch (error) {
+                console.error("ডেটা লোড করতে সমস্যা হয়েছে!", error);
+                alert("ডেটাবেস কানেক্ট করা যায়নি। ইন্টারনেট সংযোগ চেক করুন।");
+            }
+        }
 
         document.getElementById('loginId').addEventListener('input', function(e) {
             let val = e.target.value.replace(/\D/g, ''); 
@@ -1048,14 +1040,14 @@
 
             const suggestionsBox = document.getElementById('idSuggestions');
             if (formattedVal.length > 0) {
-                const matches = studentDatabase.filter(s => s.id.startsWith(formattedVal));
+                const matches = studentDatabase.filter(s => s.id && s.id.toString().startsWith(formattedVal));
                 
                 if (matches.length > 0) {
                     suggestionsBox.innerHTML = '';
                     matches.forEach(match => {
                         let div = document.createElement('div');
                         div.className = 'suggestion-item';
-                        div.innerHTML = `<span><i class="fas fa-id-card" style="margin-right:5px; color:var(--primary-blue);"></i>${match.id}</span> <span style="color:var(--accent-orange); font-weight:700;">${match.name.split(' ')[0]}</span>`;
+                        div.innerHTML = `<span><i class="fas fa-id-card" style="margin-right:5px; color:var(--primary-blue);"></i>${match.id}</span> <span style="color:var(--accent-orange); font-weight:700;">${match.name ? match.name.split(' ')[0] : 'Student'}</span>`;
                         div.onclick = function() {
                             document.getElementById('loginId').value = match.id;
                             document.getElementById('loginName').value = match.name;
@@ -1071,7 +1063,7 @@
                 suggestionsBox.style.display = 'none';
             }
 
-            const student = studentDatabase.find(s => s.id === formattedVal);
+            const student = studentDatabase.find(s => s.id && s.id.toString() === formattedVal);
             if(student) {
                 document.getElementById('loginName').value = student.name;
                 suggestionsBox.style.display = 'none'; 
@@ -1095,7 +1087,7 @@
             const pwdVal = document.getElementById('loginPwd').value;
             const err = document.getElementById('loginError');
             
-            const student = studentDatabase.find(s => s.id === idVal);
+            const student = studentDatabase.find(s => s.id && s.id.toString() === idVal);
             
             if(!student) {
                 err.innerText = "Error: Student ID not found in database!";
@@ -1108,7 +1100,7 @@
                 return;
             }
 
-            loggedInUser = student.name.split(" ")[0]; 
+            loggedInUser = student.name ? student.name.split(" ")[0] : "Student"; 
             loggedInId = student.id; 
             
             err.style.display = 'none';
@@ -1263,7 +1255,8 @@
                 
                 let badgeHtml = s.badge ? `<span class="badge ${badgeClass}">${s.badge}</span>` : "";
 
-                if(s.type === 're') {
+                // Checking based on the 'type' column
+                if(s.type === 're' || s.type === 'Re' || s.type === 'RE') {
                     reCount++;
                     reTbody.innerHTML += `<tr><td>${reCount}</td><td>${s.id}</td><td>${s.name} ${badgeHtml}</td></tr>`;
                 } else {
