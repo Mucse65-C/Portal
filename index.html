@@ -46,7 +46,7 @@
         #initialPreloader {
             position: fixed; inset: 0; background: var(--bg-white); z-index: 9999999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
         }
         .modern-spinner {
             width: 70px; height: 70px; border-radius: 50%;
@@ -64,13 +64,13 @@
             position: fixed; inset: 0; z-index: 999998;
             display: flex; justify-content: center; align-items: center; padding: 20px;
             background: linear-gradient(-45deg, #051630, #1e3a8a, #0284c7, #0f172a);
-            background-size: 400% 400%; animation: gradientBG 10s ease infinite; transition: opacity 0.5s ease;
+            background-size: 400% 400%; animation: gradientBG 10s ease infinite; transition: opacity 0.3s ease;
         }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .login-wrapper {
             display: flex; width: 100%; max-width: 850px; background: var(--bg-white); border-radius: 20px; overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); animation: cardPopIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); animation: cardPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             opacity: 0; transform: translateY(30px) scale(0.95);
         }
         @keyframes cardPopIn { to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -84,37 +84,66 @@
         .login-left h2 { font-size: 28px; font-weight: 900; margin-bottom: 10px; z-index: 1; line-height: 1.2;}
         .login-left p { font-size: 14px; font-weight: 500; opacity: 0.8; z-index: 1;}
 
-        .login-right { width: 55%; padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; background: var(--bg-white); }
-        .login-right h3 { font-size: 24px; color: var(--text-dark); font-weight: 800; margin-bottom: 5px; }
-        .login-right > p { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 30px; }
+        .login-right { width: 55%; padding: 30px 50px; display: flex; flex-direction: column; justify-content: center; background: var(--bg-white); max-height: 90vh; overflow-y: auto;}
+        .login-right::-webkit-scrollbar { width: 5px; }
+        .login-right::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 5px; }
+        
+        /* Premium Avatar Upload CSS */
+        .login-avatar-container { display: flex; justify-content: center; margin-bottom: 15px; }
+        .login-avatar { width: 90px; height: 90px; border-radius: 50%; background: #f8fafc; border: 3px dashed var(--primary-blue); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; position: relative; overflow: hidden; transition: 0.3s; box-shadow: 0 5px 15px rgba(15, 28, 64, 0.1); }
+        .login-avatar:hover { background: var(--primary-light); transform: scale(1.05); }
+        .login-avatar i { font-size: 28px; color: var(--primary-blue); z-index: 1; margin-bottom: 3px;}
+        .login-avatar-text { font-size: 10px; font-weight: 800; color: var(--primary-blue); z-index: 1; text-transform: uppercase;}
+        .login-avatar img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; z-index: 2; display: none; }
 
-        .input-group { margin-bottom: 20px; position: relative; }
-        .input-group label { display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;}
-        .input-group input { width: 100%; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 600; border: 2px solid var(--border-light); background: #f8fafc; color: var(--text-dark); outline: none; transition: 0.3s; font-family: var(--font-main); letter-spacing: 1px;}
+        .login-right h3 { font-size: 22px; color: var(--text-dark); font-weight: 800; margin-bottom: 5px; text-align: center;}
+        .login-right > p { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 20px; text-align: center;}
+
+        .input-group { margin-bottom: 12px; position: relative; }
+        .input-group label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;}
+        .input-group input { width: 100%; padding: 12px 15px; border-radius: 12px; font-size: 14px; font-weight: 600; border: 2px solid var(--border-light); background: #f8fafc; color: var(--text-dark); outline: none; transition: 0.3s; font-family: var(--font-main); letter-spacing: 1px;}
         .input-group input::placeholder { color: #94a3b8; font-weight: 500; }
         .input-group input:focus { border-color: var(--primary-blue); background: #fff; box-shadow: 0 4px 15px rgba(15, 28, 64, 0.05);}
         .input-group input[readonly] { background: #e2e8f0; color: var(--accent-green); cursor: not-allowed;}
         
-        /* Auto-Suggest Dropdown Box CSS */
-        .suggestions-box { position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 1px solid var(--border-light); border-radius: 8px; margin-top: 5px; max-height: 150px; overflow-y: auto; z-index: 10; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .suggestion-item { padding: 10px 15px; font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: background 0.2s; display: flex; justify-content: space-between; align-items: center;}
-        .suggestion-item:hover { background: var(--primary-light); color: var(--primary-blue); }
-        .suggestion-item span { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+        /* Auto-Suggest Premium UI Box CSS */
+        .suggestions-box { 
+            position: absolute; top: calc(100% + 5px); left: 0; width: 100%; 
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(8px);
+            border: 1px solid var(--primary-blue); border-radius: 12px; 
+            max-height: 200px; overflow-y: auto; z-index: 100; padding: 6px;
+            box-shadow: 0 15px 35px rgba(15, 28, 64, 0.15); display: none; 
+        }
+        .suggestions-box::-webkit-scrollbar { width: 4px; }
+        .suggestions-box::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
+        
+        .suggestion-item { 
+            padding: 12px 15px; font-size: 14px; font-weight: 700; color: var(--text-dark); 
+            cursor: pointer; border-radius: 8px; transition: all 0.2s ease; 
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;
+        }
+        .suggestion-item:last-child { margin-bottom: 0; }
+        .suggestion-item:hover, .suggestion-item.active-nav { 
+            background: linear-gradient(135deg, var(--primary-blue), #1e3a8a); 
+            color: #fff; box-shadow: 0 4px 12px rgba(15, 28, 64, 0.2); transform: translateX(4px);
+        }
+        .suggestion-item.active-nav span, .suggestion-item:hover span { color: #93c5fd !important; }
+        .suggestion-item span { font-size: 12px; color: var(--text-muted); font-weight: 600; transition: color 0.2s;}
 
-        .login-btn { width: 100%; padding: 16px; margin-top: 10px; background: var(--primary-blue); color: #fff; font-size: 16px; letter-spacing: 1px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .login-btn { width: 100%; padding: 15px; margin-top: 5px; background: var(--primary-blue); color: #fff; font-size: 15px; letter-spacing: 1px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; }
         .login-btn:hover { background: #1e3a8a; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(15, 28, 64, 0.2);}
         #loginError { color: var(--danger); font-size: 13px; font-weight: 700; text-align: center; margin-top: 15px; display: none; }
 
         @media screen and (max-width: 768px) {
             .login-wrapper { flex-direction: column; max-width: 400px; }
             .login-left { width: 100%; padding: 40px 20px; }
-            .login-right { width: 100%; padding: 40px 25px; }
+            .login-right { width: 100%; padding: 30px 25px; }
         }
 
         /* ================= MODERN PRELOADER 2 ================= */
         #portalPreloader {
             position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); z-index: 999997;
-            display: none; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease;
+            display: none; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.3s ease;
         }
         .terminal-loader { width: 90%; max-width: 420px; background: #0f172a; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; box-shadow: 0 0 40px rgba(16, 185, 129, 0.2); overflow: hidden; }
         .terminal-header { background: #020617; padding: 12px 15px; display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
@@ -158,9 +187,149 @@
         .top-header { background: var(--bg-white); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 99;}
         .header-spacer { flex-grow: 1; }
         .header-icons { display: flex; align-items: center; gap: 12px; }
-        .header-icon { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; justify-content: center; align-items: center; color: var(--text-muted); cursor: pointer; border: 1px solid var(--border-light); font-size: 14px; transition: 0.3s; }
+        .header-icon { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; justify-content: center; align-items: center; color: var(--text-muted); cursor: pointer; border: 1px solid var(--border-light); font-size: 14px; transition: 0.3s; overflow: hidden; }
         .header-icon:hover { background: var(--primary-light); color: var(--primary-blue); border-color: var(--primary-blue); }
         .mobile-toggle { display: none; background: transparent; border: none; font-size: 22px; color: var(--primary-blue); cursor: pointer;}
+
+
+        /* ================= PROFILE DETAILS POPUP ================= */
+        .profile-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(2, 6, 23, 0.64);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.22s ease;
+        }
+        .profile-modal-overlay.show { display: flex; opacity: 1; }
+        .profile-modal-card {
+            width: 100%;
+            max-width: 430px;
+            background: var(--bg-white);
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(2, 6, 23, 0.35);
+            transform: translateY(18px) scale(0.97);
+            transition: transform 0.22s ease;
+        }
+        .profile-modal-overlay.show .profile-modal-card { transform: translateY(0) scale(1); }
+        .profile-modal-top {
+            position: relative;
+            padding: 32px 28px 24px;
+            text-align: center;
+            color: #fff;
+            background: linear-gradient(135deg, #0f1c40 0%, #1e3a8a 58%, #0369a1 100%);
+            overflow: hidden;
+        }
+        .profile-modal-top::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px);
+            background-size: 18px 18px;
+            opacity: .55;
+        }
+        .profile-close-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 2;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.28);
+            background: rgba(255,255,255,.13);
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+        .profile-close-btn:hover { background: rgba(255,255,255,.24); transform: rotate(90deg); }
+        .profile-popup-avatar {
+            position: relative;
+            z-index: 1;
+            width: 104px;
+            height: 104px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,.92);
+            background: rgba(255,255,255,.16);
+            box-shadow: 0 12px 28px rgba(0,0,0,.24);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+        }
+        .profile-popup-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .profile-modal-name { position: relative; z-index: 1; font-size: 23px; font-weight: 900; line-height: 1.25; margin-bottom: 6px; }
+        .profile-modal-role { position: relative; z-index: 1; font-size: 12px; font-weight: 700; opacity: .86; letter-spacing: .8px; text-transform: uppercase; }
+        .profile-modal-body { padding: 22px 24px 24px; }
+        .profile-info-list { display: grid; gap: 12px; }
+        .profile-info-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 15px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+        }
+        .profile-info-icon {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            color: var(--primary-blue);
+            font-size: 16px;
+        }
+        .profile-info-text { min-width: 0; flex: 1; }
+        .profile-info-label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+        .profile-info-value { font-size: 14px; font-weight: 800; color: var(--text-dark); word-break: break-word; }
+        .profile-security-note {
+            display: flex;
+            gap: 9px;
+            align-items: flex-start;
+            margin-top: 16px;
+            padding: 11px 13px;
+            border-radius: 12px;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #047857;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+        #headerProfilePic { position: relative; }
+        #headerProfilePic::after {
+            content: '';
+            position: absolute;
+            right: -1px;
+            bottom: -1px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            border: 2px solid var(--bg-white);
+        }
+        @media screen and (max-width: 520px) {
+            .profile-modal-overlay { padding: 12px; }
+            .profile-modal-card { max-width: 100%; border-radius: 20px; }
+            .profile-modal-top { padding: 30px 18px 22px; }
+            .profile-modal-body { padding: 18px; }
+            .profile-modal-name { font-size: 20px; }
+        }
 
         .dept-hero { display: flex; justify-content: center; align-items: center; padding: 0 0 20px 0; text-align: center;}
         .dept-hero h1 { font-size: 50px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; background: linear-gradient(to right, var(--primary-blue), #2563eb, var(--accent-orange), var(--primary-blue)); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; animation: shine 4s linear infinite;}
@@ -285,7 +454,7 @@
 
         /* ================= BUS SCHEDULE (FULL WIDTH SLIDER) ================= */
         .bus-hero {
-            position: relative; background: url('image_6eee79.jpg') center center/cover no-repeat; border-radius: 16px;
+            position: relative; background: url('./bus%20image-04.jpg') center center/cover no-repeat; border-radius: 16px;
             padding: 60px 30px; text-align: center; color: #fff; margin-bottom: 25px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         .bus-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15, 28, 64, 0.95), rgba(30, 58, 138, 0.8)); z-index: 1; }
@@ -331,7 +500,80 @@
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-left: 8px; color: white;}
         .badge-cr { background: var(--primary-blue); } 
         .badge-advisor { background: var(--accent-green); }
-        .badge-core { background: var(--warning); } 
+        .badge-core { background: var(--warning); }
+
+        /* ================= STUDENT BADGE ROW HIGHLIGHTS ================= */
+        #regularTbody tr.student-highlight td,
+        #reTbody tr.student-highlight td {
+            position: relative;
+            border-bottom-color: rgba(255,255,255,.55);
+            transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+        }
+        #regularTbody tr.student-highlight,
+        #reTbody tr.student-highlight {
+            position: relative;
+            isolation: isolate;
+        }
+        #regularTbody tr.student-highlight:hover,
+        #reTbody tr.student-highlight:hover {
+            transform: translateY(-1px);
+            filter: saturate(1.08);
+            box-shadow: 0 8px 22px rgba(15, 23, 42, .10);
+        }
+        #regularTbody tr.student-highlight td:first-child,
+        #reTbody tr.student-highlight td:first-child {
+            border-left: 5px solid transparent;
+            font-weight: 900;
+        }
+        #regularTbody tr.row-cr td,
+        #reTbody tr.row-cr td {
+            background: linear-gradient(105deg, rgba(219,234,254,.98) 0%, rgba(238,242,255,.94) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-cr td:first-child,
+        #reTbody tr.row-cr td:first-child { border-left-color: #2563eb; }
+
+        #regularTbody tr.row-xcr td,
+        #reTbody tr.row-xcr td {
+            background: linear-gradient(105deg, rgba(207,250,254,.98) 0%, rgba(224,231,255,.94) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-xcr td:first-child,
+        #reTbody tr.row-xcr td:first-child { border-left-color: #0891b2; }
+
+        #regularTbody tr.row-core td,
+        #reTbody tr.row-core td {
+            background: linear-gradient(105deg, rgba(254,243,199,.98) 0%, rgba(255,237,213,.94) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-core td:first-child,
+        #reTbody tr.row-core td:first-child { border-left-color: #f59e0b; }
+
+        #regularTbody tr.row-advisor td,
+        #reTbody tr.row-advisor td {
+            background: linear-gradient(105deg, rgba(209,250,229,.98) 0%, rgba(220,252,231,.94) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-advisor td:first-child,
+        #reTbody tr.row-advisor td:first-child { border-left-color: #16a34a; }
+
+        #regularTbody tr.row-activated td,
+        #reTbody tr.row-activated td {
+            background: linear-gradient(105deg, rgba(220,252,231,.98) 0%, rgba(236,253,245,.95) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-activated td:first-child,
+        #reTbody tr.row-activated td:first-child { border-left-color: #22c55e; }
+
+        #regularTbody tr.student-highlight .badge,
+        #reTbody tr.student-highlight .badge {
+            box-shadow: 0 4px 12px rgba(15, 23, 42, .15);
+            border: 1px solid rgba(255,255,255,.72);
+            letter-spacing: .25px;
+        }
+        .badge-activated {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: #fff;
+        }
+        @media (max-width: 700px) {
+            #regularTbody tr.student-highlight td,
+            #reTbody tr.student-highlight td { background-attachment: scroll; }
+        }
 
         /* ================= CLASS ROUTINE (IMPROVED FONTS) ================= */
         .day-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 20px; }
@@ -347,6 +589,94 @@
         .info-block { flex-grow: 1; }
         .info-block h4 { font-size: 22px; color: var(--primary-blue); margin-bottom: 8px; font-weight: 900; letter-spacing: 0.5px;}
         .info-block p { font-size: 14px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+
+
+        /* ================= SMART ROUTINE LIVE STATES ================= */
+        .routine-card { position: relative; overflow: hidden; }
+        .routine-status {
+            display: inline-flex; align-items: center; gap: 7px; margin-top: 10px;
+            padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 900;
+            letter-spacing: .2px; transition: .25s ease;
+        }
+        .routine-status i { font-size: 11px; }
+        .routine-status.neutral { background: #eef2ff; color: var(--primary-blue); }
+
+        /* Before class: yellow blinking card */
+        .routine-card.status-upcoming {
+            background: linear-gradient(135deg, #fffbea 0%, #fef3c7 45%, #fde68a 100%);
+            border-color: #f59e0b; border-left-color: #f59e0b;
+            animation: routineUpcomingBlink 1.15s ease-in-out infinite;
+        }
+        .routine-card.status-upcoming .time-block .time,
+        .routine-card.status-upcoming .info-block h4 { color: #92400e; }
+        .routine-card.status-upcoming .routine-status { background: #f59e0b; color: #fff; }
+        @keyframes routineUpcomingBlink {
+            0%, 100% { box-shadow: 0 4px 12px rgba(245, 158, 11, .12); filter: brightness(1); }
+            50% { box-shadow: 0 0 0 5px rgba(245, 158, 11, .18), 0 12px 28px rgba(245, 158, 11, .28); filter: brightness(1.05); }
+        }
+
+        /* Class is running: strong red gradient */
+        .routine-card.status-live {
+            background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 52%, #ef4444 100%);
+            border-color: #991b1b; border-left-color: #7f1d1d;
+            box-shadow: 0 12px 28px rgba(185, 28, 28, .28);
+            animation: routineLivePulse 1.5s ease-in-out infinite;
+        }
+        .routine-card.status-live .time-block { border-right-color: rgba(255,255,255,.45); }
+        .routine-card.status-live .time-block .time,
+        .routine-card.status-live .info-block h4,
+        .routine-card.status-live .info-block p { color: #fff; }
+        .routine-card.status-live .routine-status { background: #fff; color: #b91c1c; }
+        @keyframes routineLivePulse {
+            0%, 100% { box-shadow: 0 10px 25px rgba(185, 28, 28, .25); }
+            50% { box-shadow: 0 0 0 5px rgba(239, 68, 68, .18), 0 18px 34px rgba(185, 28, 28, .38); }
+        }
+
+        /* Class finished: static red grading + finished label */
+        .routine-card.status-ended {
+            background: linear-gradient(135deg, #fff1f2 0%, #fecaca 45%, #ef4444 115%);
+            border-color: #ef4444; border-left-color: #b91c1c;
+            box-shadow: 0 7px 18px rgba(185, 28, 28, .16);
+        }
+        .routine-card.status-ended .time-block .time,
+        .routine-card.status-ended .info-block h4 { color: #991b1b; }
+        .routine-card.status-ended .routine-status { background: #b91c1c; color: #fff; }
+
+        /* Dashboard tracker states */
+        .dash-card.live-upcoming {
+            background: linear-gradient(135deg, #92400e 0%, #d97706 45%, #f59e0b 100%);
+            color: #fff; border: none; box-shadow: 0 12px 28px rgba(217, 119, 6, .28);
+        }
+        .dash-card.live-upcoming .card-title,
+        .dash-card.live-upcoming .card-sub { color: #fff !important; }
+        .dash-card.live-upcoming .card-icon { background: rgba(255,255,255,.2); color:#fff; border:none; }
+        .dash-card.live-finished {
+            background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 52%, #dc2626 100%);
+            color: #fff; border: none; box-shadow: 0 12px 28px rgba(185, 28, 28, .25);
+        }
+        .dash-card.live-finished .card-title,
+        .dash-card.live-finished .card-sub { color: #fff !important; }
+        .dash-card.live-finished .card-icon { background: rgba(255,255,255,.2); color:#fff; border:none; }
+        .dash-card.live-upcoming #classCountdown { font-size: 27px !important; line-height: 1.25; letter-spacing: 0; }
+        .dash-card.live-finished #classCountdown { font-size: 30px !important; letter-spacing: 1px; }
+        .tracker-exact-time { font-size: 12px; opacity: .92; font-weight: 800; margin-top: 4px; }
+
+        /* ================= ROUTINE API SYNC ================= */
+        .routine-sync-bar {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+            margin-bottom: 20px; padding: 12px 15px; background: #f8fafc; border: 1px solid var(--border-light); border-radius: 12px;
+        }
+        .routine-sync-status { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+        .routine-sync-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--warning); box-shadow: 0 0 0 4px rgba(180, 83, 9, 0.10); flex-shrink: 0; }
+        .routine-sync-dot.success { background: var(--accent-green); box-shadow: 0 0 0 4px rgba(4, 120, 87, 0.10); }
+        .routine-sync-dot.error { background: var(--danger); box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.10); }
+        .routine-refresh-btn {
+            border: none; background: var(--primary-blue); color: #fff; padding: 9px 14px; border-radius: 9px; cursor: pointer;
+            font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; gap: 7px; transition: 0.25s;
+        }
+        .routine-refresh-btn:hover { background: #1e3a8a; transform: translateY(-1px); }
+        .routine-refresh-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+        .routine-refresh-btn.loading i { animation: modernSpin 0.8s linear infinite; }
 
         /* ================= SOCIAL & DISCUSSION ================= */
         .community-box { background: var(--bg-white); border: 2px solid rgba(37, 211, 102, 0.3); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); width: 100%;}
@@ -427,8 +757,18 @@
             </div>
             
             <div class="login-right">
+                <!-- PREMIUM AVATAR UPLOAD U.I -->
+                <div class="login-avatar-container">
+                    <input type="file" id="loginPic" accept="image/*" style="display: none;">
+                    <label for="loginPic" class="login-avatar" title="Click to Upload Photo">
+                        <i class="fas fa-camera"></i>
+                        <span class="login-avatar-text">Add Photo</span>
+                        <img id="avatarPreview" src="" alt="Profile">
+                    </label>
+                </div>
+
                 <h3>Sign In</h3>
-                <p>Enter your credentials to continue</p>
+                <p>One-time setup: Enter your details to fix your profile</p>
                 
                 <div class="input-group">
                     <label>Student ID</label>
@@ -438,6 +778,10 @@
                 <div class="input-group">
                     <label>Student Name</label>
                     <input type="text" id="loginName" placeholder="Auto-filled via Database" readonly tabindex="-1">
+                </div>
+                <div class="input-group">
+                    <label>Phone Number (Fix Once)</label>
+                    <input type="text" id="loginPhone" placeholder="01XXX-XXXXXX">
                 </div>
                 <div class="input-group">
                     <label>Portal Password</label>
@@ -475,7 +819,18 @@
             </div>
             <ul class="sidebar-menu">
                 <li><button class="active" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> Dashboard</button></li>
-                <li><button onclick="switchTab('members')"><i class="fas fa-id-badge"></i> Members</button></li>
+                
+                <!-- NEW ADMIN PANEL DROPDOWN -->
+                <li class="nav-item-dropdown">
+                    <button onclick="toggleDropdown('adminDropdown', this)">
+                        <i class="fas fa-user-shield"></i> Admin Panel <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </button>
+                    <ul class="dropdown-menu" id="adminDropdown">
+                        <li><button onclick="switchTab('adminPanelContent')"><i class="fas fa-tachometer-alt"></i> Dashboard</button></li>
+                        <li><button onclick="switchTab('members')"><i class="fas fa-id-badge"></i> Moderator</button></li>
+                    </ul>
+                </li>
+                
                 <li><button onclick="switchTab('students')"><i class="fas fa-users"></i> Students Info</button></li>
                 
                 <li class="nav-item-dropdown">
@@ -522,7 +877,9 @@
                     <div class="header-icon"><i class="fas fa-edit"></i></div>
                     <div class="header-icon" onclick="window.open('https://www.facebook.com/profile.php?id=61590490967600', '_blank')" style="color: #1877F2; border-color: #1877F2;"><i class="fab fa-facebook-f"></i></div>
                     <div class="header-icon"><i class="fas fa-bell"></i></div>
-                    <div class="header-icon"><i class="fas fa-user"></i></div>
+                    <!-- User & Logout -->
+                    <div class="header-icon" id="headerProfilePic" onclick="openProfilePopup()" title="View Profile"><i class="fas fa-user"></i></div>
+                    <div class="header-icon" onclick="logoutSystem()" title="Logout" style="color:var(--danger); border-color:var(--danger);"><i class="fas fa-sign-out-alt"></i></div>
                 </div>
             </header>
 
@@ -663,22 +1020,121 @@
                     </div>
                 </div>
 
+                <!-- ================= NEW ADMIN PANEL SECTION (BUTTON ONLY) ================= -->
+                <div id="adminPanelContent" class="section">
+                    <div id="adminDenied" style="display:none; text-align:center; padding: 60px 20px; background: var(--bg-white); border-radius: 16px; border: 1px solid var(--border-light); margin-top: 20px;">
+                        <i class="fas fa-user-lock" style="font-size: 60px; color: var(--danger); margin-bottom: 20px;"></i>
+                        <h2 style="color: var(--text-dark); font-weight: 900; margin-bottom: 10px; font-size: 28px;">Access Denied</h2>
+                        <p style="color: var(--text-muted); font-size: 16px; font-weight: 600;">শুধুমাত্র এডমিন প্যানেলের মডারেটরদের জন্য এই সেকশনের এক্সেস উন্মুক্ত।</p>
+                    </div>
+                    <div id="adminContent" style="display:none; text-align:center; padding: 60px 20px; background: var(--bg-white); border-radius: 16px; border: 1px solid var(--border-light); margin-top: 20px;">
+                        <i class="fas fa-shield-alt" style="font-size: 60px; color: var(--primary-blue); margin-bottom: 20px;"></i>
+                        <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 10px; color: var(--primary-blue);">Moderator Dashboard</h2>
+                        <p style="color: var(--text-muted); font-size: 15px; font-weight: 600; max-width: 500px; margin: 0 auto 30px auto;">
+                            গুগল সিকিউরিটি পলিসির কারণে এডমিন ডাটাবেস সরাসরি পোর্টালে লোড করা সম্ভব নয়। দয়া করে নিচের বাটনে ক্লিক করে নতুন ট্যাবে ড্যাশবোর্ড ওপেন করুন।
+                        </p>
+                        <!-- NEW SECURE BUTTON LINK PROVIDED BY USER -->
+                        <a href="https://docs.google.com/spreadsheets/d/1bY9_RoDdqWuUc5s8bScMeua31s4Rv4-xtT_fa1xYBaY/edit?usp=sharing" target="_blank" class="btn-drive" style="font-size: 16px; padding: 15px 40px; box-shadow: 0 10px 25px rgba(194, 65, 12, 0.3);">
+                            Open Admin Panel <i class="fas fa-external-link-alt" style="margin-left: 8px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ================= STUDENTS SECTION (PASSWORD REMOVED) ================= -->
+                <div id="students" class="section">
+                    <div id="studentDenied" style="display:none; text-align:center; padding: 60px 20px; background: var(--bg-white); border-radius: 16px; border: 1px solid var(--border-light); margin-top: 20px;">
+                        <i class="fas fa-user-lock" style="font-size: 60px; color: var(--danger); margin-bottom: 20px;"></i>
+                        <h2 style="color: var(--text-dark); font-weight: 900; margin-bottom: 10px; font-size: 28px;">Access Denied</h2>
+                        <p style="color: var(--text-muted); font-size: 16px; font-weight: 600;">শুধুমাত্র এডমিন প্যানেলের মডারেটরদের জন্য এই সেকশনের এক্সেস উন্মুক্ত।</p>
+                    </div>
+
+                    <div id="studentDataContent" style="display: none;">
+                        <div class="content-card-main">
+                            <div class="table-header">
+                                <div>
+                                    <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue);">Regular Students</h2>
+                                    <p style="font-size: 14px; color: var(--text-muted); font-weight: 700;">Total Active: <span id="totalCounter" style="color: var(--accent-orange);">0</span></p>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <div class="search-box">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="searchInput" onkeyup="searchTables()" placeholder="Search by ID or Name..." autocomplete="off">
+                                    </div>
+                                    <button onclick="window.print()" style="padding: 10px 18px; border-radius: 10px; border: 2px solid var(--border-light); background: #fff; cursor: pointer; font-weight: 800; color: var(--text-dark); transition: 0.3s;"><i class="fas fa-print"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="table-container">
+                                <table id="regularTable">
+                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <tbody id="regularTbody">
+                                        <!-- Populated dynamically via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="content-card-main">
+                            <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px;">Re-Admission Students</h2>
+                            <div class="table-container">
+                                <table id="reTable">
+                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <tbody id="reTbody">
+                                        <!-- Populated dynamically via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= ROUTINE SECTION ================= -->
+                <div id="routineTab" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Class Routine</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 18px;">Routine is loaded directly from the API and automatically refreshed every 60 seconds.</p>
+
+                    <div class="routine-sync-bar">
+                        <div class="routine-sync-status" id="routineSyncStatus">
+                            <span class="routine-sync-dot" id="routineSyncDot"></span>
+                            <span id="routineSyncText">Waiting for API sync...</span>
+                        </div>
+                        <button class="routine-refresh-btn" id="routineRefreshBtn" onclick="refreshRoutineFromApi()">
+                            <i class="fas fa-sync-alt"></i> Refresh Routine
+                        </button>
+                    </div>
+                    
+                    <div class="day-tabs" id="routineTabs"></div>
+                    <div id="routineContent"></div>
+                </div>
+
+                <!-- ================= COURSE SECTION (ORIGINAL DYNAMIC) ================= -->
+                <div id="materials" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Course & Folders</h2>
+                    <div class="cards-grid" id="coursesGrid">
+                        <!-- Populated Dynamically via Google Sheets -->
+                    </div>
+                </div>
+
                 <!-- ================= BUS SCHEDULE SECTION ================= -->
                 <div id="busScheduleTab" class="section">
                     <div class="bus-hero">
                         <div class="bus-hero-content">
                             <h2><i class="fas fa-bus-alt"></i> Metropolitan University Bus Schedule</h2>
                             <p>Official transportation schedule for students and faculty.</p>
-                            <a href="https://drive.google.com/file/d/1E3RUbQwE4rSoHjEkj41otofPKdA9f_DW/view" target="_blank" class="btn-drive">View More <i class="fas fa-external-link-alt" style="margin-left:5px;"></i></a>
+                            <a href="https://drive.google.com/file/d/1E3RUbQwE4rSoHjEkj41otofPKdA9f_DW/view" target="_blank" rel="noopener noreferrer" class="btn-drive"><i class="fab fa-google-drive" style="margin-right:8px;"></i> Open Bus Routine on Google Drive <i class="fas fa-external-link-alt" style="margin-left:5px;"></i></a>
                         </div>
+                    </div>
+
+                    <div style="margin: 0 0 12px 2px; color: var(--text-muted); font-size: 13px; font-weight: 700;">
+                        <i class="fas fa-images" style="margin-right:6px; color:var(--primary-blue);"></i> Bus photo preview — use the Google Drive button above for the full official routine.
                     </div>
 
                     <div class="slider-container">
                         <div class="slider-wrapper" id="busSlider">
-                            <img src="bus image.jpg" class="slide" alt="Bus Schedule 1">
-                            <img src="bus image-02.jpg" class="slide" alt="Bus Schedule 2">
-                            <img src="bus image-03.jpg" class="slide" alt="Bus Schedule 3">
-                            <img src="bus image-04.jpg" class="slide" alt="Bus Schedule 4">
+                            <img src="./bus%20image.jpg" class="slide" alt="Bus Schedule 1" onerror="this.onerror=null; this.src='./bus%20image%20.jpeg';">
+                            <img src="./bus%20image-02.jpg" class="slide" alt="Bus Schedule 2" onerror="this.onerror=null; this.src='./bus%20image%20-02.jpg';">
+                            <img src="./bus%20image-03.jpg" class="slide" alt="Bus Schedule 3" onerror="this.onerror=null; this.src='./bus%20image%20-03.jpg';">
+                            <img src="./bus%20image-04.jpg" class="slide" alt="Bus Schedule 4" onerror="this.onerror=null; this.src='./bus%20image%20-04.jpg';">
                         </div>
                         <div class="slider-nav">
                             <button onclick="moveSlide(-1)"><i class="fas fa-chevron-left"></i></button>
@@ -736,9 +1192,9 @@
                     </div>
                 </div>
 
-                <!-- ================= MEMBERS SECTION ================= -->
+                <!-- ================= MODERATOR SECTION ================= -->
                 <div id="members" class="section">
-                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Core Members & Representatives</h2>
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Core Members & Moderators</h2>
                     <div class="cards-grid">
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--accent-green);">
                             <img src="nayeem.jpg" alt="Nayeem Nur" class="member-img" style="border-color: var(--accent-green);">
@@ -767,79 +1223,6 @@
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-141</div>
                             <div style="margin-top: 15px;"><span class="badge badge-core" style="font-size: 13px; padding: 6px 15px;">Core Member & Management Lead</span></div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- ================= STUDENTS SECTION ================= -->
-                <div id="students" class="section">
-                    <div id="studentAuthPrompt" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; padding: 20px;">
-                        <div style="background: var(--bg-white); border-radius: 20px; padding: 40px 30px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 15px 35px rgba(15, 28, 64, 0.05); border: 1px solid var(--border-light);">
-                            <i class="fas fa-user-lock" style="font-size: 50px; color: var(--primary-blue); margin-bottom: 20px;"></i>
-                            <h2 style="color: var(--text-dark); font-weight: 900; margin-bottom: 10px; font-size: 22px;">Restricted Access</h2>
-                            <p style="color: var(--text-muted); font-size: 14px; font-weight: 600; margin-bottom: 25px;">Please enter the password to view student information.</p>
-                            
-                            <div class="input-group" style="text-align: left;">
-                                <input type="password" id="studentPwd" placeholder="Enter Password" style="background: #f8fafc; color: var(--text-dark); border: 2px solid var(--border-light);">
-                            </div>
-                            <button class="login-btn" onclick="checkStudentPwd()" style="background: var(--primary-blue); box-shadow: none;">View Information</button>
-                            <div id="studentPwdMsg" style="color: var(--danger); font-size: 13px; font-weight: 700; margin-top: 15px; display: none;">Incorrect Password!</div>
-                        </div>
-                    </div>
-
-                    <div id="studentDataContent" style="display: none;">
-                        <div class="content-card-main">
-                            <div class="table-header">
-                                <div>
-                                    <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue);">Regular Students</h2>
-                                    <p style="font-size: 14px; color: var(--text-muted); font-weight: 700;">Total Active: <span id="totalCounter" style="color: var(--accent-orange);">0</span></p>
-                                </div>
-                                <div style="display: flex; gap: 10px;">
-                                    <div class="search-box">
-                                        <i class="fas fa-search"></i>
-                                        <input type="text" id="searchInput" onkeyup="searchTables()" placeholder="Search by ID or Name..." autocomplete="off">
-                                    </div>
-                                    <button onclick="window.print()" style="padding: 10px 18px; border-radius: 10px; border: 2px solid var(--border-light); background: #fff; cursor: pointer; font-weight: 800; color: var(--text-dark); transition: 0.3s;"><i class="fas fa-print"></i></button>
-                                </div>
-                            </div>
-
-                            <div class="table-container">
-                                <table id="regularTable">
-                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
-                                    <tbody id="regularTbody">
-                                        <!-- Populated dynamically via JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="content-card-main">
-                            <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px;">Re-Admission Students</h2>
-                            <div class="table-container">
-                                <table id="reTable">
-                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
-                                    <tbody id="reTbody">
-                                        <!-- Populated dynamically via JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================= ROUTINE SECTION ================= -->
-                <div id="routineTab" class="section">
-                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Class Routine</h2>
-                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 25px;">Select a day to view schedule. Live status is synced dynamically.</p>
-                    
-                    <div class="day-tabs" id="routineTabs"></div>
-                    <div id="routineContent"></div>
-                </div>
-
-                <!-- ================= COURSE SECTION ================= -->
-                <div id="materials" class="section">
-                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Course & Folders</h2>
-                    <div class="cards-grid" id="coursesGrid">
-                        <!-- Populated Dynamically via Google Sheets -->
                     </div>
                 </div>
 
@@ -942,77 +1325,475 @@
         </div>
     </div>
 
+    <!-- ================= LOGIN PROFILE DETAILS POPUP ================= -->
+    <div id="profileModal" class="profile-modal-overlay" aria-hidden="true" onclick="profileOverlayClick(event)">
+        <div class="profile-modal-card" role="dialog" aria-modal="true" aria-labelledby="profileModalName">
+            <div class="profile-modal-top">
+                <button class="profile-close-btn" type="button" onclick="closeProfilePopup()" aria-label="Close profile popup">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="profile-popup-avatar" id="profilePopupAvatar">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="profile-modal-name" id="profileModalName">Student</div>
+                <div class="profile-modal-role">CSE 65-C · Student Profile</div>
+            </div>
+            <div class="profile-modal-body">
+                <div class="profile-info-list">
+                    <div class="profile-info-row">
+                        <div class="profile-info-icon"><i class="fas fa-id-card"></i></div>
+                        <div class="profile-info-text">
+                            <div class="profile-info-label">Student ID</div>
+                            <div class="profile-info-value" id="profileModalId">—</div>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-icon"><i class="fas fa-user"></i></div>
+                        <div class="profile-info-text">
+                            <div class="profile-info-label">Student Name</div>
+                            <div class="profile-info-value" id="profileModalFullName">—</div>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="profile-info-text">
+                            <div class="profile-info-label">Phone Number</div>
+                            <div class="profile-info-value" id="profileModalPhone">Not provided</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-security-note">
+                    <i class="fas fa-shield-alt" style="margin-top:2px;"></i>
+                    <span>For security, your portal password is never displayed in this profile window.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ================= GLOBAL DATA VARIABLES =================
         let studentDatabase = []; 
         let routineData = {0: [], 1: [], 2: [], 3: [], 4: []};
         let coursesData = [];
         let noticesData = [];
+        let selectedRoutineDay = null;
+        let portalFetchInProgress = false;
+        let portalAutoSyncTimer = null;
+        let portalHasLiveData = false;
         
         // *************************************************************************
-        // আপনার নতুন দেওয়া সঠিক লিংকটি এখানে বসানো হলো
-        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxHFQW3IxnEszqDsqUjBl9n1-m_DtpwrYS1xPbWwLNWy1lG8jpgtQduEyPl7tX4TsJP/exec";
+        // Google Apps Script API: Students + Routine + Courses + Notices
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxqZtxIhOyCDjOKkwygyxsIUIk_iPJBQAfS41KZdRTkt7ajWrJNavJUVN-sVMMZ944X/exec";
+        const PORTAL_AUTO_REFRESH_MS = 60 * 1000; // 60 seconds
+        const PORTAL_CACHE_KEY = "portal_data_cache_v7_students_api_sync";
         // *************************************************************************
 
         let loggedInUser = "Student";
         let loggedInId = "";
+        let bypassLogin = false;
 
-        // পেজ লোড হওয়ার ফাংশন
-        window.onload = async () => {
-            await fetchPortalData();
+        window.onload = () => {
+            checkSession(); 
 
+            // প্রি-লোডার সাথে সাথে সরিয়ে ফেলছি
             setTimeout(() => {
                 document.getElementById('initialPreloader').style.opacity = '0';
                 setTimeout(() => { 
                     document.getElementById('initialPreloader').style.display = 'none'; 
-                    document.getElementById('loginOverlay').style.display = 'flex';
-                }, 500);
-            }, 1000);
+                    if(bypassLogin){
+                        document.getElementById('appContainer').style.display = 'flex';
+                        document.body.style.overflowY = 'auto'; 
+                        initPortal(); 
+                    } else {
+                        document.getElementById('loginOverlay').style.display = 'flex';
+                        setTimeout(()=> { document.getElementById('loginOverlay').style.opacity = '1'; }, 50);
+                    }
+                }, 300); 
+            }, 100);
+
+            // First load can use the last successful cache for instant UI,
+            // then immediately replaces it with fresh API data.
+            fetchPortalData({ useCache: true });
+            startPortalAutoSync();
         };
 
-        // গুগল শিট থেকে সব ডেটা একসাথে আনার ফাংশন (Smart Version)
-        async function fetchPortalData() {
-            try {
-                const response = await fetch(SHEET_API_URL);
-                const data = await response.json();
-                
-                // ১. Students Data (স্পেস এবং বড়-ছোট হাতের অক্ষরের সমস্যা ফিক্স করা হয়েছে)
-                let rawStudents = data.Students || [];
-                studentDatabase = rawStudents.map(s => {
-                    return {
-                        id: (s.id || s.ID || s.Id || '').toString().trim(),
-                        name: (s.name || s.Name || s.NAME || '').toString().trim(),
-                        badge: (s.badge || s.Badge || '').toString().trim(),
-                        type: (s.type || s.Type || '').toString().trim()
-                    };
-                });
-                
-                // ২. Routine Data 
-                let rawRoutine = data.Routine || [];
-                rawRoutine.forEach(r => {
-                    let dayVal = r.day !== undefined ? r.day : r.Day;
-                    if(dayVal !== undefined && dayVal !== "") {
-                        routineData[dayVal].push({ 
-                            sub: r.sub || r.Sub || '', 
-                            start: r.start || r.Start || '', 
-                            end: r.end || r.End || '', 
-                            teacher: r.teacher || r.Teacher || '' 
-                        });
-                    }
-                });
-
-                // ৩. Courses Data
-                coursesData = data.Courses || [];
-
-                // ৪. Notices Data
-                noticesData = data.Notices || [];
-
-                console.log("All portal data loaded successfully from Google Sheets!");
-            } catch (error) {
-                console.error("ডেটা লোড করতে সমস্যা হয়েছে!", error);
-                alert("ডেটাবেস কানেক্ট করা যায়নি। ইন্টারনেট সংযোগ চেক করুন।");
+        function checkSession() {
+            const session = localStorage.getItem('portal_user_session_v2');
+            if (session) {
+                const user = JSON.parse(session);
+                loggedInId = user.id;
+                loggedInUser = user.name;
+                if (user.pic) {
+                    document.getElementById('headerProfilePic').innerHTML = `<img src="${user.pic}" style="width:100%; height:100%; object-fit:cover;">`;
+                }
+                bypassLogin = true;
             }
         }
+
+        function logoutSystem() {
+            localStorage.removeItem('portal_user_session_v2');
+            window.location.reload();
+        }
+
+        // ================= PROFILE DETAILS POPUP =================
+        function getLoggedInProfileData() {
+            let saved = {};
+            try {
+                saved = JSON.parse(localStorage.getItem('portal_user_session_v2') || '{}') || {};
+            } catch (e) {
+                saved = {};
+            }
+
+            const matchedStudent = Array.isArray(studentDatabase)
+                ? studentDatabase.find(s => String(s.id || '').trim() === String(saved.id || loggedInId || '').trim())
+                : null;
+
+            const fullName = (saved.fullName || (matchedStudent && matchedStudent.name) || saved.name || loggedInUser || 'Student').toString().trim();
+            return {
+                id: (saved.id || loggedInId || '—').toString().trim(),
+                fullName: fullName || 'Student',
+                phone: (saved.phone || '').toString().trim(),
+                pic: (saved.pic || '').toString()
+            };
+        }
+
+        function openProfilePopup() {
+            const modal = document.getElementById('profileModal');
+            if (!modal) return;
+
+            const profile = getLoggedInProfileData();
+            document.getElementById('profileModalName').textContent = profile.fullName;
+            document.getElementById('profileModalFullName').textContent = profile.fullName;
+            document.getElementById('profileModalId').textContent = profile.id || '—';
+            document.getElementById('profileModalPhone').textContent = profile.phone || 'Not provided';
+
+            const avatar = document.getElementById('profilePopupAvatar');
+            if (profile.pic) {
+                avatar.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = profile.pic;
+                img.alt = profile.fullName + ' profile photo';
+                avatar.appendChild(img);
+            } else {
+                avatar.innerHTML = '<i class="fas fa-user-graduate"></i>';
+            }
+
+            modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
+            requestAnimationFrame(() => modal.classList.add('show'));
+        }
+
+        function closeProfilePopup() {
+            const modal = document.getElementById('profileModal');
+            if (!modal) return;
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+            setTimeout(() => {
+                if (!modal.classList.contains('show')) modal.style.display = 'none';
+            }, 220);
+        }
+
+        function profileOverlayClick(event) {
+            if (event.target && event.target.id === 'profileModal') closeProfilePopup();
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') closeProfilePopup();
+        });
+
+        // ================= PROFILE PIC UPLOAD PREVIEW =================
+        document.getElementById('loginPic').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('avatarPreview');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // ================= BACKGROUND FETCH & DOM UPDATE =================
+        function updateRoutineSyncStatus(state, message) {
+            const textEl = document.getElementById('routineSyncText');
+            const dotEl = document.getElementById('routineSyncDot');
+            const btn = document.getElementById('routineRefreshBtn');
+
+            if (textEl) textEl.innerText = message;
+            if (dotEl) {
+                dotEl.classList.remove('success', 'error');
+                if (state === 'success') dotEl.classList.add('success');
+                if (state === 'error') dotEl.classList.add('error');
+            }
+            if (btn) {
+                const loading = state === 'loading';
+                btn.disabled = loading;
+                btn.classList.toggle('loading', loading);
+            }
+        }
+
+        function formatSyncClock(date) {
+            try {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            } catch (e) {
+                return date.toLocaleTimeString();
+            }
+        }
+
+        async function fetchPortalData(options = {}) {
+            const { useCache = false, silent = false } = options;
+
+            // Prevent two API requests from running at the same time.
+            if (portalFetchInProgress) return;
+
+            // Use cache only for the first page load. Live refreshes never prefer cache.
+            if (useCache && !portalHasLiveData) {
+                const cachedData = localStorage.getItem(PORTAL_CACHE_KEY);
+                if (cachedData) {
+                    try {
+                        const parsed = JSON.parse(cachedData);
+                        if (parsed && !parsed.error) {
+                            processData(parsed);
+                            updateRoutineSyncStatus('loading', 'Cached routine shown. Checking API...');
+                        }
+                    } catch (e) {
+                        console.warn('Cached portal data could not be parsed:', e);
+                    }
+                }
+            }
+
+            portalFetchInProgress = true;
+            if (!silent) updateRoutineSyncStatus('loading', 'Syncing latest routine from API...');
+
+            try {
+                // Cache-busting query makes sure the browser/proxy requests fresh Apps Script data.
+                const joiner = SHEET_API_URL.includes('?') ? '&' : '?';
+                const freshUrl = `${SHEET_API_URL}${joiner}_ts=${Date.now()}`;
+
+                const response = await fetch(freshUrl, {
+                    method: 'GET',
+                    cache: 'no-store',
+                    redirect: 'follow'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API returned HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (!data || typeof data !== 'object' || data.error) {
+                    throw new Error(data && data.error ? data.error : 'Invalid API response');
+                }
+
+                localStorage.setItem(PORTAL_CACHE_KEY, JSON.stringify(data));
+                processData(data);
+                portalHasLiveData = true;
+
+                console.info(`[Portal API] Students loaded: ${studentDatabase.length}`);
+                console.info(`[Portal API] Routine rows loaded: ${Object.values(routineData).reduce((n, arr) => n + arr.length, 0)}`);
+
+                const syncedAt = new Date();
+                updateRoutineSyncStatus('success', `Live API synced: ${formatSyncClock(syncedAt)}`);
+
+                // If a saved session opened the portal before API completed, refresh all visible portal widgets.
+                if (bypassLogin && document.getElementById('appContainer').style.display === 'flex') {
+                    updateLiveTimer();
+                }
+            } catch (error) {
+                console.error('API Fetch Error:', error);
+                updateRoutineSyncStatus('error', `API sync failed. Showing last available data.`);
+            } finally {
+                portalFetchInProgress = false;
+                const btn = document.getElementById('routineRefreshBtn');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                }
+            }
+        }
+
+        function refreshRoutineFromApi() {
+            return fetchPortalData({ useCache: false, silent: false });
+        }
+
+        function startPortalAutoSync() {
+            if (portalAutoSyncTimer) clearInterval(portalAutoSyncTimer);
+
+            portalAutoSyncTimer = setInterval(() => {
+                fetchPortalData({ useCache: false, silent: true });
+            }, PORTAL_AUTO_REFRESH_MS);
+
+            // When a user returns to the tab, refresh immediately instead of waiting up to 60 seconds.
+            if (!window.portalVisibilitySyncBound) {
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') {
+                        fetchPortalData({ useCache: false, silent: true });
+                    }
+                });
+                window.portalVisibilitySyncBound = true;
+            }
+        }
+
+        function normalizeApiKey(key) {
+            return String(key || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
+
+        function unwrapApiArray(value) {
+            if (Array.isArray(value)) return value;
+            if (value && typeof value === 'object') {
+                if (Array.isArray(value.data)) return value.data;
+                if (Array.isArray(value.rows)) return value.rows;
+                if (Array.isArray(value.values)) return value.values;
+            }
+            return [];
+        }
+
+        // Finds a sheet collection even if Apps Script changes case/spacing,
+        // e.g. "Class Routine", "classRoutine", "Routine", etc.
+        function getApiCollection(data, aliases) {
+            const containers = [
+                data,
+                data && data.data,
+                data && data.result,
+                data && data.payload,
+                data && data.sheets
+            ].filter(v => v && typeof v === 'object');
+
+            const wanted = new Set(aliases.map(normalizeApiKey));
+
+            for (const container of containers) {
+                for (const key of Object.keys(container)) {
+                    if (wanted.has(normalizeApiKey(key))) {
+                        const arr = unwrapApiArray(container[key]);
+                        if (arr.length || Array.isArray(container[key])) return arr;
+                    }
+                }
+            }
+            return [];
+        }
+
+        function normalizeStudentId(value) {
+            let raw = String(value ?? '').trim();
+            if (!raw) return '';
+            const digits = raw.replace(/\D/g, '');
+            if (digits.length === 9) {
+                return `${digits.slice(0,3)}-${digits.slice(3,6)}-${digits.slice(6,9)}`;
+            }
+            return raw;
+        }
+
+        function isHeaderLikeStudent(id, name) {
+            const a = String(id || '').trim().toLowerCase();
+            const b = String(name || '').trim().toLowerCase();
+            return (a === 'id' && b === 'name') || a === 'studentid' || a === 'student_id';
+        }
+
+        function processData(data) {
+            // ================= 1. STUDENTS =================
+            // Supports clean headers as well as the current Sheet's legacy
+            // "badage" typo, uppercase TYPE, and accidental repeated header row.
+            const rawStudents = getApiCollection(data, ['Students', 'Student']);
+            const seenStudentIds = new Set();
+
+            studentDatabase = rawStudents.map(s => {
+                s = s || {};
+                const id = normalizeStudentId(s.id ?? s.ID ?? s.Id ?? s.student_id ?? s.studentId ?? s['Student ID'] ?? '');
+                const name = String(s.name ?? s.Name ?? s.NAME ?? s.student_name ?? s.studentName ?? s['Student Name'] ?? '').trim();
+                const badge = String(s.badge ?? s.Badge ?? s.BADGE ?? s.badage ?? s.Badage ?? s.BADAGE ?? '').trim();
+                const type = String(s.type ?? s.Type ?? s.TYPE ?? s.student_type ?? '').trim();
+                const password = String(s.password ?? s.Password ?? s.PASSWORD ?? '').trim();
+                return { id, name, badge, type, password };
+            }).filter(s => {
+                // Remove the duplicate header row and the blank "re" row.
+                if (!s.id || !s.name || isHeaderLikeStudent(s.id, s.name)) return false;
+                if (seenStudentIds.has(s.id)) return false;
+                seenStudentIds.add(s.id);
+                return true;
+            });
+
+            // ================= 2. CLASS ROUTINE =================
+            // Supports BOTH schemas:
+            // New Sheet: day | sub | start | end | teacher
+            // Legacy API: DAY | TIME | COURSE | ROOM | FACULTY
+            const rawRoutine = getApiCollection(data, ['Class Routine', 'Routine', 'ClassRoutine']);
+            routineData = {0: [], 1: [], 2: [], 3: [], 4: []};
+            const dayMap = {
+                sunday: 0, sun: 0,
+                monday: 1, mon: 1,
+                tuesday: 2, tue: 2, tues: 2,
+                wednesday: 3, wed: 3,
+                thursday: 4, thu: 4, thurs: 4
+            };
+
+            rawRoutine.forEach(r => {
+                r = r || {};
+                const dayVal = r.day ?? r.Day ?? r.DAY ?? r.day_index ?? r.dayIndex;
+                if (dayVal === undefined || dayVal === null || String(dayVal).trim() === '') return;
+
+                const dayKey = String(dayVal).toLowerCase().trim();
+                const index = Object.prototype.hasOwnProperty.call(dayMap, dayKey)
+                    ? dayMap[dayKey]
+                    : parseInt(dayVal, 10);
+                if (!Object.prototype.hasOwnProperty.call(routineData, index)) return;
+
+                let startT = String(r.start ?? r.Start ?? r.START ?? '').trim();
+                let endT = String(r.end ?? r.End ?? r.END ?? '').trim();
+
+                // Fall back to the old combined TIME field.
+                if (!startT && !endT) {
+                    const timeStr = String(r.Time ?? r.TIME ?? r.time ?? '').trim();
+                    const times = timeStr.split(/\s*[-–—]\s*/);
+                    startT = times[0] ? times[0].trim() : '';
+                    endT = times[1] ? times[1].trim() : '';
+                }
+
+                const courseName = String(
+                    r.sub ?? r.Sub ?? r.SUB ??
+                    r.course ?? r.Course ?? r.COURSE ??
+                    r.subject ?? r.Subject ?? ''
+                ).trim();
+                const roomNo = String(r.room ?? r.Room ?? r.ROOM ?? '').trim();
+                const teacherName = String(
+                    r.teacher ?? r.Teacher ?? r.TEACHER ??
+                    r.faculty ?? r.Faculty ?? r.FACULTY ?? ''
+                ).trim();
+
+                if (!courseName && !startT && !endT) return;
+
+                // Avoid appending a room twice when `sub` already includes it.
+                let subjectFull = courseName;
+                if (roomNo && !courseName.includes(`(${roomNo})`)) {
+                    subjectFull = `${courseName} (${roomNo})`;
+                }
+
+                routineData[index].push({
+                    sub: subjectFull || 'Untitled Class',
+                    start: startT,
+                    end: endT,
+                    teacher: teacherName || 'Not specified'
+                });
+            });
+
+            // Keep each day's classes in chronological order.
+            Object.keys(routineData).forEach(dayIndex => {
+                routineData[dayIndex].sort((a, b) => parseTimeToMinutes(a.start) - parseTimeToMinutes(b.start));
+            });
+
+            // ================= 3. COURSES + NOTICES =================
+            const incomingCourses = getApiCollection(data, ['Courses', 'Course']);
+            const incomingNotices = getApiCollection(data, ['Notices', 'Notice']);
+            if (incomingCourses.length) coursesData = incomingCourses;
+            if (incomingNotices.length) noticesData = incomingNotices;
+
+            if (typeof populateTables === 'function') populateTables();
+            if (typeof renderCourses === 'function') renderCourses();
+            if (typeof renderNotices === 'function') renderNotices();
+            if (typeof initRoutine === 'function') initRoutine();
+            if (typeof updateLiveTimer === 'function') updateLiveTimer();
+        }
+
+        let currentFocus = -1;
 
         document.getElementById('loginId').addEventListener('input', function(e) {
             let val = e.target.value.replace(/\D/g, ''); 
@@ -1022,21 +1803,27 @@
                 formattedVal += val[i];
             }
             e.target.value = formattedVal;
+            currentFocus = -1; 
 
             const suggestionsBox = document.getElementById('idSuggestions');
-            if (formattedVal.length > 0) {
-                const matches = studentDatabase.filter(s => s.id && s.id.startsWith(formattedVal));
+            if (val.length > 0) {
+                const matches = studentDatabase.filter(s => {
+                    if(!s.id) return false;
+                    let sRaw = s.id.replace(/\D/g, '');
+                    return sRaw.includes(val);
+                });
                 
                 if (matches.length > 0) {
                     suggestionsBox.innerHTML = '';
                     matches.forEach(match => {
                         let div = document.createElement('div');
                         div.className = 'suggestion-item';
-                        div.innerHTML = `<span><i class="fas fa-id-card" style="margin-right:5px; color:var(--primary-blue);"></i>${match.id}</span> <span style="color:var(--accent-orange); font-weight:700;">${match.name ? match.name.split(' ')[0] : 'Student'}</span>`;
+                        div.innerHTML = `<span><i class="fas fa-id-card" style="margin-right:8px; color:var(--primary-blue);"></i>${match.id}</span> <span style="color:var(--accent-orange); font-weight:700;">${match.name ? match.name.split(' ')[0] : 'Student'}</span>`;
                         div.onclick = function() {
                             document.getElementById('loginId').value = match.id;
                             document.getElementById('loginName').value = match.name;
                             suggestionsBox.style.display = 'none';
+                            document.getElementById('loginPhone').focus();
                         };
                         suggestionsBox.appendChild(div);
                     });
@@ -1051,11 +1838,49 @@
             const student = studentDatabase.find(s => s.id === formattedVal);
             if(student) {
                 document.getElementById('loginName').value = student.name;
-                suggestionsBox.style.display = 'none'; 
             } else {
                 document.getElementById('loginName').value = "";
             }
         });
+
+        document.getElementById('loginId').addEventListener('keydown', function(e) {
+            let x = document.getElementById("idSuggestions");
+            if (x) x = x.getElementsByTagName("div");
+            if (!x || x.length === 0) return;
+
+            if (e.keyCode == 40) { 
+                currentFocus++;
+                addActive(x);
+            } else if (e.keyCode == 38) { 
+                currentFocus--;
+                addActive(x);
+            } else if (e.keyCode == 13) { 
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    if (x) x[currentFocus].click();
+                } else if (x.length == 1) {
+                    x[0].click(); 
+                }
+            }
+        });
+
+        document.getElementById('loginPhone').addEventListener('keydown', function (e) {
+            if (e.keyCode === 13) document.getElementById('loginPwd').focus();
+        });
+
+        function addActive(x) {
+            if (!x) return false;
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            x[currentFocus].classList.add("active-nav");
+            x[currentFocus].scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        function removeActive(x) {
+            for (let i = 0; i < x.length; i++) {
+                x[i].classList.remove("active-nav");
+            }
+        }
 
         document.addEventListener('click', function(e) {
             if(e.target.id !== 'loginId') {
@@ -1075,7 +1900,7 @@
             const student = studentDatabase.find(s => s.id === idVal);
             
             if(!student) {
-                err.innerText = "Error: Student ID not found in database!";
+                err.innerText = "Error: Student ID not found! Wait a sec to load database";
                 err.style.display = 'block';
                 return;
             }
@@ -1087,53 +1912,116 @@
 
             loggedInUser = student.name ? student.name.split(" ")[0] : "Student"; 
             loggedInId = student.id; 
-            
             err.style.display = 'none';
-            document.getElementById('loginOverlay').style.opacity = '0';
 
-            const coreMemberIDs = ["251-115-183", "261-115-144", "261-115-111", "261-115-141"];
-            if (coreMemberIDs.includes(loggedInId)) {
-                document.getElementById('studentAuthPrompt').style.display = 'none';
-                document.getElementById('studentDataContent').style.display = 'block';
+            const fileInput = document.getElementById('loginPic');
+            if(fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    finalizeLogin(e.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
             } else {
-                document.getElementById('studentAuthPrompt').style.display = 'flex';
-                document.getElementById('studentDataContent').style.display = 'none';
-                document.getElementById('studentPwd').value = '';
+                finalizeLogin("");
             }
+        }
+
+        function finalizeLogin(picData) {
+            const phoneVal = document.getElementById('loginPhone').value.trim();
+            const fullNameVal = document.getElementById('loginName').value.trim() || loggedInUser;
+            localStorage.setItem('portal_user_session_v2', JSON.stringify({
+                id: loggedInId,
+                name: loggedInUser,
+                fullName: fullNameVal,
+                phone: phoneVal,
+                pic: picData
+            }));
+
+            saveLoginRequest({
+                id: loggedInId,
+                name: fullNameVal,
+                phone: phoneVal,
+                pic: picData
+            });
             
+            if(picData) {
+                document.getElementById('headerProfilePic').innerHTML = `<img src="${picData}" style="width:100%; height:100%; object-fit:cover;">`;
+            }
+
+            document.getElementById('loginOverlay').style.opacity = '0';
+            checkAdminAccess();
+
             setTimeout(() => {
                 document.getElementById('loginOverlay').style.display = 'none';
-                
                 const p2 = document.getElementById('portalPreloader');
                 p2.style.display = 'flex';
                 p2.style.opacity = '1';
+                document.getElementById('postLoginSuccess').style.display = 'block';
                 
                 setTimeout(() => {
-                    document.getElementById('postLoginSuccess').style.display = 'block';
-                    setTimeout(() => {
-                        p2.style.opacity = '0';
-                        setTimeout(() => { 
-                            p2.style.display = 'none'; 
-                            document.getElementById('appContainer').style.display = 'flex';
-                            document.body.style.overflowY = 'auto'; 
-                            initPortal(); 
-                        }, 500);
-                    }, 1000);
-                }, 1500);
-            }, 500);
+                    p2.style.opacity = '0';
+                    setTimeout(() => { 
+                        p2.style.display = 'none'; 
+                        document.getElementById('appContainer').style.display = 'flex';
+                        document.body.style.overflowY = 'auto'; 
+                        initPortal(); 
+                    }, 200);
+                }, 300);
+            }, 100);
+        }
+
+        async function saveLoginRequest(user){
+            try{
+                await fetch(SHEET_API_URL,{
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({
+                        action:"loginRequest",
+                        timestamp:new Date().toISOString(),
+                        studentId:user.id,
+                        name:user.name,
+                        phone:user.phone,
+                        photo:user.pic,
+                        status:"Pending",
+                        activate:"Activate"
+                    })
+                });
+            }catch(e){ console.warn("Login request sync failed",e); }
+        }
+
+        function checkAdminAccess() {
+            const coreMemberIDs = ["251-115-183", "261-115-144", "261-115-111", "261-115-141"];
+            const isCoreMember = coreMemberIDs.includes(normalizeStudentId(loggedInId));
+
+            // Student Information is a portal feature and is visible to every logged-in student.
+            // Admin Panel remains restricted to the four moderator/core IDs above.
+            const studentDenied = document.getElementById('studentDenied');
+            const studentDataContent = document.getElementById('studentDataContent');
+            if (studentDenied) studentDenied.style.display = 'none';
+            if (studentDataContent) studentDataContent.style.display = 'block';
+
+            const adminDenied = document.getElementById('adminDenied');
+            const adminContent = document.getElementById('adminContent');
+            if (adminDenied) adminDenied.style.display = isCoreMember ? 'none' : 'block';
+            if (adminContent) adminContent.style.display = isCoreMember ? 'block' : 'none';
         }
 
         function initPortal() {
             populateTables();
             loadComments();
-            renderCourses();
+            renderCourses(); 
             renderNotices(); 
             initRoutine(); 
-            setInterval(updateLiveTimer, 1000); 
-            updateLiveTimer();
             loadAttendance();
             renderCalendar(); 
-            initLiveTraffic();
+            checkAdminAccess(); 
+
+            if(!window.timerInitialized) {
+                setInterval(updateLiveTimer, 1000); 
+                initLiveTraffic();
+                window.timerInitialized = true;
+            }
+            updateLiveTimer();
         }
 
         let currentSlide = 0;
@@ -1155,18 +2043,6 @@
                 document.getElementById('activeUsersCount').innerHTML = `<span class="live-dot"></span> ${activeUsers}`;
             }, 5000);
             document.getElementById('activeUsersCount').innerHTML = `<span class="live-dot"></span> ${Math.floor(Math.random() * (28 - 12 + 1)) + 12}`;
-        }
-
-        function checkStudentPwd() {
-            const pwd = document.getElementById('studentPwd').value;
-            const msg = document.getElementById('studentPwdMsg');
-            if (pwd === 'MU@2026') {
-                msg.style.display = 'none';
-                document.getElementById('studentAuthPrompt').style.display = 'none';
-                document.getElementById('studentDataContent').style.display = 'block';
-            } else {
-                msg.style.display = 'block';
-            }
         }
 
         let currDate = new Date();
@@ -1204,7 +2080,7 @@
             document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             
-            if(event && event.currentTarget) {
+            if (typeof event !== 'undefined' && event && event.currentTarget) {
                 event.currentTarget.classList.add('active');
             }
             if(window.innerWidth <= 992) {
@@ -1227,29 +2103,81 @@
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
 
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         function populateTables() {
             const regTbody = document.getElementById('regularTbody');
             const reTbody = document.getElementById('reTbody');
-            regTbody.innerHTML = ''; reTbody.innerHTML = '';
-            
-            let regCount = 0; let reCount = 0;
-            
-            studentDatabase.forEach(s => {
-                let badgeClass = "badge-advisor"; 
-                if(s.badge === 'CR') badgeClass = "badge-cr";
-                else if(s.badge === 'Core Member') badgeClass = "badge-core";
-                
-                let badgeHtml = s.badge ? `<span class="badge ${badgeClass}">${s.badge}</span>` : "";
+            const totalCounter = document.getElementById('totalCounter');
+            if (!regTbody || !reTbody) return;
 
-                if(s.type === 're' || s.type === 'Re' || s.type === 'RE') {
+            regTbody.innerHTML = '';
+            reTbody.innerHTML = '';
+
+            if (!Array.isArray(studentDatabase) || studentDatabase.length === 0) {
+                regTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Loading student information from API...</td></tr>`;
+                reTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No data loaded yet.</td></tr>`;
+                if (totalCounter) totalCounter.innerText = '0';
+                return;
+            }
+
+            let regCount = 0;
+            let reCount = 0;
+
+            studentDatabase.forEach(s => {
+                if (!s || !s.id || !s.name) return;
+
+                const badgeValue = String(s.badge || '').trim();
+                const badgeKey = badgeValue.toLowerCase();
+                let badgeClass = 'badge-advisor';
+                if (badgeKey === 'cr' || badgeKey === 'x-cr') badgeClass = 'badge-cr';
+                else if (badgeKey === 'core member') badgeClass = 'badge-core';
+
+                const badgeHtml = badgeValue
+                    ? `<span class="badge ${badgeClass}">${escapeHtml(badgeValue)}</span>`
+                    : '';
+
+                const safeId = escapeHtml(s.id);
+                const safeName = escapeHtml(s.name);
+                const isActivated = (String(s.id).trim() === String(loggedInId).trim());
+                const loginBadge = isActivated
+                    ? `<span class="badge badge-activated">ACTIVATED</span>`
+                    : '';
+
+                // Rows with a visible badge receive a premium role-based gradient.
+                let rowClass = '';
+                if (badgeKey === 'cr') rowClass = 'student-highlight row-cr';
+                else if (badgeKey === 'x-cr') rowClass = 'student-highlight row-xcr';
+                else if (badgeKey === 'core member') rowClass = 'student-highlight row-core';
+                else if (badgeValue) rowClass = 'student-highlight row-advisor';
+                else if (isActivated) rowClass = 'student-highlight row-activated';
+
+                const visibleBadges = `${badgeHtml} ${loginBadge}`.trim();
+                const studentType = String(s.type || '').trim().toLowerCase();
+
+                if (studentType === 're' || studentType === 're-admission' || studentType === 'readmission') {
                     reCount++;
-                    reTbody.innerHTML += `<tr><td>${reCount}</td><td>${s.id}</td><td>${s.name} ${badgeHtml}</td></tr>`;
+                    reTbody.innerHTML += `<tr class="${rowClass}"><td>${reCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
                 } else {
                     regCount++;
-                    regTbody.innerHTML += `<tr><td>${regCount}</td><td>${s.id}</td><td>${s.name} ${badgeHtml}</td></tr>`;
+                    regTbody.innerHTML += `<tr class="${rowClass}"><td>${regCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
                 }
             });
-            document.getElementById("totalCounter").innerText = regCount + reCount;
+
+            if (regCount === 0) {
+                regTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No regular students found.</td></tr>`;
+            }
+            if (reCount === 0) {
+                reTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No re-admission students found.</td></tr>`;
+            }
+            if (totalCounter) totalCounter.innerText = regCount + reCount;
         }
 
         function searchTables() {
@@ -1267,37 +2195,77 @@
             { index: 4, name: "Thursday" }
         ];
         
-        function format12Hour(time24) {
-            if (!time24) return "";
-            try {
-                let [h, m] = time24.split(":");
-                h = parseInt(h);
-                let ampm = h >= 12 ? "PM" : "AM";
-                h = h % 12;
-                h = h ? h : 12; 
-                return `${h}:${m} ${ampm}`;
-            } catch(e) { return time24; }
+        // Converts the mixed time style used in the Sheet into minutes since midnight.
+        // Current routine uses 09:00/10:30 in the morning and 01:30-06:00 for afternoon/evening.
+        function parseTimeToMinutes(timeStr) {
+            if (timeStr === undefined || timeStr === null || String(timeStr).trim() === '') return Number.POSITIVE_INFINITY;
+
+            let raw = String(timeStr).trim();
+            const lower = raw.toLowerCase();
+            const isPM = /\bpm\b/.test(lower);
+            const isAM = /\bam\b/.test(lower);
+
+            // Also accept ISO-like date/time strings if Apps Script serializes a time as a Date.
+            const isoMatch = raw.match(/T(\d{1,2}):(\d{2})(?::\d{2})?/);
+            if (isoMatch) raw = `${isoMatch[1]}:${isoMatch[2]}`;
+
+            const match = raw.match(/(\d{1,2})\s*:\s*(\d{1,2})/);
+            if (!match) return Number.POSITIVE_INFINITY;
+
+            let h = parseInt(match[1], 10);
+            let m = parseInt(match[2], 10);
+            if (Number.isNaN(h) || Number.isNaN(m)) return Number.POSITIVE_INFINITY;
+
+            if (isPM && h !== 12) h += 12;
+            if (isAM && h === 12) h = 0;
+
+            // The current Sheet mixes 24-hour values (16:30/18:00) with
+            // afternoon values written as 01:30/02:30/03:00/04:30/06:00.
+            // Without AM/PM, 1-6 are therefore treated as PM.
+            if (!isAM && !isPM && h >= 1 && h <= 6) h += 12;
+
+            h = h % 24;
+            return (h * 60) + m;
         }
+
+        function formatSpreadsheetTime(timeStr) {
+            if (!timeStr) return '';
+            const total = parseTimeToMinutes(timeStr);
+            if (!Number.isFinite(total)) return String(timeStr).trim();
+
+            const h24 = Math.floor(total / 60) % 24;
+            const m = total % 60;
+            const ampm = h24 >= 12 ? 'PM' : 'AM';
+            const h12 = (h24 % 12) || 12;
+            return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+        }
+
 
         function initRoutine() {
             const tabsContainer = document.getElementById('routineTabs');
+            if(!tabsContainer) return;
             tabsContainer.innerHTML = '';
             
             let currentDay = new Date().getDay();
             if (currentDay === 5 || currentDay === 6) currentDay = 0;
 
+            const validSelectedDay = activeDays.some(d => d.index === selectedRoutineDay);
+            const dayToShow = validSelectedDay ? selectedRoutineDay : currentDay;
+
             activeDays.forEach(dayObj => {
-                tabsContainer.innerHTML += `<div class="day-tab ${dayObj.index === currentDay ? 'active' : ''}" onclick="selectRoutineDay(${dayObj.index}, this)">${dayObj.name}</div>`;
+                tabsContainer.innerHTML += `<div class="day-tab ${dayObj.index === dayToShow ? 'active' : ''}" onclick="selectRoutineDay(${dayObj.index}, this)">${dayObj.name}</div>`;
             });
             
-            selectRoutineDay(currentDay, tabsContainer.querySelector('.active'));
+            selectRoutineDay(dayToShow, tabsContainer.querySelector('.active'));
         }
 
         function selectRoutineDay(dayIndex, element) {
+            selectedRoutineDay = dayIndex;
             document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
             if(element) element.classList.add('active');
             
             const content = document.getElementById('routineContent');
+            if(!content) return;
             content.innerHTML = '';
             
             if(!routineData[dayIndex] || routineData[dayIndex].length === 0) {
@@ -1305,43 +2273,140 @@
                 return;
             }
 
-            routineData[dayIndex].forEach(cls => {
-                let timeDisplay = `${format12Hour(cls.start)} - ${format12Hour(cls.end)}`;
+            const sortedClasses = [...routineData[dayIndex]].sort((a, b) => parseTimeToMinutes(a.start) - parseTimeToMinutes(b.start));
+
+            sortedClasses.forEach(cls => {
+                const startMins = parseTimeToMinutes(cls.start);
+                const endMins = parseTimeToMinutes(cls.end);
+                let timeDisplay = `${formatSpreadsheetTime(cls.start)} - ${formatSpreadsheetTime(cls.end)}`;
                 content.innerHTML += `
-                <div class="routine-card">
+                <div class="routine-card" data-routine-day="${dayIndex}" data-start-mins="${startMins}" data-end-mins="${endMins}">
                     <div class="time-block">
                         <div class="time">${timeDisplay}</div>
                     </div>
                     <div class="info-block">
-                        <h4>${cls.sub}</h4>
-                        <p>Teacher: <span style="font-weight: 500;">${cls.teacher}</span></p>
+                        <h4>${escapeHtml(cls.sub)}</h4>
+                        <p>Teacher: <span style="font-weight: 500;">${escapeHtml(cls.teacher)}</span></p>
+                        <div class="routine-status neutral"><i class="fas fa-calendar-alt"></i><span>Scheduled Class</span></div>
                     </div>
                 </div>`;
             });
+
+            updateRoutineCardStates(new Date());
+        }
+
+        function formatDurationHuman(ms, includeSeconds = true) {
+            const safeMs = Math.max(0, Number(ms) || 0);
+            const totalSeconds = Math.floor(safeMs / 1000);
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const sec = totalSeconds % 60;
+
+            const parts = [];
+            if (h > 0) parts.push(`${h} ঘণ্টা`);
+            if (m > 0 || h > 0) parts.push(`${m} মিনিট`);
+            if (includeSeconds) parts.push(`${sec} সেকেন্ড`);
+            return parts.join(' ') || (includeSeconds ? '0 সেকেন্ড' : '0 মিনিট');
+        }
+
+        function getTimeDateForToday(now, totalMinutes) {
+            const d = new Date(now);
+            const h = Math.floor(totalMinutes / 60);
+            const m = totalMinutes % 60;
+            d.setHours(h, m, 0, 0);
+            return d;
         }
 
         function getNextClass(now) {
-            let day = now.getDay();
-            let currentMins = now.getHours() * 60 + now.getMinutes();
+            const day = now.getDay();
+            const todayClasses = Array.isArray(routineData[day])
+                ? [...routineData[day]]
+                    .filter(cls => cls && cls.start && cls.end)
+                    .map(cls => ({
+                        ...cls,
+                        startMins: parseTimeToMinutes(cls.start),
+                        endMins: parseTimeToMinutes(cls.end)
+                    }))
+                    .filter(cls => Number.isFinite(cls.startMins) && Number.isFinite(cls.endMins))
+                    .sort((a, b) => a.startMins - b.startMins)
+                : [];
 
-            if (routineData[day]) {
-                for (let cls of routineData[day]) {
-                    if(!cls.start || !cls.end) continue;
-                    let startParts = cls.start.split(":");
-                    let endParts = cls.end.split(":");
-                    let startMins = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
-                    let endMins = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
+            if (todayClasses.length === 0) {
+                return { status: 'none' };
+            }
 
-                    if (currentMins >= startMins && currentMins < endMins) {
-                        return { status: 'ongoing', sub: cls.sub, endsIn: endMins - currentMins };
-                    } else if (currentMins < startMins) {
-                        let targetDate = new Date();
-                        targetDate.setHours(parseInt(startParts[0]), parseInt(startParts[1]), 0, 0);
-                        return { status: 'upcoming', sub: cls.sub, time: targetDate };
-                    }
+            const nowTs = now.getTime();
+            for (const cls of todayClasses) {
+                const startDate = getTimeDateForToday(now, cls.startMins);
+                const endDate = getTimeDateForToday(now, cls.endMins);
+
+                if (nowTs >= startDate.getTime() && nowTs < endDate.getTime()) {
+                    return {
+                        status: 'ongoing',
+                        sub: cls.sub,
+                        start: cls.start,
+                        end: cls.end,
+                        endTime: endDate,
+                        endsInMs: endDate.getTime() - nowTs
+                    };
+                }
+
+                if (nowTs < startDate.getTime()) {
+                    return {
+                        status: 'upcoming',
+                        sub: cls.sub,
+                        start: cls.start,
+                        end: cls.end,
+                        time: startDate,
+                        startsInMs: startDate.getTime() - nowTs
+                    };
                 }
             }
-            return { status: 'none' };
+
+            return { status: 'finished' };
+        }
+
+        function updateRoutineCardStates(now = new Date()) {
+            const cards = document.querySelectorAll('.routine-card[data-routine-day]');
+            if (!cards.length) return;
+
+            const currentDay = now.getDay();
+            const nowMinutesExact = (now.getHours() * 60) + now.getMinutes() + (now.getSeconds() / 60);
+
+            cards.forEach(card => {
+                card.classList.remove('status-upcoming', 'status-live', 'status-ended');
+                const statusEl = card.querySelector('.routine-status');
+                if (!statusEl) return;
+
+                const cardDay = Number(card.dataset.routineDay);
+                const startMins = Number(card.dataset.startMins);
+                const endMins = Number(card.dataset.endMins);
+
+                // Only today's routine receives live time-based colour states.
+                if (cardDay !== currentDay || !Number.isFinite(startMins) || !Number.isFinite(endMins)) {
+                    statusEl.className = 'routine-status neutral';
+                    statusEl.innerHTML = '<i class="fas fa-calendar-alt"></i><span>Scheduled Class</span>';
+                    return;
+                }
+
+                if (nowMinutesExact < startMins) {
+                    const startDate = getTimeDateForToday(now, startMins);
+                    const remaining = startDate.getTime() - now.getTime();
+                    card.classList.add('status-upcoming');
+                    statusEl.className = 'routine-status';
+                    statusEl.innerHTML = `<i class="fas fa-hourglass-half"></i><span>শুরু হতে ${formatDurationHuman(remaining, false)} বাকি</span>`;
+                } else if (nowMinutesExact >= startMins && nowMinutesExact < endMins) {
+                    const endDate = getTimeDateForToday(now, endMins);
+                    const remaining = endDate.getTime() - now.getTime();
+                    card.classList.add('status-live');
+                    statusEl.className = 'routine-status';
+                    statusEl.innerHTML = `<i class="fas fa-broadcast-tower fa-beat"></i><span>ক্লাস চলছে • শেষ হতে ${formatDurationHuman(remaining, false)}</span>`;
+                } else {
+                    card.classList.add('status-ended');
+                    statusEl.className = 'routine-status';
+                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i><span>ক্লাস শেষ</span>';
+                }
+            });
         }
 
         function updateLiveTimer() {
@@ -1351,32 +2416,29 @@
             const subjectEl = document.getElementById('classSubject');
             const subtitleEl = document.getElementById('timerSubtitle');
             const iconEl = document.getElementById('timerIcon');
-            let nextCls = getNextClass(now);
+            const nextCls = getNextClass(now);
+
+            // Keep Class Routine cards synced every second without rebuilding the DOM.
+            updateRoutineCardStates(now);
             
-            if (modernCard && countdownEl && subjectEl) {
+            if (modernCard && countdownEl && subjectEl && subtitleEl && iconEl) {
                 if (nextCls.status === 'ongoing') {
                     modernCard.className = 'dash-card live-alert';
-                    let h = Math.floor(nextCls.endsIn / 60); let m = nextCls.endsIn % 60;
-                    subtitleEl.innerText = `Ends in ${h > 0 ? h+'h ':''}${m}m`;
-                    subjectEl.innerText = nextCls.sub;
-                    countdownEl.innerText = "ON AIR"; 
+                    subtitleEl.innerText = `ক্লাস চলছে • শেষ হতে ${formatDurationHuman(nextCls.endsInMs, false)}`;
+                    subjectEl.innerHTML = `${escapeHtml(nextCls.sub.split(' (')[0])}<div class="tracker-exact-time">শেষ হবে ${formatSpreadsheetTime(nextCls.end)}</div>`;
+                    countdownEl.innerText = 'LIVE';
                     iconEl.innerHTML = '<i class="fas fa-broadcast-tower fa-beat"></i>';
                 } else if (nextCls.status === 'upcoming') {
-                    modernCard.className = 'dash-card active-blue';
-                    let diff = nextCls.time - now;
-                    let h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                    let m = Math.floor((diff / 1000 / 60) % 60);
-                    let s = Math.floor((diff / 1000) % 60);
-                    let timeStr = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-                    subtitleEl.innerText = `Next class in`;
-                    subjectEl.innerText = nextCls.sub;
-                    countdownEl.innerText = timeStr;
-                    iconEl.innerHTML = '<i class="fas fa-hourglass-half"></i>';
+                    modernCard.className = 'dash-card live-upcoming';
+                    subtitleEl.innerText = 'পরবর্তী ক্লাস শুরু হতে বাকি';
+                    subjectEl.innerHTML = `${escapeHtml(nextCls.sub.split(' (')[0])}<div class="tracker-exact-time">শুরু ${formatSpreadsheetTime(nextCls.start)}</div>`;
+                    countdownEl.innerText = formatDurationHuman(nextCls.startsInMs, true);
+                    iconEl.innerHTML = '<i class="fas fa-hourglass-half fa-beat-fade"></i>';
                 } else {
-                    modernCard.className = 'dash-card active-blue';
-                    subtitleEl.innerText = `Status`;
-                    subjectEl.innerText = "No classes left today";
-                    countdownEl.innerText = "--:--:--";
+                    modernCard.className = 'dash-card live-finished';
+                    subtitleEl.innerText = 'আজকের ক্লাস স্ট্যাটাস';
+                    subjectEl.innerText = 'আজকে আর কোনো ক্লাস নেই';
+                    countdownEl.innerText = 'CLASS END';
                     iconEl.innerHTML = '<i class="fas fa-calendar-check"></i>';
                 }
             }
@@ -1385,6 +2447,7 @@
         // ================= DYNAMIC COURSES =================
         function renderCourses() {
             const coursesContainer = document.getElementById('coursesGrid');
+            if(!coursesContainer) return;
             coursesContainer.innerHTML = '';
             
             if(coursesData.length === 0) {
@@ -1399,7 +2462,8 @@
                         <i class="fas ${course.icon || 'fa-folder'}"></i>
                     </div>
                     <div class="card-title">${course.title || course.Title}</div>
-                    <div class="card-sub" style="margin-top: 5px;">${course.code || course.Code}</div>
+                    <div class="card-sub" style="margin-top: 5px; margin-bottom: 15px;">${course.code || course.Code}</div>
+                    <a href="${course.link}" target="_blank" class="btn-drive" style="width: 100%; padding: 10px; font-size: 13px;">Open Folder</a>
                 </div>`;
             });
         }
@@ -1407,6 +2471,7 @@
         // ================= DYNAMIC NOTICES =================
         function renderNotices() {
             const noticeContainer = document.getElementById('notices');
+            if(!noticeContainer) return;
             noticeContainer.innerHTML = `<h2 style="font-size: 26px; font-weight: 900; margin-bottom: 25px; color: var(--text-dark);">Notice Board</h2>`;
             
             if(noticesData.length === 0) {
