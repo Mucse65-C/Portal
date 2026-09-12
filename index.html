@@ -511,6 +511,15 @@
         .badge-cr { background: var(--primary-blue); } 
         .badge-advisor { background: var(--accent-green); }
         .badge-core { background: var(--warning); }
+        .badge-notetaker {
+            background: linear-gradient(135deg, #4338ca, #7c3aed);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, .22);
+        }
+        .badge-notetaker i { font-size: 10px; }
 
         /* ================= STUDENT BADGE ROW HIGHLIGHTS ================= */
         #regularTbody tr.student-highlight td,
@@ -555,6 +564,13 @@
         }
         #regularTbody tr.row-core td:first-child,
         #reTbody tr.row-core td:first-child { border-left-color: #f59e0b; }
+
+        #regularTbody tr.row-notetaker td,
+        #reTbody tr.row-notetaker td {
+            background: linear-gradient(105deg, rgba(237,233,254,.98) 0%, rgba(224,231,255,.95) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-notetaker td:first-child,
+        #reTbody tr.row-notetaker td:first-child { border-left-color: #7c3aed; }
 
         #regularTbody tr.row-advisor td,
         #reTbody tr.row-advisor td {
@@ -759,9 +775,31 @@
         .pwa-install-login i { margin-right: 7px; }
         #installAppBtn { display: none; color: var(--accent-green); border-color: rgba(4,120,87,.45); }
         #installAppBtn:hover { background: #ecfdf5; color: #047857; border-color: #047857; }
-        .pwa-installed #installAppBtn, .pwa-installed #loginInstallBtn { display: none !important; }
+        /* Dashboard app download / install card */
+        .pwa-download-card {
+            position: relative; overflow: hidden; cursor: pointer;
+            background: linear-gradient(135deg, #047857 0%, #059669 46%, #0f766e 100%);
+            color: #fff; border: none; box-shadow: 0 12px 28px rgba(4,120,87,.24);
+        }
+        .pwa-download-card::after {
+            content: ''; position: absolute; width: 150px; height: 150px; right: -55px; top: -70px;
+            border-radius: 50%; background: rgba(255,255,255,.11); pointer-events: none;
+        }
+        .pwa-download-card:hover { border-color: transparent; box-shadow: 0 18px 34px rgba(4,120,87,.34); }
+        .pwa-download-card .card-title, .pwa-download-card .card-sub,
+        .pwa-download-card .line-progress-text, .pwa-download-card .btn-deadline { color: #fff; }
+        .pwa-download-card .card-icon { background: rgba(255,255,255,.18); color: #fff; border: 1px solid rgba(255,255,255,.24); }
+        .pwa-download-card .line-progress-track { background: rgba(255,255,255,.24); }
+        .pwa-download-card .line-progress-fill { background: #fff; }
+        .pwa-download-card .card-footer { border-top-color: rgba(255,255,255,.2); }
+        .pwa-download-card .btn-view {
+            color: #047857; background: #fff; padding: 7px 12px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.10);
+        }
+        .pwa-installed #installAppBtn, .pwa-installed #loginInstallBtn,
+        .pwa-installed #dashboardInstallCard { display: none !important; }
         @media (display-mode: standalone) {
-            #installAppBtn, #loginInstallBtn { display: none !important; }
+            #installAppBtn, #loginInstallBtn, #dashboardInstallCard { display: none !important; }
         }
 
     </style>
@@ -970,6 +1008,28 @@
                                 <span class="btn-view">Visit Details</span>
                             </div>
                         </a>
+
+
+                        <!-- PWA APP DOWNLOAD / INSTALL -->
+                        <div class="dash-card pwa-download-card" id="dashboardInstallCard" onclick="installPortalApp()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();installPortalApp();}">
+                            <div>
+                                <div class="card-header">
+                                    <div class="card-icon"><i class="fas fa-mobile-alt"></i></div>
+                                    <div>
+                                        <div class="card-title">Download CSE 65-C App</div>
+                                        <div class="card-sub" id="installCardSubtext">Install directly from Android Chrome</div>
+                                    </div>
+                                </div>
+                                <div class="line-progress-container">
+                                    <div class="line-progress-track"><div class="line-progress-fill" style="width: 100%;"></div></div>
+                                    <span class="line-progress-text">PWA</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span class="btn-deadline"><i class="fab fa-android"></i> Android / Chrome</span>
+                                <span class="btn-view" id="installCardAction"><i class="fas fa-download" style="margin-right:5px;"></i> Install Now</span>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="dashboard-split">
@@ -1251,6 +1311,17 @@
                             <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Amirul Islam</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-141</div>
                             <div style="margin-top: 15px;"><span class="badge badge-core" style="font-size: 13px; padding: 6px 15px;">Core Member & Management Lead</span></div>
+                        </div>
+
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(124,58,237,0.10); border: 2px solid #7c3aed; background: linear-gradient(145deg, #ffffff 0%, #f5f3ff 100%);">
+                            <img src="Tarin%20Peer%20Notetaker.jpeg" alt="Khadiza Akther Tarin" class="member-img" style="border-color: #7c3aed;">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Khadiza Akther Tarin</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-124</div>
+                            <div style="margin-top: 15px;">
+                                <span class="badge badge-notetaker" style="font-size: 13px; padding: 7px 15px;">
+                                    <i class="fas fa-book-open"></i> Peer Notetaker
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2166,11 +2237,16 @@
                 const badgeValue = String(s.badge || '').trim();
                 const badgeKey = badgeValue.toLowerCase();
                 let badgeClass = 'badge-advisor';
+                let badgeIcon = '';
                 if (badgeKey === 'cr' || badgeKey === 'x-cr') badgeClass = 'badge-cr';
                 else if (badgeKey === 'core member') badgeClass = 'badge-core';
+                else if (badgeKey === 'peer notetaker') {
+                    badgeClass = 'badge-notetaker';
+                    badgeIcon = '<i class="fas fa-book-open" aria-hidden="true"></i>';
+                }
 
                 const badgeHtml = badgeValue
-                    ? `<span class="badge ${badgeClass}">${escapeHtml(badgeValue)}</span>`
+                    ? `<span class="badge ${badgeClass}">${badgeIcon}${escapeHtml(badgeValue)}</span>`
                     : '';
 
                 const safeId = escapeHtml(s.id);
@@ -2185,6 +2261,7 @@
                 if (badgeKey === 'cr') rowClass = 'student-highlight row-cr';
                 else if (badgeKey === 'x-cr') rowClass = 'student-highlight row-xcr';
                 else if (badgeKey === 'core member') rowClass = 'student-highlight row-core';
+                else if (badgeKey === 'peer notetaker') rowClass = 'student-highlight row-notetaker';
                 else if (badgeValue) rowClass = 'student-highlight row-advisor';
                 else if (isActivated) rowClass = 'student-highlight row-activated';
 
@@ -2615,10 +2692,30 @@
         function updateInstallButtons(show) {
             const headerBtn = document.getElementById('installAppBtn');
             const loginBtn = document.getElementById('loginInstallBtn');
-            const shouldShow = !!show && !isPortalInstalled();
-            if (headerBtn) headerBtn.style.display = shouldShow ? 'flex' : 'none';
-            if (loginBtn) loginBtn.style.display = shouldShow ? 'block' : 'none';
-            document.documentElement.classList.toggle('pwa-installed', isPortalInstalled());
+            const dashboardCard = document.getElementById('dashboardInstallCard');
+            const cardSubtext = document.getElementById('installCardSubtext');
+            const cardAction = document.getElementById('installCardAction');
+            const installed = isPortalInstalled();
+            const shouldShowPromptButtons = !!show && !installed;
+
+            if (headerBtn) headerBtn.style.display = shouldShowPromptButtons ? 'flex' : 'none';
+            if (loginBtn) loginBtn.style.display = shouldShowPromptButtons ? 'block' : 'none';
+
+            // Keep a visible dashboard download option in the browser even before
+            // Chrome fires beforeinstallprompt. Hide it only after installation.
+            if (dashboardCard) dashboardCard.style.display = installed ? 'none' : 'flex';
+            if (cardSubtext) {
+                cardSubtext.textContent = show
+                    ? 'Ready to install on this device'
+                    : 'Install directly from Android Chrome';
+            }
+            if (cardAction) {
+                cardAction.innerHTML = show
+                    ? '<i class="fas fa-download" style="margin-right:5px;"></i> Install Now'
+                    : '<i class="fab fa-chrome" style="margin-right:5px;"></i> Download App';
+            }
+
+            document.documentElement.classList.toggle('pwa-installed', installed);
         }
 
         window.addEventListener('beforeinstallprompt', (event) => {
