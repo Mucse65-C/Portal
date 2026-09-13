@@ -1024,7 +1024,7 @@
                 </div>
                 <div id="loginIdentityHint" class="login-helper-note show">
                     <i class="fas fa-shield-alt" style="margin-right:5px;"></i>
-                    First login: your Gmail will be saved with your Student ID in the connected Google Sheet. After logout, the same ID + Gmail must match the Sheet to log in again.
+                    First login: your Gmail will be saved in the Portal Login Database sheet against your Student ID. After logout, the same Student ID + Gmail must match that database to log in again.
                 </div>
                 <div id="loginApiStatus" class="login-api-status">
                     <span class="api-dot"></span>
@@ -1663,7 +1663,7 @@
         // Google Apps Script API: Students + Routine + Courses + Notices
         const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbx0UgUgU6xF8kwzCG3rxMiolv0xfic-rJ0zoTbiY4HFHhhfaYAc0mxOCHp1tWBkBVVI/exec";
         const PORTAL_AUTO_REFRESH_MS = 60 * 1000; // 60 seconds
-        const PORTAL_CACHE_KEY = "portal_data_cache_v9_id_gmail_auth";
+        const PORTAL_CACHE_KEY = "portal_data_cache_v10_login_db_gmail_auth";
         // *************************************************************************
 
         let loggedInUser = "Student";
