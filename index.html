@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, viewport-fit=cover">
     <title>Dep : CSE 65 C - Premium Portal</title>
 
     <!-- ================= PWA / INSTALLABLE APP ================= -->
@@ -80,9 +80,58 @@
         }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
+        .login-bg-scene { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+        .login-grid {
+            position: absolute; inset: -12%; opacity: 0.22;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.09) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.09) 1px, transparent 1px);
+            background-size: 44px 44px;
+            transform: perspective(700px) rotateX(68deg) scale(1.35);
+            transform-origin: center bottom;
+            mask-image: radial-gradient(circle at center, rgba(0,0,0,1), rgba(0,0,0,0.15) 70%, transparent 90%);
+            -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,1), rgba(0,0,0,0.15) 70%, transparent 90%);
+            animation: loginGridDrift 16s linear infinite;
+        }
+        @keyframes loginGridDrift { from { transform: perspective(700px) rotateX(68deg) scale(1.35) translateY(0); } to { transform: perspective(700px) rotateX(68deg) scale(1.35) translateY(44px); } }
+        .login-orb {
+            position: absolute; border-radius: 50%; filter: blur(10px); opacity: 0.55;
+            mix-blend-mode: screen; animation: loginOrbFloat 12s ease-in-out infinite;
+        }
+        .login-orb.orb-1 { width: 260px; height: 260px; background: radial-gradient(circle, rgba(96,165,250,0.65), rgba(96,165,250,0.08) 72%, transparent 76%); top: 4%; left: 6%; }
+        .login-orb.orb-2 { width: 320px; height: 320px; background: radial-gradient(circle, rgba(45,212,191,0.52), rgba(45,212,191,0.08) 70%, transparent 76%); right: 6%; top: 18%; animation-delay: -3s; }
+        .login-orb.orb-3 { width: 280px; height: 280px; background: radial-gradient(circle, rgba(251,191,36,0.44), rgba(251,191,36,0.08) 70%, transparent 76%); left: 32%; bottom: 5%; animation-delay: -6s; }
+        @keyframes loginOrbFloat {
+            0%, 100% { transform: translate3d(0,0,0) scale(1); }
+            33% { transform: translate3d(18px,-28px,0) scale(1.06); }
+            66% { transform: translate3d(-22px,18px,0) scale(0.96); }
+        }
+        .login-floaters { position: absolute; inset: 0; overflow: hidden; }
+        .login-floaters span {
+            position: absolute; display: block; width: 10px; height: 10px; border-radius: 50%;
+            background: rgba(255,255,255,0.72); box-shadow: 0 0 16px rgba(255,255,255,0.38); opacity: 0;
+            animation: floaterRise 10s linear infinite;
+        }
+        .login-floaters span:nth-child(1) { left: 9%; top: 76%; animation-delay: 0s; }
+        .login-floaters span:nth-child(2) { left: 18%; top: 62%; width: 6px; height: 6px; animation-delay: -2s; }
+        .login-floaters span:nth-child(3) { left: 26%; top: 86%; width: 12px; height: 12px; animation-delay: -5s; }
+        .login-floaters span:nth-child(4) { left: 39%; top: 73%; width: 7px; height: 7px; animation-delay: -1s; }
+        .login-floaters span:nth-child(5) { right: 28%; top: 81%; width: 8px; height: 8px; animation-delay: -4s; }
+        .login-floaters span:nth-child(6) { right: 17%; top: 60%; width: 11px; height: 11px; animation-delay: -7s; }
+        .login-floaters span:nth-child(7) { right: 10%; top: 84%; width: 6px; height: 6px; animation-delay: -3s; }
+        .login-floaters span:nth-child(8) { left: 56%; top: 64%; width: 9px; height: 9px; animation-delay: -6s; }
+        @keyframes floaterRise {
+            0% { transform: translate3d(0, 30px, 0) scale(0.3); opacity: 0; }
+            20% { opacity: 0.85; }
+            80% { opacity: 0.35; }
+            100% { transform: translate3d(24px, -90px, 0) scale(1.1); opacity: 0; }
+        }
+
         .login-wrapper {
+            position: relative; z-index: 2;
             display: flex; width: 100%; max-width: 850px; max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px);
-            background: var(--bg-white); border-radius: 20px; overflow: hidden;
+            background: rgba(255,255,255,0.965); border-radius: 20px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.22); backdrop-filter: blur(14px);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); animation: cardPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             opacity: 0; transform: translateY(30px) scale(0.95);
         }
@@ -153,6 +202,19 @@
             font-size: 11px; font-weight: 700; line-height: 1.45;
         }
         .login-helper-note.show { display: block; }
+        .login-api-status {
+            display: flex; align-items: center; gap: 9px; margin: 4px 0 14px; padding: 10px 12px;
+            border-radius: 10px; font-size: 11px; font-weight: 800; line-height: 1.45;
+            border: 1px solid #bfdbfe; background: #eff6ff; color: #1d4ed8;
+        }
+        .login-api-status .api-dot {
+            width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+            background: #f59e0b; box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.12);
+        }
+        .login-api-status.online { background: #ecfdf5; border-color: #a7f3d0; color: #047857; }
+        .login-api-status.online .api-dot { background: #10b981; box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.14); }
+        .login-api-status.offline { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+        .login-api-status.offline .api-dot { background: #ef4444; box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.12); }
 
         /* Mobile/iPhone login: the overlay itself scrolls, so the bottom button can never be clipped. */
         @media screen and (max-width: 768px) {
@@ -182,6 +244,10 @@
             .input-group { margin-bottom: 10px; }
             .input-group input { font-size: 16px; padding: 11px 13px; } /* prevents iOS focus zoom */
             .login-btn { position: relative; z-index: 2; }
+            .login-grid { opacity: 0.15; }
+            .login-orb.orb-1 { width: 180px; height: 180px; left: -8%; top: 2%; }
+            .login-orb.orb-2 { width: 210px; height: 210px; right: -6%; top: 16%; }
+            .login-orb.orb-3 { width: 190px; height: 190px; left: 28%; bottom: -3%; }
         }
 
         /* Short landscape phones/tablets also need a scrollable login. */
@@ -366,24 +432,6 @@
             font-weight: 700;
             line-height: 1.45;
         }
-        .profile-password-card {
-            margin-top: 16px; padding: 15px; border-radius: 14px;
-            border: 1px solid #cbd5e1; background: #f8fafc;
-        }
-        .profile-password-card h4 { font-size: 14px; font-weight: 900; color: var(--primary-blue); margin-bottom: 10px; display:flex; align-items:center; gap:8px; }
-        .profile-password-card input {
-            width: 100%; margin-top: 8px; padding: 11px 12px; border: 1px solid #cbd5e1;
-            border-radius: 10px; outline: none; background: #fff; color: var(--text-dark); font-size: 14px; font-weight: 600;
-        }
-        .profile-password-card input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(15,28,64,.08); }
-        .profile-password-card button {
-            width:100%; margin-top:10px; padding:11px 14px; border:0; border-radius:10px;
-            background: var(--primary-blue); color:#fff; font-size:13px; font-weight:800; cursor:pointer;
-        }
-        .profile-password-card button:disabled { opacity:.65; cursor:wait; }
-        .password-change-status { display:none; margin-top:9px; padding:9px 10px; border-radius:9px; font-size:11px; font-weight:800; line-height:1.4; }
-        .password-change-status.success { display:block; color:#047857; background:#ecfdf5; border:1px solid #a7f3d0; }
-        .password-change-status.error { display:block; color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; }
         #headerProfilePic { position: relative; }
         #headerProfilePic::after {
             content: '';
@@ -865,6 +913,60 @@
             #installAppBtn, #loginInstallBtn, #dashboardInstallCard { display: none !important; }
         }
 
+        /* ================= UNIVERSAL MOBILE RESPONSIVE HARDENING ================= */
+        html, body { width: 100%; max-width: 100%; min-height: 100%; }
+        body { min-height: 100vh; min-height: 100svh; }
+        #loginOverlay { min-height: 100vh; min-height: 100svh; min-height: 100dvh; }
+        .login-wrapper { width: min(850px, 100%); }
+        .login-right, .login-left { min-width: 0; }
+        .login-right input, .login-btn, .pwa-install-login { max-width: 100%; }
+
+        @supports (-webkit-touch-callout: none) {
+            #loginOverlay { min-height: -webkit-fill-available; }
+        }
+
+        @media screen and (max-width: 480px) {
+            #loginOverlay {
+                padding-top: max(8px, env(safe-area-inset-top));
+                padding-right: max(8px, env(safe-area-inset-right));
+                padding-bottom: max(14px, env(safe-area-inset-bottom));
+                padding-left: max(8px, env(safe-area-inset-left));
+            }
+            .login-wrapper { width: 100%; border-radius: 14px; margin: 0; }
+            .login-left { padding: 14px 14px 12px; }
+            .login-left i { font-size: 30px; margin-bottom: 6px; }
+            .login-left h2 { font-size: 20px; }
+            .login-left p { font-size: 11px; }
+            .login-right { padding: 14px 14px max(18px, env(safe-area-inset-bottom)); }
+            .login-avatar { width: 60px; height: 60px; }
+            .login-avatar-text { font-size: 9px; }
+            .login-right h3 { font-size: 20px; }
+            .login-right > p { font-size: 12px; margin-bottom: 12px; }
+            .input-group { margin-bottom: 9px; }
+            .input-group input { min-height: 46px; width: 100%; font-size: 16px; }
+            .login-helper-note { font-size: 10.5px; margin-bottom: 9px; }
+            .login-btn { min-height: 48px; padding: 13px 12px; font-size: 14px; }
+            #loginError { font-size: 12px; margin-top: 10px; }
+        }
+
+        @media screen and (max-width: 350px) {
+            .login-left p { display: none; }
+            .login-right { padding-left: 11px; padding-right: 11px; }
+            .login-avatar-container { margin-bottom: 6px; }
+            .login-avatar { width: 54px; height: 54px; }
+            .login-right h3 { font-size: 18px; }
+        }
+
+        @media screen and (orientation: landscape) and (max-height: 520px) {
+            #loginOverlay { align-items: flex-start; overflow-y: auto; }
+            .login-wrapper { max-height: none; margin: 0 auto 12px; }
+            .login-left { padding: 10px 16px; }
+            .login-left i { display: none; }
+            .login-left p { display: none; }
+            .login-right { max-height: none; overflow: visible; padding-top: 12px; padding-bottom: 16px; }
+            .login-avatar-container { display: none; }
+        }
+
     </style>
 </head>
 <body>
@@ -877,6 +979,15 @@
 
     <!-- ================= SECURE LOGIN SCREEN ================= -->
     <div id="loginOverlay" style="display: none;">
+        <div class="login-bg-scene" aria-hidden="true">
+            <div class="login-grid"></div>
+            <div class="login-orb orb-1"></div>
+            <div class="login-orb orb-2"></div>
+            <div class="login-orb orb-3"></div>
+            <div class="login-floaters">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
         <div class="login-wrapper">
             <div class="login-left">
                 <i class="fas fa-fingerprint"></i>
@@ -896,7 +1007,7 @@
                 </div>
 
                 <h3>Sign In</h3>
-                <p>One-time setup: Enter your details to fix your profile</p>
+                <p>Enter your Student ID and Gmail to access the portal</p>
                 
                 <div class="input-group">
                     <label>Student ID</label>
@@ -907,27 +1018,22 @@
                     <label>Student Name</label>
                     <input type="text" id="loginName" placeholder="Auto-filled via Database" readonly tabindex="-1">
                 </div>
-                <div class="input-group" id="loginPhoneGroup" style="display:none;">
-                    <label>Phone Number (Save Once)</label>
-                    <input type="tel" id="loginPhone" placeholder="01XXXXXXXXX" inputmode="numeric" autocomplete="tel" maxlength="14">
-                </div>
-                <div class="input-group" id="loginActivationGroup" style="display:none;">
-                    <label>One-time Activation Code</label>
-                    <input type="password" id="loginActivationCode" placeholder="First setup only" autocomplete="one-time-code">
-                </div>
                 <div class="input-group">
-                    <label id="loginPwdLabel">Portal Password</label>
-                    <input type="password" id="loginPwd" placeholder="Enter Password" autocomplete="current-password">
+                    <label>Gmail Address</label>
+                    <input type="email" id="loginEmail" placeholder="yourname@gmail.com" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false">
                 </div>
-                <div class="input-group" id="loginConfirmGroup" style="display:none;">
-                    <label>Confirm New Password</label>
-                    <input type="password" id="loginPwdConfirm" placeholder="Re-enter your new password" autocomplete="new-password">
+                <div id="loginIdentityHint" class="login-helper-note show">
+                    <i class="fas fa-shield-alt" style="margin-right:5px;"></i>
+                    First login: your Gmail will be saved with your Student ID in the connected Google Sheet. After logout, the same ID + Gmail must match the Sheet to log in again.
                 </div>
-                <div id="loginPasswordHint" class="login-helper-note"></div>
+                <div id="loginApiStatus" class="login-api-status">
+                    <span class="api-dot"></span>
+                    <span id="loginApiStatusText">Checking login database connection...</span>
+                </div>
                 
-                <button class="login-btn" id="loginSubmitBtn" onclick="attemptLogin()">Secure Login <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
+                <button class="login-btn" id="loginSubmitBtn" onclick="attemptLogin()">Login with ID &amp; Gmail <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
                 <button class="pwa-install-login" id="loginInstallBtn" type="button" onclick="installPortalApp()"><i class="fas fa-download"></i> Install CSE 65-C App</button>
-                <div id="loginError">Invalid ID or Password!</div>
+                <div id="loginError">Invalid Student ID or Gmail!</div>
             </div>
         </div>
     </div>
@@ -1527,24 +1633,16 @@
                         </div>
                     </div>
                     <div class="profile-info-row">
-                        <div class="profile-info-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="profile-info-icon"><i class="fas fa-envelope"></i></div>
                         <div class="profile-info-text">
-                            <div class="profile-info-label">Phone Number</div>
-                            <div class="profile-info-value" id="profileModalPhone">Not provided</div>
+                            <div class="profile-info-label">Registered Gmail</div>
+                            <div class="profile-info-value" id="profileModalEmail">Not provided</div>
                         </div>
                     </div>
                 </div>
                 <div class="profile-security-note">
                     <i class="fas fa-shield-alt" style="margin-top:2px;"></i>
-                    <span>Your password is stored in Google Sheets as a salted hash. The actual password is never shown in the portal.</span>
-                </div>
-                <div class="profile-password-card">
-                    <h4><i class="fas fa-key"></i> Change My Password</h4>
-                    <input type="password" id="profileCurrentPwd" placeholder="Current password" autocomplete="current-password">
-                    <input type="password" id="profileNewPwd" placeholder="New password (minimum 6 characters)" autocomplete="new-password">
-                    <input type="password" id="profileConfirmPwd" placeholder="Confirm new password" autocomplete="new-password">
-                    <button type="button" id="profileChangePwdBtn" onclick="changeOwnPassword()"><i class="fas fa-lock"></i> Save New Password</button>
-                    <div id="profilePasswordStatus" class="password-change-status"></div>
+                    <span>Login uses your Student ID + registered Gmail. No fixed portal password or 65-C password is required.</span>
                 </div>
             </div>
         </div>
@@ -1563,9 +1661,9 @@
         
         // *************************************************************************
         // Google Apps Script API: Students + Routine + Courses + Notices
-        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxqZtxIhOyCDjOKkwygyxsIUIk_iPJBQAfS41KZdRTkt7ajWrJNavJUVN-sVMMZ944X/exec";
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbx0UgUgU6xF8kwzCG3rxMiolv0xfic-rJ0zoTbiY4HFHhhfaYAc0mxOCHp1tWBkBVVI/exec";
         const PORTAL_AUTO_REFRESH_MS = 60 * 1000; // 60 seconds
-        const PORTAL_CACHE_KEY = "portal_data_cache_v8_secure_auth";
+        const PORTAL_CACHE_KEY = "portal_data_cache_v9_id_gmail_auth";
         // *************************************************************************
 
         let loggedInUser = "Student";
@@ -1587,9 +1685,13 @@
                     } else {
                         document.getElementById('loginOverlay').style.display = 'flex';
                         setTimeout(()=> { document.getElementById('loginOverlay').style.opacity = '1'; }, 50);
+                        setTimeout(() => { pingLoginApi(); }, 220);
                     }
                 }, 300); 
             }, 100);
+
+            window.addEventListener('online', pingLoginApi);
+            window.addEventListener('offline', () => setLoginApiStatus('offline', 'Internet connection lost. Please reconnect and try again.'));
 
             // First load can use the last successful cache for instant UI,
             // then immediately replaces it with fresh API data.
@@ -1598,7 +1700,7 @@
         };
 
         function checkSession() {
-            const session = localStorage.getItem('portal_user_session_v3');
+            const session = localStorage.getItem('portal_user_session_v4');
             if (session) {
                 const user = JSON.parse(session);
                 loggedInId = user.id;
@@ -1611,7 +1713,7 @@
         }
 
         function logoutSystem() {
-            localStorage.removeItem('portal_user_session_v3');
+            localStorage.removeItem('portal_user_session_v4');
             window.location.reload();
         }
 
@@ -1619,7 +1721,7 @@
         function getLoggedInProfileData() {
             let saved = {};
             try {
-                saved = JSON.parse(localStorage.getItem('portal_user_session_v3') || '{}') || {};
+                saved = JSON.parse(localStorage.getItem('portal_user_session_v4') || '{}') || {};
             } catch (e) {
                 saved = {};
             }
@@ -1632,7 +1734,7 @@
             return {
                 id: (saved.id || loggedInId || '—').toString().trim(),
                 fullName: fullName || 'Student',
-                phone: (saved.phone || '').toString().trim(),
+                email: (saved.email || '').toString().trim(),
                 pic: (saved.pic || '').toString()
             };
         }
@@ -1645,14 +1747,7 @@
             document.getElementById('profileModalName').textContent = profile.fullName;
             document.getElementById('profileModalFullName').textContent = profile.fullName;
             document.getElementById('profileModalId').textContent = profile.id || '—';
-            document.getElementById('profileModalPhone').textContent = profile.phone || 'Not provided';
-
-            ['profileCurrentPwd','profileNewPwd','profileConfirmPwd'].forEach(id => {
-                const input = document.getElementById(id);
-                if (input) input.value = '';
-            });
-            const pwdStatus = document.getElementById('profilePasswordStatus');
-            if (pwdStatus) { pwdStatus.className = 'password-change-status'; pwdStatus.textContent = ''; }
+            document.getElementById('profileModalEmail').textContent = profile.email || 'Not provided';
 
             const avatar = document.getElementById('profilePopupAvatar');
             if (profile.pic) {
@@ -1889,9 +1984,7 @@
                 const name = String(s.name ?? s.Name ?? s.NAME ?? s.student_name ?? s.studentName ?? s['Student Name'] ?? '').trim();
                 const badge = String(s.badge ?? s.Badge ?? s.BADGE ?? s.badage ?? s.Badage ?? s.BADAGE ?? '').trim();
                 const type = String(s.type ?? s.Type ?? s.TYPE ?? s.student_type ?? '').trim();
-                const rawHasPassword = s.hasPassword ?? s.HasPassword ?? s.HAS_PASSWORD ?? s.passwordSet ?? s.PASSWORD_SET ?? false;
-                const hasPassword = rawHasPassword === true || ['true', '1', 'yes', 'y'].includes(String(rawHasPassword).toLowerCase().trim());
-                return { id, name, badge, type, hasPassword };
+                return { id, name, badge, type };
             }).filter(s => {
                 // Remove the duplicate header row and the blank "re" row.
                 if (!s.id || !s.name || isHeaderLikeStudent(s.id, s.name)) return false;
@@ -1984,36 +2077,33 @@
         let currentFocus = -1;
 
         document.getElementById('loginId').addEventListener('input', function(e) {
-            let val = e.target.value.replace(/\D/g, ''); 
+            let val = e.target.value.replace(/\D/g, '');
             let formattedVal = '';
-            for(let i = 0; i < val.length; i++) {
-                if(i === 3 || i === 6) formattedVal += '-';
+            for (let i = 0; i < val.length; i++) {
+                if (i === 3 || i === 6) formattedVal += '-';
                 formattedVal += val[i];
             }
             e.target.value = formattedVal;
-            currentFocus = -1; 
+            currentFocus = -1;
 
             const suggestionsBox = document.getElementById('idSuggestions');
             if (val.length > 0) {
                 const matches = studentDatabase.filter(s => {
-                    if(!s.id) return false;
-                    let sRaw = s.id.replace(/\D/g, '');
-                    return sRaw.includes(val);
+                    if (!s.id) return false;
+                    return s.id.replace(/\D/g, '').includes(val);
                 });
-                
+
                 if (matches.length > 0) {
                     suggestionsBox.innerHTML = '';
                     matches.forEach(match => {
-                        let div = document.createElement('div');
+                        const div = document.createElement('div');
                         div.className = 'suggestion-item';
                         div.innerHTML = `<span><i class="fas fa-id-card" style="margin-right:8px; color:var(--primary-blue);"></i>${match.id}</span> <span style="color:var(--accent-orange); font-weight:700;">${match.name ? match.name.split(' ')[0] : 'Student'}</span>`;
                         div.onclick = function() {
                             document.getElementById('loginId').value = match.id;
                             document.getElementById('loginName').value = match.name;
                             suggestionsBox.style.display = 'none';
-                            updateLoginPasswordMode(match);
-                            const nextFocus = match.hasPassword ? document.getElementById('loginPwd') : document.getElementById('loginPhone');
-                            if (nextFocus) nextFocus.focus();
+                            document.getElementById('loginEmail').focus();
                         };
                         suggestionsBox.appendChild(div);
                     });
@@ -2026,138 +2116,120 @@
             }
 
             const student = studentDatabase.find(s => s.id === formattedVal);
-            if(student) {
-                document.getElementById('loginName').value = student.name;
-                updateLoginPasswordMode(student);
-            } else {
-                document.getElementById('loginName').value = "";
-                updateLoginPasswordMode(null);
-            }
+            document.getElementById('loginName').value = student ? student.name : '';
         });
 
         document.getElementById('loginId').addEventListener('keydown', function(e) {
-            let x = document.getElementById("idSuggestions");
-            if (x) x = x.getElementsByTagName("div");
-            if (!x || x.length === 0) return;
+            let x = document.getElementById('idSuggestions');
+            if (x) x = x.getElementsByTagName('div');
+            if (!x || x.length === 0) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('loginEmail').focus();
+                }
+                return;
+            }
 
-            if (e.keyCode == 40) { 
+            if (e.keyCode === 40) {
                 currentFocus++;
                 addActive(x);
-            } else if (e.keyCode == 38) { 
+            } else if (e.keyCode === 38) {
                 currentFocus--;
                 addActive(x);
-            } else if (e.keyCode == 13) { 
+            } else if (e.keyCode === 13) {
                 e.preventDefault();
-                if (currentFocus > -1) {
-                    if (x) x[currentFocus].click();
-                } else if (x.length == 1) {
-                    x[0].click(); 
-                }
+                if (currentFocus > -1 && x[currentFocus]) x[currentFocus].click();
+                else if (x.length === 1) x[0].click();
+                else document.getElementById('loginEmail').focus();
             }
         });
 
-        document.getElementById('loginPhone').addEventListener('keydown', function (e) {
+        document.getElementById('loginEmail').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
-                const activation = document.getElementById('loginActivationCode');
-                if (activation && activation.offsetParent !== null) activation.focus();
-                else document.getElementById('loginPwd').focus();
+                e.preventDefault();
+                attemptLogin();
             }
-        });
-
-        document.getElementById('loginActivationCode').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') document.getElementById('loginPwd').focus();
         });
 
         function addActive(x) {
             if (!x) return false;
             removeActive(x);
             if (currentFocus >= x.length) currentFocus = 0;
-            if (currentFocus < 0) currentFocus = (x.length - 1);
-            x[currentFocus].classList.add("active-nav");
-            x[currentFocus].scrollIntoView({ behavior: "smooth", block: "nearest" });
+            if (currentFocus < 0) currentFocus = x.length - 1;
+            x[currentFocus].classList.add('active-nav');
+            x[currentFocus].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
+
         function removeActive(x) {
-            for (let i = 0; i < x.length; i++) {
-                x[i].classList.remove("active-nav");
-            }
+            for (let i = 0; i < x.length; i++) x[i].classList.remove('active-nav');
         }
 
         document.addEventListener('click', function(e) {
-            if(e.target.id !== 'loginId') {
-                document.getElementById('idSuggestions').style.display = 'none';
-            }
+            if (e.target.id !== 'loginId') document.getElementById('idSuggestions').style.display = 'none';
         });
 
-        document.getElementById('loginPwd').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                const confirmGroup = document.getElementById('loginConfirmGroup');
-                if (confirmGroup && confirmGroup.style.display !== 'none') {
-                    document.getElementById('loginPwdConfirm').focus();
-                } else {
-                    attemptLogin();
-                }
-            }
-        });
-        document.getElementById('loginPwdConfirm').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') attemptLogin();
-        });
+        function normalizeGmail(value) {
+            return String(value || '').trim().toLowerCase();
+        }
 
-        function updateLoginPasswordMode(student) {
-            const phoneGroup = document.getElementById('loginPhoneGroup');
-            const activationGroup = document.getElementById('loginActivationGroup');
-            const confirmGroup = document.getElementById('loginConfirmGroup');
-            const pwdLabel = document.getElementById('loginPwdLabel');
-            const pwdInput = document.getElementById('loginPwd');
-            const hint = document.getElementById('loginPasswordHint');
-            const submitBtn = document.getElementById('loginSubmitBtn');
-
-            if (!student) {
-                phoneGroup.style.display = 'none';
-                activationGroup.style.display = 'none';
-                confirmGroup.style.display = 'none';
-                pwdLabel.textContent = 'Portal Password';
-                pwdInput.placeholder = 'Enter Password';
-                pwdInput.autocomplete = 'current-password';
-                hint.className = 'login-helper-note';
-                hint.textContent = '';
-                submitBtn.innerHTML = 'Secure Login <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>';
-                return;
-            }
-
-            if (student.hasPassword) {
-                phoneGroup.style.display = 'none';
-                activationGroup.style.display = 'none';
-                confirmGroup.style.display = 'none';
-                pwdLabel.textContent = 'Your Portal Password';
-                pwdInput.placeholder = 'Enter your password';
-                pwdInput.autocomplete = 'current-password';
-                hint.className = 'login-helper-note show';
-                hint.innerHTML = '<i class="fas fa-lock" style="margin-right:5px;"></i> Use the personal password you created for your Student ID.';
-                submitBtn.innerHTML = 'Secure Login <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>';
-            } else {
-                phoneGroup.style.display = 'block';
-                activationGroup.style.display = 'block';
-                confirmGroup.style.display = 'block';
-                pwdLabel.textContent = 'Create Your Password';
-                pwdInput.placeholder = 'Choose a new password';
-                pwdInput.autocomplete = 'new-password';
-                hint.className = 'login-helper-note show';
-                hint.innerHTML = '<i class="fas fa-user-shield" style="margin-right:5px;"></i> First-time setup: enter the one-time activation code (default <strong>65-C</strong>, or your assigned code), then create your own password. After setup, the activation code will no longer work as your login password.';
-                submitBtn.innerHTML = 'Create Password & Login <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>';
-            }
+        function isValidGmail(value) {
+            return /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@gmail\.com$/i.test(normalizeGmail(value));
         }
 
         function setLoginBusy(isBusy) {
             const btn = document.getElementById('loginSubmitBtn');
             if (!btn) return;
             btn.disabled = isBusy;
-            if (isBusy) btn.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="margin-right:8px;"></i> Verifying...';
+            btn.innerHTML = isBusy
+                ? '<i class="fas fa-circle-notch fa-spin" style="margin-right:8px;"></i> Verifying...'
+                : 'Login with ID &amp; Gmail <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>';
         }
 
         function showLoginError(message) {
             const err = document.getElementById('loginError');
             err.innerText = message;
             err.style.display = 'block';
+        }
+
+        function setLoginApiStatus(state, message) {
+            const box = document.getElementById('loginApiStatus');
+            const textNode = document.getElementById('loginApiStatusText');
+            if (!box || !textNode) return;
+            box.classList.remove('online', 'offline');
+            if (state === 'online') box.classList.add('online');
+            if (state === 'offline') box.classList.add('offline');
+            textNode.textContent = message;
+        }
+
+        function buildApiUrl(params = {}) {
+            const url = new URL(SHEET_API_URL);
+            Object.entries(params).forEach(([key, value]) => {
+                if (value !== undefined && value !== null && value !== '') {
+                    url.searchParams.set(key, value);
+                }
+            });
+            url.searchParams.set('_ts', Date.now());
+            return url.toString();
+        }
+
+        function parseApiRawResponse(raw) {
+            try { return JSON.parse(raw); }
+            catch (e) {
+                if (/doctype html|<html|google accounts|sign in|sorry, unable to open/i.test(String(raw))) {
+                    throw new Error('Apps Script is not publicly accessible. Redeploy the Web App as "Execute as: Me" and "Who has access: Anyone".');
+                }
+                throw new Error('Server returned an invalid response. Use the latest Apps Script code, deploy the /exec URL, then update SHEET_API_URL in index.html.');
+            }
+        }
+
+        async function portalApiGet(params) {
+            const response = await fetch(buildApiUrl(params), {
+                method: 'GET',
+                cache: 'no-store',
+                redirect: 'follow'
+            });
+            const raw = await response.text();
+            return parseApiRawResponse(raw);
         }
 
         async function portalApiPost(payload) {
@@ -2169,84 +2241,75 @@
                 redirect: 'follow'
             });
             const raw = await response.text();
-            let data;
-            try { data = JSON.parse(raw); }
-            catch (e) { throw new Error('Server returned an invalid response. Please redeploy the Apps Script and try again.'); }
-            return data;
+            return parseApiRawResponse(raw);
+        }
+
+        async function pingLoginApi() {
+            setLoginApiStatus('checking', 'Checking login database connection...');
+            try {
+                const result = await portalApiGet({ action: 'status' });
+                if (result && result.ok !== false) {
+                    setLoginApiStatus('online', 'Login database connected and ready.');
+                } else {
+                    throw new Error((result && result.message) || 'Login database is not ready.');
+                }
+            } catch (e) {
+                console.warn('Login API ping failed:', e);
+                setLoginApiStatus('offline', 'Login database not connected. Redeploy Apps Script and update SHEET_API_URL.');
+            }
+        }
+
+        async function authenticateStudentWithGmail(studentId, email) {
+            try {
+                return await portalApiGet({ action: 'authenticateEmail', studentId, email });
+            } catch (getErr) {
+                console.warn('GET authentication failed, retrying with POST...', getErr);
+                try {
+                    return await portalApiPost({ action: 'authenticateEmail', studentId, email });
+                } catch (postErr) {
+                    throw new Error(postErr && postErr.message ? postErr.message : (getErr && getErr.message ? getErr.message : 'Unable to reach the login database.'));
+                }
+            }
         }
 
         async function attemptLogin() {
             const idVal = normalizeStudentId(document.getElementById('loginId').value.trim());
-            const pwdVal = document.getElementById('loginPwd').value;
-            const phoneVal = document.getElementById('loginPhone').value.trim();
-            const activationCode = document.getElementById('loginActivationCode').value;
-            const confirmPwd = document.getElementById('loginPwdConfirm').value;
+            const emailVal = normalizeGmail(document.getElementById('loginEmail').value);
             const err = document.getElementById('loginError');
             const student = studentDatabase.find(s => normalizeStudentId(s.id) === idVal);
 
             if (!student) {
-                showLoginError('Error: Student ID not found. Please wait for the student database to finish loading.');
+                showLoginError('Student ID not found. Please wait for the database to load or check the ID.');
                 return;
             }
-            if (!pwdVal) {
-                showLoginError(student.hasPassword ? 'Please enter your password.' : 'Please create a password.');
+            if (!isValidGmail(emailVal)) {
+                showLoginError('Please enter a valid Gmail address ending with @gmail.com.');
                 return;
-            }
-            if (!student.hasPassword) {
-                const phoneDigits = phoneVal.replace(/\D/g, '');
-                if (!/^01\d{9}$/.test(phoneDigits)) {
-                    showLoginError('First-time setup requires a valid 11-digit Bangladesh phone number.');
-                    return;
-                }
-                if (!activationCode) {
-                    showLoginError('Please enter the one-time activation code.');
-                    return;
-                }
-                if (pwdVal.length < 6) {
-                    showLoginError('Your new password must be at least 6 characters.');
-                    return;
-                }
-                if (pwdVal !== confirmPwd) {
-                    showLoginError('New password and confirmation do not match.');
-                    return;
-                }
             }
 
             err.style.display = 'none';
             setLoginBusy(true);
 
             try {
-                const result = student.hasPassword
-                    ? await portalApiPost({ action: 'authenticate', studentId: idVal, password: pwdVal })
-                    : await portalApiPost({
-                        action: 'registerPassword',
-                        studentId: idVal,
-                        activationCode: activationCode,
-                        newPassword: pwdVal,
-                        phone: phoneVal
-                    });
+                const result = await authenticateStudentWithGmail(idVal, emailVal);
 
                 if (!result || !result.ok) {
-                    if (result && result.setupRequired) {
-                        student.hasPassword = false;
-                        updateLoginPasswordMode(student);
-                    }
-                    showLoginError((result && result.message) ? result.message : 'Login failed. Please check your password and try again.');
+                    showLoginError((result && result.message) ? result.message : 'Login failed. Student ID and Gmail did not match the Sheet database.');
                     return;
                 }
 
-                student.hasPassword = true;
+                setLoginApiStatus('online', 'Login database connected and verified.');
                 loggedInUser = (result.student && result.student.name ? result.student.name : student.name || 'Student').split(' ')[0];
                 loggedInId = student.id;
-                err.style.display = 'none';
 
                 const authProfile = {
                     name: (result.student && result.student.name) || student.name || loggedInUser,
-                    phone: (result.student && result.student.phone) || phoneVal || ''
+                    email: (result.student && result.student.email) || emailVal,
+                    firstRegistration: Boolean(result.firstRegistration)
                 };
 
                 const fileInput = document.getElementById('loginPic');
-                if(fileInput.files && fileInput.files[0]) {
+                if (fileInput.files && fileInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) { finalizeLogin(e.target.result, authProfile); };
                     reader.readAsDataURL(fileInput.files[0]);
@@ -2255,22 +2318,21 @@
                 }
             } catch (e) {
                 console.error('Authentication error:', e);
-                showLoginError('Unable to reach the secure login server. Check the Apps Script deployment and internet connection.');
+                showLoginError(e && e.message ? e.message : 'Unable to reach the login database. Check the Apps Script deployment and internet connection.');
+                setLoginApiStatus('offline', 'Login database is not responding. Check deployment and internet connection.');
             } finally {
                 setLoginBusy(false);
-                const current = studentDatabase.find(s => normalizeStudentId(s.id) === idVal);
-                updateLoginPasswordMode(current || student);
             }
         }
 
         function finalizeLogin(picData, authProfile = {}) {
-            const phoneVal = (authProfile.phone || document.getElementById('loginPhone').value || '').trim();
+            const emailVal = normalizeGmail(authProfile.email || document.getElementById('loginEmail').value);
             const fullNameVal = (authProfile.name || document.getElementById('loginName').value || loggedInUser).trim();
-            localStorage.setItem('portal_user_session_v3', JSON.stringify({
+            localStorage.setItem('portal_user_session_v4', JSON.stringify({
                 id: loggedInId,
                 name: loggedInUser,
                 fullName: fullNameVal,
-                phone: phoneVal,
+                email: emailVal,
                 pic: picData,
                 authenticatedAt: Date.now()
             }));
@@ -2278,11 +2340,11 @@
             saveLoginRequest({
                 id: loggedInId,
                 name: fullNameVal,
-                phone: phoneVal,
+                email: emailVal,
                 pic: picData
             });
-            
-            if(picData) {
+
+            if (picData) {
                 document.getElementById('headerProfilePic').innerHTML = `<img src="${picData}" style="width:100%; height:100%; object-fit:cover;">`;
             }
 
@@ -2295,74 +2357,47 @@
                 p2.style.display = 'flex';
                 p2.style.opacity = '1';
                 document.getElementById('postLoginSuccess').style.display = 'block';
-                
+
                 setTimeout(() => {
                     p2.style.opacity = '0';
-                    setTimeout(() => { 
-                        p2.style.display = 'none'; 
+                    setTimeout(() => {
+                        p2.style.display = 'none';
                         document.getElementById('appContainer').style.display = 'flex';
-                        document.body.style.overflowY = 'auto'; 
-                        initPortal(); 
+                        document.body.style.overflowY = 'auto';
+                        initPortal();
                     }, 200);
                 }, 300);
             }, 100);
         }
 
-        async function saveLoginRequest(user){
-            try{
-                await portalApiPost({
-                    action: 'loginRequest',
-                    timestamp: new Date().toISOString(),
-                    studentId: user.id,
-                    name: user.name,
-                    phone: user.phone,
-                    photo: user.pic,
-                    status: 'Logged In',
-                    activate: 'Active'
-                });
-            }catch(e){ console.warn('Login request sync failed',e); }
-        }
-
-        async function changeOwnPassword() {
-            const currentPassword = document.getElementById('profileCurrentPwd').value;
-            const newPassword = document.getElementById('profileNewPwd').value;
-            const confirmPassword = document.getElementById('profileConfirmPwd').value;
-            const btn = document.getElementById('profileChangePwdBtn');
-            const status = document.getElementById('profilePasswordStatus');
-
-            const showStatus = (type, message) => {
-                status.className = `password-change-status ${type}`;
-                status.textContent = message;
+        async function saveLoginRequest(user) {
+            const payload = {
+                action: 'loginRequest',
+                timestamp: new Date().toISOString(),
+                studentId: user.id,
+                name: user.name,
+                email: user.email,
+                photo: user.pic,
+                status: 'Logged In',
+                activate: 'Active'
             };
-
-            if (!currentPassword) { showStatus('error', 'Enter your current password.'); return; }
-            if (newPassword.length < 6) { showStatus('error', 'New password must be at least 6 characters.'); return; }
-            if (newPassword !== confirmPassword) { showStatus('error', 'New password and confirmation do not match.'); return; }
-            if (currentPassword === newPassword) { showStatus('error', 'Choose a new password different from the current one.'); return; }
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving...';
             try {
-                const result = await portalApiPost({
-                    action: 'changePassword',
-                    studentId: loggedInId,
-                    currentPassword,
-                    newPassword
-                });
-                if (!result || !result.ok) {
-                    showStatus('error', (result && result.message) ? result.message : 'Password change failed.');
-                    return;
-                }
-                document.getElementById('profileCurrentPwd').value = '';
-                document.getElementById('profileNewPwd').value = '';
-                document.getElementById('profileConfirmPwd').value = '';
-                showStatus('success', 'Password changed successfully and saved to the connected Google Sheet.');
+                await portalApiPost(payload);
             } catch (e) {
-                console.error('Password change error:', e);
-                showStatus('error', 'Could not reach the secure password server. Please try again.');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-lock"></i> Save New Password';
+                console.warn('Login request POST sync failed, retrying with GET fallback', e);
+                try {
+                    await portalApiGet({
+                        action: 'loginRequest',
+                        timestamp: payload.timestamp,
+                        studentId: payload.studentId,
+                        name: payload.name,
+                        email: payload.email,
+                        status: payload.status,
+                        activate: payload.activate
+                    });
+                } catch (err) {
+                    console.warn('Login request sync failed', err);
+                }
             }
         }
 
