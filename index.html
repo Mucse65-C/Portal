@@ -1,0 +1,3028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dep : CSE 65 C - Premium Portal</title>
+
+    <!-- ================= PWA / INSTALLABLE APP ================= -->
+    <meta name="theme-color" content="#0f1c40">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CSE 65-C">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================= LIGHT THEME VARIABLES ================= */
+        :root {
+            --bg-body: #f4f7f6;
+            --bg-white: #ffffff;
+            
+            --primary-blue: #0f1c40; 
+            --primary-light: #e0e7ff;
+            --accent-orange: #c2410c; 
+            --accent-green: #047857; 
+            --danger: #b91c1c; 
+            --warning: #b45309; 
+            
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border-light: #cbd5e1;
+            
+            --font-main: 'Outfit', sans-serif;
+            --font-code: 'Fira Code', monospace;
+            --sidebar-width: 260px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-dark);
+            overflow: hidden; 
+        }
+
+        #appContainer { display: none; width: 100%; min-height: 100vh; flex-direction: row; }
+
+        /* ================= MODERN PRELOADER 1 ================= */
+        #initialPreloader {
+            position: fixed; inset: 0; background: var(--bg-white); z-index: 9999999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.3s ease;
+        }
+        .modern-spinner {
+            width: 70px; height: 70px; border-radius: 50%;
+            border: 4px solid transparent; border-top-color: var(--primary-blue);
+            border-bottom-color: var(--accent-orange);
+            animation: modernSpin 1.2s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+            margin-bottom: 25px;
+        }
+        @keyframes modernSpin { 100% { transform: rotate(360deg); } }
+        .cyber-text { font-family: var(--font-main); font-weight: 800; color: var(--primary-blue); font-size: 16px; letter-spacing: 3px; text-transform: uppercase; animation: pulseGlow 1.5s infinite;}
+        @keyframes pulseGlow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* ================= PREMIUM LOGIN SCREEN ================= */
+        #loginOverlay {
+            position: fixed; inset: 0; z-index: 999998;
+            display: flex; justify-content: center; align-items: center; padding: 20px;
+            background: linear-gradient(-45deg, #051630, #1e3a8a, #0284c7, #0f172a);
+            background-size: 400% 400%; animation: gradientBG 10s ease infinite; transition: opacity 0.3s ease;
+        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .login-wrapper {
+            display: flex; width: 100%; max-width: 850px; background: var(--bg-white); border-radius: 20px; overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); animation: cardPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0; transform: translateY(30px) scale(0.95);
+        }
+        @keyframes cardPopIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        .login-left {
+            width: 45%; background: linear-gradient(135deg, var(--primary-blue), #1e3a8a); padding: 50px 30px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #fff; position: relative;
+        }
+        .login-left::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.5; }
+        .login-left i { font-size: 60px; color: #60a5fa; margin-bottom: 20px; z-index: 1;}
+        .login-left h2 { font-size: 28px; font-weight: 900; margin-bottom: 10px; z-index: 1; line-height: 1.2;}
+        .login-left p { font-size: 14px; font-weight: 500; opacity: 0.8; z-index: 1;}
+
+        .login-right { width: 55%; padding: 30px 50px; display: flex; flex-direction: column; justify-content: center; background: var(--bg-white); max-height: 90vh; overflow-y: auto;}
+        .login-right::-webkit-scrollbar { width: 5px; }
+        .login-right::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 5px; }
+        
+        /* Premium Avatar Upload CSS */
+        .login-avatar-container { display: flex; justify-content: center; margin-bottom: 15px; }
+        .login-avatar { width: 90px; height: 90px; border-radius: 50%; background: #f8fafc; border: 3px dashed var(--primary-blue); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; position: relative; overflow: hidden; transition: 0.3s; box-shadow: 0 5px 15px rgba(15, 28, 64, 0.1); }
+        .login-avatar:hover { background: var(--primary-light); transform: scale(1.05); }
+        .login-avatar i { font-size: 28px; color: var(--primary-blue); z-index: 1; margin-bottom: 3px;}
+        .login-avatar-text { font-size: 10px; font-weight: 800; color: var(--primary-blue); z-index: 1; text-transform: uppercase;}
+        .login-avatar img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; z-index: 2; display: none; }
+
+        .login-right h3 { font-size: 22px; color: var(--text-dark); font-weight: 800; margin-bottom: 5px; text-align: center;}
+        .login-right > p { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 20px; text-align: center;}
+
+        .input-group { margin-bottom: 12px; position: relative; }
+        .input-group label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;}
+        .input-group input { width: 100%; padding: 12px 15px; border-radius: 12px; font-size: 14px; font-weight: 600; border: 2px solid var(--border-light); background: #f8fafc; color: var(--text-dark); outline: none; transition: 0.3s; font-family: var(--font-main); letter-spacing: 1px;}
+        .input-group input::placeholder { color: #94a3b8; font-weight: 500; }
+        .input-group input:focus { border-color: var(--primary-blue); background: #fff; box-shadow: 0 4px 15px rgba(15, 28, 64, 0.05);}
+        .input-group input[readonly] { background: #e2e8f0; color: var(--accent-green); cursor: not-allowed;}
+        
+        /* Auto-Suggest Premium UI Box CSS */
+        .suggestions-box { 
+            position: absolute; top: calc(100% + 5px); left: 0; width: 100%; 
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(8px);
+            border: 1px solid var(--primary-blue); border-radius: 12px; 
+            max-height: 200px; overflow-y: auto; z-index: 100; padding: 6px;
+            box-shadow: 0 15px 35px rgba(15, 28, 64, 0.15); display: none; 
+        }
+        .suggestions-box::-webkit-scrollbar { width: 4px; }
+        .suggestions-box::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
+        
+        .suggestion-item { 
+            padding: 12px 15px; font-size: 14px; font-weight: 700; color: var(--text-dark); 
+            cursor: pointer; border-radius: 8px; transition: all 0.2s ease; 
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;
+        }
+        .suggestion-item:last-child { margin-bottom: 0; }
+        .suggestion-item:hover, .suggestion-item.active-nav { 
+            background: linear-gradient(135deg, var(--primary-blue), #1e3a8a); 
+            color: #fff; box-shadow: 0 4px 12px rgba(15, 28, 64, 0.2); transform: translateX(4px);
+        }
+        .suggestion-item.active-nav span, .suggestion-item:hover span { color: #93c5fd !important; }
+        .suggestion-item span { font-size: 12px; color: var(--text-muted); font-weight: 600; transition: color 0.2s;}
+
+        .login-btn { width: 100%; padding: 15px; margin-top: 5px; background: var(--primary-blue); color: #fff; font-size: 15px; letter-spacing: 1px; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .login-btn:hover { background: #1e3a8a; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(15, 28, 64, 0.2);}
+        #loginError { color: var(--danger); font-size: 13px; font-weight: 700; text-align: center; margin-top: 15px; display: none; }
+
+        @media screen and (max-width: 768px) {
+            .login-wrapper { flex-direction: column; max-width: 400px; }
+            .login-left { width: 100%; padding: 40px 20px; }
+            .login-right { width: 100%; padding: 30px 25px; }
+        }
+
+        /* ================= MODERN PRELOADER 2 ================= */
+        #portalPreloader {
+            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98); z-index: 999997;
+            display: none; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.3s ease;
+        }
+        .terminal-loader { width: 90%; max-width: 420px; background: #0f172a; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; box-shadow: 0 0 40px rgba(16, 185, 129, 0.2); overflow: hidden; }
+        .terminal-header { background: #020617; padding: 12px 15px; display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
+        .terminal-header .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; } .dot.yellow { background: #f59e0b; } .dot.green { background: #10b981; }
+        .terminal-header .title { margin-left: 10px; font-size: 13px; color: #10b981; font-family: var(--font-code); font-weight: 600;}
+        .terminal-body { padding: 30px 25px; font-family: var(--font-code); font-size: 15px; color: #e2e8f0; line-height: 1.8; text-align: left;}
+        .typing-text { color: #60a5fa; font-weight: bold; margin-bottom: 10px;}
+        .success-flash { margin-top: 20px; color: #10b981; font-weight: bold; display: none; text-align: center; font-size: 18px; text-shadow: 0 0 10px rgba(16,185,129,0.5);}
+        .cursor { display: inline-block; width: 8px; height: 16px; background: #60a5fa; animation: blink 1s step-end infinite; margin-left: 5px;}
+
+        /* ================= SIDEBAR & DROPDOWN ================= */
+        .sidebar { width: var(--sidebar-width); background: var(--bg-white); height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; border-right: 1px solid var(--border-light); z-index: 1000; transition: transform 0.3s ease; }
+        .sidebar-brand { padding: 25px 20px; font-size: 24px; font-weight: 800; color: var(--primary-blue); display: flex; align-items: center; gap: 10px; letter-spacing: 1px; }
+        .sidebar-brand span { color: var(--accent-orange); }
+
+        .sidebar-menu { list-style: none; padding: 0 15px; flex-grow: 1; overflow-y: auto; }
+        .sidebar-menu::-webkit-scrollbar { display: none; }
+        .sidebar-menu li { margin-bottom: 5px; }
+        .sidebar-menu button { width: 100%; background: transparent; border: none; color: var(--text-dark); padding: 12px 20px; border-radius: 25px; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: all 0.3s; }
+        .sidebar-menu button i { font-size: 16px; color: var(--text-muted); width: 20px; text-align: center;}
+        .sidebar-menu button:hover { background: #f8fafc; color: var(--primary-blue);}
+        .sidebar-menu button:hover i { color: var(--primary-blue); }
+        .sidebar-menu button.active { background: var(--primary-blue); color: #fff; font-weight: 700; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2);}
+        .sidebar-menu button.active i { color: #fff; }
+
+        .nav-item-dropdown { flex-direction: column; align-items: stretch !important; }
+        .dropdown-menu { list-style: none; padding-left: 15px; display: none; margin-top: 5px;}
+        .dropdown-menu.show { display: block; animation: slideDown 0.3s ease;}
+        .dropdown-arrow { margin-left: auto; transition: transform 0.3s; font-size: 12px !important; }
+        .show-dropdown .dropdown-arrow { transform: rotate(180deg); }
+        .dropdown-menu button { padding: 10px 20px; font-size: 14px; opacity: 0.8;}
+        @keyframes slideDown { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+
+        .dev-badge { margin: 15px; padding: 15px; background: #f8fafc; border: 1px solid var(--border-light); border-radius: 16px; text-align: center; }
+        .dev-badge p { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px;}
+        .dev-badge h4 { font-size: 13px; color: var(--primary-blue); font-weight: 900; line-height: 1.4;}
+
+        /* ================= MAIN CONTENT & HEADER ================= */
+        .main-wrapper { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; width: calc(100% - var(--sidebar-width)); }
+        .top-header { background: var(--bg-white); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 99;}
+        .header-spacer { flex-grow: 1; }
+        .header-icons { display: flex; align-items: center; gap: 12px; }
+        .header-icon { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; justify-content: center; align-items: center; color: var(--text-muted); cursor: pointer; border: 1px solid var(--border-light); font-size: 14px; transition: 0.3s; overflow: hidden; }
+        .header-icon:hover { background: var(--primary-light); color: var(--primary-blue); border-color: var(--primary-blue); }
+        .mobile-toggle { display: none; background: transparent; border: none; font-size: 22px; color: var(--primary-blue); cursor: pointer;}
+
+
+        /* ================= PROFILE DETAILS POPUP ================= */
+        .profile-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(2, 6, 23, 0.64);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.22s ease;
+        }
+        .profile-modal-overlay.show { display: flex; opacity: 1; }
+        .profile-modal-card {
+            width: 100%;
+            max-width: 430px;
+            background: var(--bg-white);
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(2, 6, 23, 0.35);
+            transform: translateY(18px) scale(0.97);
+            transition: transform 0.22s ease;
+        }
+        .profile-modal-overlay.show .profile-modal-card { transform: translateY(0) scale(1); }
+        .profile-modal-top {
+            position: relative;
+            padding: 32px 28px 24px;
+            text-align: center;
+            color: #fff;
+            background: linear-gradient(135deg, #0f1c40 0%, #1e3a8a 58%, #0369a1 100%);
+            overflow: hidden;
+        }
+        .profile-modal-top::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px);
+            background-size: 18px 18px;
+            opacity: .55;
+        }
+        .profile-close-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 2;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.28);
+            background: rgba(255,255,255,.13);
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+        .profile-close-btn:hover { background: rgba(255,255,255,.24); transform: rotate(90deg); }
+        .profile-popup-avatar {
+            position: relative;
+            z-index: 1;
+            width: 104px;
+            height: 104px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,.92);
+            background: rgba(255,255,255,.16);
+            box-shadow: 0 12px 28px rgba(0,0,0,.24);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+        }
+        .profile-popup-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .profile-modal-name { position: relative; z-index: 1; font-size: 23px; font-weight: 900; line-height: 1.25; margin-bottom: 6px; }
+        .profile-modal-role { position: relative; z-index: 1; font-size: 12px; font-weight: 700; opacity: .86; letter-spacing: .8px; text-transform: uppercase; }
+        .profile-modal-body { padding: 22px 24px 24px; }
+        .profile-info-list { display: grid; gap: 12px; }
+        .profile-info-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 15px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+        }
+        .profile-info-icon {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            color: var(--primary-blue);
+            font-size: 16px;
+        }
+        .profile-info-text { min-width: 0; flex: 1; }
+        .profile-info-label { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+        .profile-info-value { font-size: 14px; font-weight: 800; color: var(--text-dark); word-break: break-word; }
+        .profile-security-note {
+            display: flex;
+            gap: 9px;
+            align-items: flex-start;
+            margin-top: 16px;
+            padding: 11px 13px;
+            border-radius: 12px;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #047857;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+        #headerProfilePic { position: relative; }
+        #headerProfilePic::after {
+            content: '';
+            position: absolute;
+            right: -1px;
+            bottom: -1px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            border: 2px solid var(--bg-white);
+        }
+        @media screen and (max-width: 520px) {
+            .profile-modal-overlay { padding: 12px; }
+            .profile-modal-card { max-width: 100%; border-radius: 20px; }
+            .profile-modal-top { padding: 30px 18px 22px; }
+            .profile-modal-body { padding: 18px; }
+            .profile-modal-name { font-size: 20px; }
+        }
+
+        .dept-hero { display: flex; justify-content: center; align-items: center; padding: 0 0 20px 0; text-align: center;}
+        .dept-hero h1 { font-size: 50px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; background: linear-gradient(to right, var(--primary-blue), #2563eb, var(--accent-orange), var(--primary-blue)); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; animation: shine 4s linear infinite;}
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* ================= SECTIONS & ANIMATION ================= */
+        .dashboard-container { padding: 25px 30px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ================= MAIN PROGRESS CARD ================= */
+        .progress-banner-card { background: var(--bg-white); border-radius: 16px; padding: 30px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-light); }
+        .progress-left { display: flex; align-items: center; gap: 20px; }
+        .circle-chart-lg { width: 80px; height: 80px; border-radius: 50%; background: conic-gradient(var(--accent-orange) 65%, #f1f5f9 0); display: flex; justify-content: center; align-items: center; position: relative; }
+        .circle-chart-lg::before { content: ""; position: absolute; width: 65px; height: 65px; background: #fff; border-radius: 50%; }
+        .circle-chart-lg span { position: relative; z-index: 2; font-weight: 800; font-size: 18px; color: var(--accent-orange);}
+        .progress-left-text h3 { font-size: 20px; font-weight: 800; color: var(--text-dark); margin-bottom: 5px;}
+        .progress-left-text p { font-size: 14px; color: var(--text-muted); font-weight: 600;}
+        .progress-right { display: flex; align-items: center; gap: 20px; }
+        .progress-right-text { text-align: right; }
+        .progress-right-text h4 { font-size: 16px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px;}
+        .progress-right-text p { font-size: 14px; color: var(--primary-blue); font-weight: 800; display: flex; align-items: center; gap: 8px; justify-content: flex-end;}
+        .progress-right-text p i { background: var(--primary-blue); color: #fff; padding: 3px; border-radius: 4px; font-size: 12px;}
+        .trophy-icon { width: 60px; height: 60px; border-radius: 50%; background: #d1fae5; color: var(--accent-green); display: flex; justify-content: center; align-items: center; font-size: 24px; border: 2px solid #a7f3d0;}
+
+        /* ================= GRID CARDS ================= */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .dash-card { background: var(--bg-white); border-radius: 12px; padding: 20px; border: 1px solid var(--border-light); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; cursor: pointer; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
+        .dash-card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.06); border-color: var(--primary-blue);}
+        .dash-card.active-blue { background: var(--primary-blue); color: #fff; border: none; box-shadow: 0 10px 25px rgba(15, 28, 64, 0.3);}
+        .dash-card.active-blue .card-title, .dash-card.active-blue .card-sub { color: #fff; }
+        .dash-card.live-alert { background: var(--danger); color: #fff; border: none; box-shadow: 0 10px 25px rgba(185, 28, 28, 0.3);}
+        .dash-card.live-alert .card-title, .dash-card.live-alert .card-sub { color: #fff; }
+        .card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px;}
+        .card-icon { width: 40px; height: 40px; border-radius: 50%; background: #f1f5f9; color: var(--primary-blue); display: flex; justify-content: center; align-items: center; font-size: 16px; border: 1px solid var(--border-light);}
+        .dash-card.active-blue .card-icon, .dash-card.live-alert .card-icon { background: rgba(255,255,255,0.2); color: #fff; border: none;}
+        .card-title { font-size: 16px; font-weight: 800; color: var(--text-dark);}
+        .card-sub { font-size: 13px; color: var(--text-muted); font-weight: 600;}
+        .line-progress-container { margin-bottom: 20px; display: flex; align-items: center; gap: 10px;}
+        .line-progress-track { flex: 1; height: 5px; background: #cbd5e1; border-radius: 5px; overflow: hidden; }
+        .dash-card.active-blue .line-progress-track, .dash-card.live-alert .line-progress-track { background: rgba(255,255,255,0.3); }
+        .line-progress-fill { height: 100%; background: var(--primary-blue); border-radius: 5px;}
+        .dash-card.active-blue .line-progress-fill, .dash-card.live-alert .line-progress-fill { background: #fff; }
+        .line-progress-text { font-size: 12px; font-weight: 800; color: var(--text-dark);}
+        .dash-card.active-blue .line-progress-text, .dash-card.live-alert .line-progress-text { color: #fff; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; border-top: 1px solid var(--border-light); padding-top: 15px;}
+        .dash-card.active-blue .card-footer, .dash-card.live-alert .card-footer { border-top-color: rgba(255,255,255,0.15); }
+        .btn-deadline { color: var(--text-muted); display: flex; align-items: center; gap: 5px;}
+        .dash-card.active-blue .btn-deadline, .dash-card.live-alert .btn-deadline { color: #e2e8f0; }
+        .btn-view { color: var(--accent-orange); font-weight: 800;}
+        .dash-card.active-blue .btn-view { color: #fff; }
+        .dash-card.live-alert .btn-view { color: var(--danger); background: #fff; padding: 6px 12px; border-radius: 6px;}
+
+        .live-timer-content { display: flex; flex-direction: column; gap: 5px; text-align: center; padding: 10px 0;}
+        .timer-countdown { font-family: var(--font-code); font-size: 32px; font-weight: 800; letter-spacing: 2px; }
+        .timer-subject { font-size: 16px; font-weight: 700; }
+
+        .bg-blue { background: rgba(15, 28, 64, 0.1); color: var(--primary-blue); border-color: transparent;}
+        .bg-orange { background: rgba(194, 65, 12, 0.1); color: var(--accent-orange); border-color: transparent;}
+        .bg-green { background: rgba(4, 120, 87, 0.1); color: var(--accent-green); border-color: transparent;}
+        .bg-purple { background: rgba(139, 92, 246, 0.1); color: #7c3aed; border-color: transparent;}
+
+        /* ================= DASHBOARD SPLIT LAYOUT ================= */
+        .dashboard-split { display: flex; gap: 25px; margin-bottom: 30px; align-items: stretch; }
+        .dash-left { flex: 1.6; min-width: 0; display: flex; flex-direction: column; gap: 25px; }
+        .dash-right { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 25px; }
+
+        /* ================= TRAFFIC CHART (LIVE SIMULATOR) ================= */
+        .traffic-card { background: var(--bg-white); border-radius: 16px; padding: 25px; border: 1px solid var(--border-light); box-shadow: 0 4px 15px rgba(0,0,0,0.02); height: 100%; display: flex; flex-direction: column;}
+        .traffic-chart-container { flex: 1; display: flex; align-items: flex-end; justify-content: space-between; padding: 20px 10px 10px 10px; border-bottom: 1px solid var(--border-light); margin-bottom: 15px; min-height: 180px;}
+        .traffic-bar-group { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 12%; height: 100%; justify-content: flex-end;}
+        .traffic-bar { width: 100%; max-width: 25px; background: linear-gradient(to top, var(--primary-light), var(--primary-blue)); border-radius: 6px 6px 0 0; position: relative; animation: growUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; transform-origin: bottom;}
+        .day-label { font-size: 12px; font-weight: 800; color: var(--text-muted); }
+        @keyframes growUp { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+        .traffic-info { display: flex; justify-content: space-between; align-items: center; padding: 0 10px;}
+        .traffic-info h4 { font-size: 13px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px; text-transform: uppercase;}
+        .traffic-info p { font-size: 28px; color: var(--primary-blue); font-weight: 900; font-family: var(--font-code);}
+        .live-dot { display: inline-block; width: 12px; height: 12px; background: var(--danger); border-radius: 50%; animation: pulseLive 1.5s infinite; margin-right: 8px; vertical-align: middle;}
+        @keyframes pulseLive { 0% { box-shadow: 0 0 0 0 rgba(185, 28, 28, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(185, 28, 28, 0); } 100% { box-shadow: 0 0 0 0 rgba(185, 28, 28, 0); } }
+
+        /* ================= COMPACT CALENDAR ================= */
+        .calendar-container { background: var(--bg-white); border-radius: 16px; padding: 20px; border: 1px solid var(--border-light); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .calendar-header h3 { font-size: 18px; font-weight: 800; color: var(--primary-blue); margin: 0; }
+        .calendar-header button { background: #f1f5f9; border: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; color: var(--text-dark); font-size: 12px; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .calendar-header button:hover { background: var(--primary-blue); color: #fff; }
+        .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 800; color: var(--text-muted); font-size: 11px; margin-bottom: 8px; }
+        .calendar-dates { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .calendar-date { padding: 8px 0; text-align: center; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: 0.3s; color: var(--text-dark); }
+        .calendar-date:hover:not(.empty) { background: var(--primary-light); color: var(--primary-blue); }
+        .calendar-date.empty { background: transparent; cursor: default; }
+        .calendar-date.today { background: var(--danger); color: #fff; font-weight: 800; box-shadow: 0 4px 10px rgba(185, 28, 28, 0.3); }
+
+        /* ================= BOTTOM METRICS (Aptitude Engine) ================= */
+        .engine-header { font-size: 18px; font-weight: 800; color: var(--text-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
+        .engine-grid { display: flex; flex-direction: column; gap: 20px; }
+        
+        .engine-card { background: #fffaf5; border: 1px solid #fed7aa; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
+        .engine-card.white-bg { background: #fff; border: 1px solid var(--border-light); }
+        .tool-title { font-size: 16px; font-weight: 800; color: var(--text-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;}
+        
+        .sgpa-inputs { display: flex; gap: 10px; margin-bottom: 15px; width: 100%;}
+        .sgpa-inputs select { flex: 1; padding: 10px; border: 1px solid var(--border-light); border-radius: 8px; outline: none; font-size: 13px; font-weight: 600; background: #fff;}
+        .sgpa-inputs select:focus { border-color: var(--primary-blue); }
+        .sgpa-inputs button { padding: 10px 15px; background: var(--primary-blue); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 800; transition: 0.3s;}
+        .sgpa-inputs button:hover { background: #1a2f66; }
+        .sgpa-list { max-height: 80px; overflow-y: auto; font-size: 12px; color: var(--text-muted); margin-bottom: 10px; font-weight: 600;}
+        .sgpa-list div { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-light); padding: 5px 0;}
+        .sgpa-result { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px 15px; border-radius: 8px; border: 1px solid #fed7aa;}
+        .sgpa-result h3 { font-size: 24px; font-weight: 900; color: var(--primary-blue);}
+
+        .attendance-container { display: flex; align-items: center; justify-content: space-between; }
+        .circle-chart-sm { width: 80px; height: 80px; border-radius: 50%; background: conic-gradient(var(--accent-green) var(--perc, 0%), #e2e8f0 0); display: flex; justify-content: center; align-items: center; position: relative; }
+        .circle-chart-sm::before { content: ""; position: absolute; width: 65px; height: 65px; background: #fffaf5; border-radius: 50%; }
+        .circle-chart-sm span { position: relative; z-index: 2; font-weight: 900; font-size: 16px; color: var(--accent-green);}
+        .att-stats { display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 700; color: var(--text-muted);}
+        .att-btns { display: flex; gap: 8px; margin-top: 10px;}
+        .att-btn { border: 1px solid var(--border-light); background: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; transition: 0.3s;}
+        .att-btn.present { color: var(--accent-green); } .att-btn.absent { color: var(--danger); }
+        .att-btn.present:hover { background: #d1fae5; border-color: var(--accent-green);} .att-btn.absent:hover { background: #fee2e2; border-color: var(--danger);}
+
+        /* ================= BUS SCHEDULE (FULL WIDTH SLIDER) ================= */
+        .bus-hero {
+            position: relative; background: url('./bus%20image-04.jpg') center center/cover no-repeat; border-radius: 16px;
+            padding: 60px 30px; text-align: center; color: #fff; margin-bottom: 25px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .bus-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15, 28, 64, 0.95), rgba(30, 58, 138, 0.8)); z-index: 1; }
+        .bus-hero-content { position: relative; z-index: 2; }
+        .bus-hero h2 { font-size: 32px; font-weight: 900; margin-bottom: 10px; }
+        .bus-hero p { font-size: 16px; font-weight: 500; margin-bottom: 25px; opacity: 0.9;}
+        .btn-drive { display: inline-block; background: var(--accent-orange); color: #fff; padding: 14px 28px; border-radius: 30px; font-weight: 800; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(194, 65, 12, 0.4); font-size: 15px;}
+        .btn-drive:hover { transform: translateY(-3px); background: #9a340a; }
+
+        .slider-container { position: relative; width: 100%; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); background: #0f172a; border: 2px solid var(--border-light); }
+        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; height: 75vh; min-height: 450px; }
+        .slide { min-width: 100%; height: 100%; object-fit: contain; }
+        .slider-nav { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; transform: translateY(-50%); padding: 0 20px; pointer-events: none; z-index: 10;}
+        .slider-nav button { pointer-events: auto; width: 50px; height: 50px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); color: var(--primary-blue); font-size: 22px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; }
+        .slider-nav button:hover { background: var(--primary-blue); color: #fff; transform: scale(1.1);}
+
+        /* ================= PHOTO ALBUM (PREMIUM CARD DESIGN) ================= */
+        .album-card { background: var(--bg-white); border-radius: 16px; border: 1px solid var(--border-light); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: 0.3s; max-width: 500px; margin: 0 auto; }
+        .album-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: var(--primary-blue);}
+        .album-cover { height: 240px; background: linear-gradient(135deg, #1e3a8a, #3b82f6); position: relative; display: flex; align-items: center; justify-content: center;}
+        .album-cover::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.1) 2px, transparent 2px); background-size: 20px 20px; opacity: 0.5;}
+        .album-cover i { font-size: 65px; color: #fff; position: relative; z-index: 2; text-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: pulseGlow 2.5s infinite alternate;}
+        .album-info { padding: 35px 30px; text-align: center; }
+        .album-info h3 { font-size: 24px; font-weight: 900; color: var(--text-dark); margin-bottom: 12px;}
+        .album-info p { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6;}
+        .btn-drive-album { background: linear-gradient(135deg, var(--primary-blue), #2563eb); color: #fff; padding: 15px 35px; border-radius: 30px; font-size: 15px; font-weight: 800; text-decoration: none; display: inline-block; transition: 0.3s; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);}
+        .btn-drive-album:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(37, 99, 235, 0.4);}
+
+        /* ================= MEMBERS SECTION ================= */
+        .member-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-blue); margin: 0 auto 15px auto; display: block; box-shadow: 0 5px 15px rgba(15,28,64,0.15); background: #fff;}
+        
+        /* ================= TABLES ================= */
+        .content-card-main { background: var(--bg-white); border-radius: 16px; padding: 25px; border: 1px solid var(--border-light); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);}
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;}
+        .search-box { border-radius: 10px; padding: 12px 15px; display: flex; align-items: center; gap: 10px; width: 100%; max-width: 350px; border: 2px solid var(--border-light); background: #f8fafc; transition: 0.3s;}
+        .search-box:focus-within { border-color: var(--primary-blue); background: #fff;}
+        .search-box input { border: none; background: transparent; outline: none; color: var(--text-dark); width: 100%; font-size: 14px; font-weight: 600;}
+        .table-container { overflow-x: auto; border: 1px solid var(--border-light); border-radius: 12px;}
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { background: #f8fafc; padding: 16px 20px; text-align: left; font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border-light); }
+        td { padding: 15px 20px; text-align: left; border-bottom: 1px solid var(--border-light); font-size: 14px; font-weight: 600; color: var(--text-dark); }
+        tbody tr:hover { background: #f1f5f9; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-left: 8px; color: white;}
+        .badge-cr { background: var(--primary-blue); } 
+        .badge-advisor { background: var(--accent-green); }
+        .badge-core { background: var(--warning); }
+        .badge-notetaker {
+            background: linear-gradient(135deg, #4338ca, #7c3aed);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, .22);
+        }
+        .badge-notetaker i { font-size: 10px; }
+
+        /* ================= STUDENT BADGE ROW HIGHLIGHTS ================= */
+        #regularTbody tr.student-highlight td,
+        #reTbody tr.student-highlight td {
+            position: relative;
+            border-bottom-color: rgba(255,255,255,.55);
+            transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+        }
+        #regularTbody tr.student-highlight,
+        #reTbody tr.student-highlight {
+            position: relative;
+            isolation: isolate;
+        }
+        #regularTbody tr.student-highlight:hover,
+        #reTbody tr.student-highlight:hover {
+            transform: translateY(-1px);
+            filter: saturate(1.08);
+            box-shadow: 0 8px 22px rgba(15, 23, 42, .10);
+        }
+        #regularTbody tr.student-highlight td:first-child,
+        #reTbody tr.student-highlight td:first-child {
+            border-left: 5px solid transparent;
+            font-weight: 900;
+        }
+        #regularTbody tr.row-cr td,
+        #reTbody tr.row-cr td {
+            background: linear-gradient(105deg, rgba(219,234,254,.98) 0%, rgba(238,242,255,.94) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-cr td:first-child,
+        #reTbody tr.row-cr td:first-child { border-left-color: #2563eb; }
+
+        #regularTbody tr.row-xcr td,
+        #reTbody tr.row-xcr td {
+            background: linear-gradient(105deg, rgba(207,250,254,.98) 0%, rgba(224,231,255,.94) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-xcr td:first-child,
+        #reTbody tr.row-xcr td:first-child { border-left-color: #0891b2; }
+
+        #regularTbody tr.row-core td,
+        #reTbody tr.row-core td {
+            background: linear-gradient(105deg, rgba(254,243,199,.98) 0%, rgba(255,237,213,.94) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-core td:first-child,
+        #reTbody tr.row-core td:first-child { border-left-color: #f59e0b; }
+
+        #regularTbody tr.row-notetaker td,
+        #reTbody tr.row-notetaker td {
+            background: linear-gradient(105deg, rgba(237,233,254,.98) 0%, rgba(224,231,255,.95) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-notetaker td:first-child,
+        #reTbody tr.row-notetaker td:first-child { border-left-color: #7c3aed; }
+
+        #regularTbody tr.row-advisor td,
+        #reTbody tr.row-advisor td {
+            background: linear-gradient(105deg, rgba(209,250,229,.98) 0%, rgba(220,252,231,.94) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-advisor td:first-child,
+        #reTbody tr.row-advisor td:first-child { border-left-color: #16a34a; }
+
+        #regularTbody tr.row-activated td,
+        #reTbody tr.row-activated td {
+            background: linear-gradient(105deg, rgba(220,252,231,.98) 0%, rgba(236,253,245,.95) 52%, rgba(255,255,255,.98) 100%);
+        }
+        #regularTbody tr.row-activated td:first-child,
+        #reTbody tr.row-activated td:first-child { border-left-color: #22c55e; }
+
+        #regularTbody tr.student-highlight .badge,
+        #reTbody tr.student-highlight .badge {
+            box-shadow: 0 4px 12px rgba(15, 23, 42, .15);
+            border: 1px solid rgba(255,255,255,.72);
+            letter-spacing: .25px;
+        }
+        .badge-activated {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: #fff;
+        }
+        @media (max-width: 700px) {
+            #regularTbody tr.student-highlight td,
+            #reTbody tr.student-highlight td { background-attachment: scroll; }
+        }
+
+        /* ================= CLASS ROUTINE (IMPROVED FONTS) ================= */
+        .day-tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 20px; }
+        .day-tabs::-webkit-scrollbar { display: none; }
+        .day-tab { background: var(--bg-white); border: 2px solid var(--border-light); color: var(--text-muted); padding: 12px 25px; border-radius: 30px; font-weight: 700; cursor: pointer; transition: 0.3s; white-space: nowrap; font-size: 14px;}
+        .day-tab:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
+        .day-tab.active { background: var(--primary-blue); border-color: var(--primary-blue); color: #fff; box-shadow: 0 4px 15px rgba(29, 59, 148, 0.3);}
+        
+        .routine-card { background: var(--bg-white); border: 1px solid var(--border-light); border-left: 6px solid var(--primary-blue); padding: 25px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.3s;}
+        .routine-card:hover { transform: translateX(5px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: var(--primary-blue);}
+        .time-block { text-align: center; padding-right: 25px; border-right: 2px dashed var(--border-light); min-width: 170px; }
+        .time-block .time { font-size: 26px; font-weight: 900; font-family: var(--font-code); color: var(--accent-orange); letter-spacing: 1px;}
+        .info-block { flex-grow: 1; }
+        .info-block h4 { font-size: 22px; color: var(--primary-blue); margin-bottom: 8px; font-weight: 900; letter-spacing: 0.5px;}
+        .info-block p { font-size: 14px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+
+
+        /* ================= SMART ROUTINE LIVE STATES ================= */
+        .routine-card { position: relative; overflow: hidden; }
+        .routine-status {
+            display: inline-flex; align-items: center; gap: 7px; margin-top: 10px;
+            padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 900;
+            letter-spacing: .2px; transition: .25s ease;
+        }
+        .routine-status i { font-size: 11px; }
+        .routine-status.neutral { background: #eef2ff; color: var(--primary-blue); }
+
+        /* Before class: yellow blinking card */
+        .routine-card.status-upcoming {
+            background: linear-gradient(135deg, #fffbea 0%, #fef3c7 45%, #fde68a 100%);
+            border-color: #f59e0b; border-left-color: #f59e0b;
+            animation: routineUpcomingBlink 1.15s ease-in-out infinite;
+        }
+        .routine-card.status-upcoming .time-block .time,
+        .routine-card.status-upcoming .info-block h4 { color: #92400e; }
+        .routine-card.status-upcoming .routine-status { background: #f59e0b; color: #fff; }
+        @keyframes routineUpcomingBlink {
+            0%, 100% { box-shadow: 0 4px 12px rgba(245, 158, 11, .12); filter: brightness(1); }
+            50% { box-shadow: 0 0 0 5px rgba(245, 158, 11, .18), 0 12px 28px rgba(245, 158, 11, .28); filter: brightness(1.05); }
+        }
+
+        /* Class is running: strong red gradient */
+        .routine-card.status-live {
+            background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 52%, #ef4444 100%);
+            border-color: #991b1b; border-left-color: #7f1d1d;
+            box-shadow: 0 12px 28px rgba(185, 28, 28, .28);
+            animation: routineLivePulse 1.5s ease-in-out infinite;
+        }
+        .routine-card.status-live .time-block { border-right-color: rgba(255,255,255,.45); }
+        .routine-card.status-live .time-block .time,
+        .routine-card.status-live .info-block h4,
+        .routine-card.status-live .info-block p { color: #fff; }
+        .routine-card.status-live .routine-status { background: #fff; color: #b91c1c; }
+        @keyframes routineLivePulse {
+            0%, 100% { box-shadow: 0 10px 25px rgba(185, 28, 28, .25); }
+            50% { box-shadow: 0 0 0 5px rgba(239, 68, 68, .18), 0 18px 34px rgba(185, 28, 28, .38); }
+        }
+
+        /* Class finished: static red grading + finished label */
+        .routine-card.status-ended {
+            background: linear-gradient(135deg, #fff1f2 0%, #fecaca 45%, #ef4444 115%);
+            border-color: #ef4444; border-left-color: #b91c1c;
+            box-shadow: 0 7px 18px rgba(185, 28, 28, .16);
+        }
+        .routine-card.status-ended .time-block .time,
+        .routine-card.status-ended .info-block h4 { color: #991b1b; }
+        .routine-card.status-ended .routine-status { background: #b91c1c; color: #fff; }
+
+        /* Dashboard tracker states */
+        .dash-card.live-upcoming {
+            background: linear-gradient(135deg, #92400e 0%, #d97706 45%, #f59e0b 100%);
+            color: #fff; border: none; box-shadow: 0 12px 28px rgba(217, 119, 6, .28);
+        }
+        .dash-card.live-upcoming .card-title,
+        .dash-card.live-upcoming .card-sub { color: #fff !important; }
+        .dash-card.live-upcoming .card-icon { background: rgba(255,255,255,.2); color:#fff; border:none; }
+        .dash-card.live-finished {
+            background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 52%, #dc2626 100%);
+            color: #fff; border: none; box-shadow: 0 12px 28px rgba(185, 28, 28, .25);
+        }
+        .dash-card.live-finished .card-title,
+        .dash-card.live-finished .card-sub { color: #fff !important; }
+        .dash-card.live-finished .card-icon { background: rgba(255,255,255,.2); color:#fff; border:none; }
+        .dash-card.live-upcoming #classCountdown { font-size: 27px !important; line-height: 1.25; letter-spacing: 0; }
+        .dash-card.live-finished #classCountdown { font-size: 30px !important; letter-spacing: 1px; }
+        .tracker-exact-time { font-size: 12px; opacity: .92; font-weight: 800; margin-top: 4px; }
+
+        /* ================= ROUTINE API SYNC ================= */
+        .routine-sync-bar {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+            margin-bottom: 20px; padding: 12px 15px; background: #f8fafc; border: 1px solid var(--border-light); border-radius: 12px;
+        }
+        .routine-sync-status { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 12px; font-weight: 700; }
+        .routine-sync-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--warning); box-shadow: 0 0 0 4px rgba(180, 83, 9, 0.10); flex-shrink: 0; }
+        .routine-sync-dot.success { background: var(--accent-green); box-shadow: 0 0 0 4px rgba(4, 120, 87, 0.10); }
+        .routine-sync-dot.error { background: var(--danger); box-shadow: 0 0 0 4px rgba(185, 28, 28, 0.10); }
+        .routine-refresh-btn {
+            border: none; background: var(--primary-blue); color: #fff; padding: 9px 14px; border-radius: 9px; cursor: pointer;
+            font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; gap: 7px; transition: 0.25s;
+        }
+        .routine-refresh-btn:hover { background: #1e3a8a; transform: translateY(-1px); }
+        .routine-refresh-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+        .routine-refresh-btn.loading i { animation: modernSpin 0.8s linear infinite; }
+
+        /* ================= SOCIAL & DISCUSSION ================= */
+        .community-box { background: var(--bg-white); border: 2px solid rgba(37, 211, 102, 0.3); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); width: 100%;}
+        .community-main { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(37, 211, 102, 0.05); flex-wrap: wrap; }
+        .wa-main-icon { width: 55px; height: 55px; background: #25D366; color: #fff; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 28px; flex-shrink: 0; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
+        .community-info { flex: 1 1 200px; }
+        .community-info h4 { color: var(--text-dark); font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+        .community-info p { color: var(--text-muted); font-size: 13px; font-weight: 600;}
+        .btn-join-main { background: #25D366; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 800; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); display: inline-block; white-space: nowrap;}
+        .btn-join-main:hover { background: #16a34a; transform: translateY(-2px);}
+        
+        .sub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 25px; width: 100%;}
+        .sub-card { background: #fff; border: 2px solid var(--border-light); border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+        .sub-card:hover { border-color: #25D366; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(37,211,102,0.15);}
+        .sub-icon { color: #25D366; font-size: 18px; width: 35px; height: 35px; background: rgba(37,211,102,0.1); border-radius: 8px; display:flex; justify-content:center; align-items:center; flex-shrink: 0;}
+        .sub-name { color: var(--text-dark); font-size: 14px; font-weight: 800; flex:1;}
+
+        .fb-link-card { background: var(--bg-white); border: 2px solid rgba(24, 119, 242, 0.3); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 18px; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 450px; margin-top: 20px; width: 100%;}
+        .fb-link-card:hover { border-color: #1877F2; box-shadow: 0 10px 25px rgba(24, 119, 242, 0.15); transform: translateY(-3px);}
+        .fb-icon-wrapper { width: 50px; height: 50px; border-radius: 12px; background: rgba(24, 119, 242, 0.1); color: #1877F2; display: flex; justify-content: center; align-items: center; font-size: 24px; transition: 0.3s; flex-shrink: 0;}
+        .fb-link-card:hover .fb-icon-wrapper { background: #1877F2; color: #fff;}
+        .fb-text-content { flex: 1; }
+        .fb-text-content h4 { color: var(--text-dark); font-size: 16px; font-weight: 900; margin-bottom: 4px; }
+        .fb-text-content p { color: var(--text-muted); font-size: 13px; font-weight: 600;}
+
+        .chat-container { background: var(--bg-white); border-radius: 16px; padding: 25px; border: 1px solid var(--border-light); margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); width: 100%;}
+        .comment-input { width: 100%; border-radius: 12px; padding: 18px; border: 2px solid var(--border-light); min-height: 120px; resize: vertical; outline: none; margin-bottom: 15px; font-size: 15px; font-weight: 500; background: #f8fafc; transition: 0.3s;}
+        .comment-input:focus { border-color: var(--primary-blue); background: #fff;}
+        .wa-btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-send { background: rgba(37, 211, 102, 0.1); color: #16a34a; border: 2px solid rgba(37, 211, 102, 0.3); padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; font-size: 14px; white-space: nowrap;}
+        .btn-send:hover { background: #25D366; color: #fff; border-color: #25D366; transform: translateY(-2px);}
+        
+        .public-comments { margin-top: 25px; display: flex; flex-direction: column; gap: 15px; width: 100%;}
+        .comment-msg { border-radius: 16px; padding: 20px; display: flex; gap: 15px; background: #f8fafc; border: 1px solid var(--border-light); width: 100%;}
+        .comment-avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; color: #fff; background: var(--primary-blue); flex-shrink: 0; box-shadow: 0 4px 10px rgba(15, 28, 64, 0.2);}
+        .comment-content { flex: 1; }
+        .comment-content h5 { color: var(--text-dark); font-size: 15px; margin-bottom: 5px; font-weight: 900;}
+        .comment-content span { font-size: 11px; color: var(--text-muted); font-weight: 700; margin-left: 10px; }
+        .comment-content p { color: var(--text-dark); font-size: 14px; line-height: 1.6; font-weight: 600;}
+
+        /* ================= RESPONSIVE ================= */
+        @media screen and (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); box-shadow: 10px 0 30px rgba(0,0,0,0.1);}
+            .main-wrapper { margin-left: 0; width: 100%; }
+            .top-header { padding: 15px 20px; gap: 10px;}
+            .mobile-toggle { display: block; margin-right: auto;}
+            .header-icons { gap: 8px; }
+            .header-icon { width: 32px; height: 32px; font-size: 12px; }
+            .dept-hero h1 { font-size: 32px; letter-spacing: 2px;}
+            .dashboard-split { flex-direction: column; gap: 20px;}
+            .dash-left, .dash-right { width: 100%; }
+            
+            .routine-card { flex-direction: column; align-items: flex-start; gap: 10px; padding: 20px; }
+            .time-block { border-right: none; border-bottom: 2px dashed var(--border-light); padding-right: 0; padding-bottom: 10px; width: 100%; text-align: left;}
+            .time-block .time { font-size: 22px; }
+            .info-block h4 { font-size: 18px; }
+            .slider-wrapper { height: 400px; }
+            .bus-hero { padding: 40px 20px; }
+        }
+
+        /* ================= PWA INSTALL UI ================= */
+        .pwa-install-login {
+            display: none; width: 100%; margin-top: 10px; padding: 12px 15px;
+            border: 2px solid var(--primary-blue); border-radius: 12px;
+            background: #eef2ff; color: var(--primary-blue); font-size: 14px;
+            font-weight: 800; cursor: pointer; transition: .25s ease;
+        }
+        .pwa-install-login:hover { background: var(--primary-blue); color: #fff; transform: translateY(-1px); }
+        .pwa-install-login i { margin-right: 7px; }
+        #installAppBtn { display: none; color: var(--accent-green); border-color: rgba(4,120,87,.45); }
+        #installAppBtn:hover { background: #ecfdf5; color: #047857; border-color: #047857; }
+        /* Dashboard app download / install card */
+        .pwa-download-card {
+            position: relative; overflow: hidden; cursor: pointer;
+            background: linear-gradient(135deg, #047857 0%, #059669 46%, #0f766e 100%);
+            color: #fff; border: none; box-shadow: 0 12px 28px rgba(4,120,87,.24);
+        }
+        .pwa-download-card::after {
+            content: ''; position: absolute; width: 150px; height: 150px; right: -55px; top: -70px;
+            border-radius: 50%; background: rgba(255,255,255,.11); pointer-events: none;
+        }
+        .pwa-download-card:hover { border-color: transparent; box-shadow: 0 18px 34px rgba(4,120,87,.34); }
+        .pwa-download-card .card-title, .pwa-download-card .card-sub,
+        .pwa-download-card .line-progress-text, .pwa-download-card .btn-deadline { color: #fff; }
+        .pwa-download-card .card-icon { background: rgba(255,255,255,.18); color: #fff; border: 1px solid rgba(255,255,255,.24); }
+        .pwa-download-card .line-progress-track { background: rgba(255,255,255,.24); }
+        .pwa-download-card .line-progress-fill { background: #fff; }
+        .pwa-download-card .card-footer { border-top-color: rgba(255,255,255,.2); }
+        .pwa-download-card .btn-view {
+            color: #047857; background: #fff; padding: 7px 12px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.10);
+        }
+        .pwa-installed #installAppBtn, .pwa-installed #loginInstallBtn,
+        .pwa-installed #dashboardInstallCard { display: none !important; }
+        @media (display-mode: standalone) {
+            #installAppBtn, #loginInstallBtn, #dashboardInstallCard { display: none !important; }
+        }
+
+
+        /* =========================================================
+           MOBILE LOGIN RESPONSIVE FIX — iPhone + Android
+           Only login-screen responsive behaviour is overridden here.
+           ========================================================= */
+        @media screen and (max-width: 768px) {
+            #loginOverlay {
+                align-items: flex-start !important;
+                justify-content: center !important;
+                width: 100%;
+                height: 100vh;
+                height: 100svh;
+                height: 100dvh;
+                min-height: 100vh;
+                min-height: 100svh;
+                min-height: 100dvh;
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior-y: contain;
+                padding-top: max(10px, env(safe-area-inset-top));
+                padding-right: max(10px, env(safe-area-inset-right));
+                padding-bottom: max(18px, env(safe-area-inset-bottom));
+                padding-left: max(10px, env(safe-area-inset-left));
+            }
+
+            .login-wrapper {
+                flex-direction: column !important;
+                width: 100% !important;
+                max-width: 400px !important;
+                max-height: none !important;
+                min-height: auto !important;
+                margin: 0 auto !important;
+                overflow: visible !important;
+                border-radius: 16px;
+                flex: 0 0 auto;
+            }
+
+            .login-left {
+                width: 100% !important;
+                flex: 0 0 auto;
+                padding: 18px 18px 16px !important;
+            }
+
+            .login-left i {
+                font-size: 36px;
+                margin-bottom: 8px;
+            }
+
+            .login-left h2 {
+                font-size: 22px;
+                margin-bottom: 5px;
+            }
+
+            .login-left p {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+
+            .login-right {
+                width: 100% !important;
+                max-height: none !important;
+                min-height: auto !important;
+                overflow: visible !important;
+                justify-content: flex-start !important;
+                flex: 0 0 auto;
+                padding: 18px 18px calc(22px + env(safe-area-inset-bottom)) !important;
+            }
+
+            .login-avatar-container {
+                margin-bottom: 10px;
+            }
+
+            .login-avatar {
+                width: 68px;
+                height: 68px;
+            }
+
+            .login-avatar i {
+                font-size: 22px;
+            }
+
+            .login-right h3 {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+
+            .login-right > p {
+                font-size: 12px;
+                margin-bottom: 14px;
+                line-height: 1.4;
+            }
+
+            .input-group {
+                margin-bottom: 10px;
+            }
+
+            .input-group input {
+                min-height: 46px;
+                padding: 11px 13px;
+                font-size: 16px; /* prevents automatic iPhone Safari zoom */
+            }
+
+            .login-btn,
+            .pwa-install-login {
+                width: 100%;
+                min-height: 48px;
+                flex: 0 0 auto;
+            }
+
+            .login-btn {
+                margin-top: 5px;
+                padding: 13px 12px;
+            }
+
+            #loginError {
+                margin-top: 10px;
+                margin-bottom: 4px;
+                line-height: 1.4;
+            }
+        }
+
+        /* Extra compact layout for small iPhones / narrow Android phones */
+        @media screen and (max-width: 390px) {
+            #loginOverlay {
+                padding-top: max(8px, env(safe-area-inset-top));
+                padding-right: max(8px, env(safe-area-inset-right));
+                padding-left: max(8px, env(safe-area-inset-left));
+                padding-bottom: max(14px, env(safe-area-inset-bottom));
+            }
+
+            .login-wrapper {
+                border-radius: 14px;
+            }
+
+            .login-left {
+                padding: 14px 14px 12px !important;
+            }
+
+            .login-left i {
+                font-size: 30px;
+                margin-bottom: 6px;
+            }
+
+            .login-left h2 {
+                font-size: 20px;
+            }
+
+            .login-left p {
+                font-size: 11px;
+            }
+
+            .login-right {
+                padding: 14px 14px calc(18px + env(safe-area-inset-bottom)) !important;
+            }
+
+            .login-avatar {
+                width: 58px;
+                height: 58px;
+            }
+
+            .login-avatar-container {
+                margin-bottom: 7px;
+            }
+
+            .login-right > p {
+                margin-bottom: 11px;
+            }
+
+            .input-group {
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Landscape phones: keep the form scrollable and expose the login button */
+        @media screen and (orientation: landscape) and (max-height: 520px) {
+            #loginOverlay {
+                align-items: flex-start !important;
+                overflow-y: auto !important;
+            }
+
+            .login-wrapper {
+                max-height: none !important;
+                margin: 0 auto 12px !important;
+            }
+
+            .login-left {
+                padding: 10px 16px !important;
+            }
+
+            .login-left i,
+            .login-left p {
+                display: none;
+            }
+
+            .login-left h2 {
+                margin: 0;
+                font-size: 19px;
+            }
+
+            .login-right {
+                max-height: none !important;
+                overflow: visible !important;
+                padding-top: 12px !important;
+                padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+            }
+
+            .login-avatar-container {
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ================= PRELOADER 1 ================= -->
+    <div id="initialPreloader">
+        <div class="modern-spinner"></div>
+        <div class="cyber-text">System Booting</div>
+    </div>
+
+    <!-- ================= SECURE LOGIN SCREEN ================= -->
+    <div id="loginOverlay" style="display: none;">
+        <div class="login-wrapper">
+            <div class="login-left">
+                <i class="fas fa-fingerprint"></i>
+                <h2>Dep: CSE 65 C</h2>
+                <p>Welcome to the secure e-Learning Portal. Access course materials, assignments, and routines seamlessly.</p>
+            </div>
+            
+            <div class="login-right">
+                <!-- PREMIUM AVATAR UPLOAD U.I -->
+                <div class="login-avatar-container">
+                    <input type="file" id="loginPic" accept="image/*" style="display: none;">
+                    <label for="loginPic" class="login-avatar" title="Click to Upload Photo">
+                        <i class="fas fa-camera"></i>
+                        <span class="login-avatar-text">Add Photo</span>
+                        <img id="avatarPreview" src="" alt="Profile">
+                    </label>
+                </div>
+
+                <h3>Sign In</h3>
+                <p>One-time setup: Enter your details to fix your profile</p>
+                
+                <div class="input-group">
+                    <label>Student ID</label>
+                    <input type="text" id="loginId" placeholder="261-115-111" autocomplete="off" name="no-fill-id" maxlength="11">
+                    <div id="idSuggestions" class="suggestions-box"></div>
+                </div>
+                <div class="input-group">
+                    <label>Student Name</label>
+                    <input type="text" id="loginName" placeholder="Auto-filled via Database" readonly tabindex="-1">
+                </div>
+                <div class="input-group">
+                    <label>Phone Number (Fix Once)</label>
+                    <input type="text" id="loginPhone" placeholder="01XXX-XXXXXX">
+                </div>
+                <div class="input-group">
+                    <label>Portal Password</label>
+                    <input type="password" id="loginPwd" placeholder="Enter Password" autocomplete="new-password">
+                </div>
+                
+                <button class="login-btn" onclick="attemptLogin()">Secure Login <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
+                <button class="pwa-install-login" id="loginInstallBtn" type="button" onclick="installPortalApp()"><i class="fas fa-download"></i> Install CSE 65-C App</button>
+                <div id="loginError">Invalid ID or Password!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= PRELOADER 2 ================= -->
+    <div id="portalPreloader">
+        <div class="terminal-loader">
+            <div class="terminal-header">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                <span class="title">Security_Auth.exe</span>
+            </div>
+            <div class="terminal-body">
+                <div class="typing-text">> Connecting to secure server...</div>
+                <div class="typing-text" style="animation: pulseGlow 1s infinite;">> Verifying Student Credentials<span class="cursor"></span></div>
+                <div class="success-flash" id="postLoginSuccess"><i class="fas fa-check-circle"></i> Access Granted!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MAIN APP WRAPPER ================= -->
+    <div id="appContainer">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                🔥 <span>Dep:</span> CSE 65 C
+            </div>
+            <ul class="sidebar-menu">
+                <li><button class="active" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> Dashboard</button></li>
+                
+                <!-- NEW ADMIN PANEL DROPDOWN -->
+                <li class="nav-item-dropdown">
+                    <button onclick="toggleDropdown('adminDropdown', this)">
+                        <i class="fas fa-user-shield"></i> Admin Panel <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </button>
+                    <ul class="dropdown-menu" id="adminDropdown">
+                        <li><button onclick="switchTab('adminPanelContent')"><i class="fas fa-tachometer-alt"></i> Dashboard</button></li>
+                        <li><button onclick="switchTab('members')"><i class="fas fa-id-badge"></i> Moderator</button></li>
+                    </ul>
+                </li>
+                
+                <li><button onclick="switchTab('students')"><i class="fas fa-users"></i> Students Info</button></li>
+                
+                <li class="nav-item-dropdown">
+                    <button onclick="toggleDropdown('routineDropdown', this)">
+                        <i class="fas fa-calendar-alt"></i> Schedules <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </button>
+                    <ul class="dropdown-menu" id="routineDropdown">
+                        <li><button onclick="switchTab('routineTab')"><i class="fas fa-clock"></i> Class Routine</button></li>
+                        <li><button onclick="switchTab('busScheduleTab')"><i class="fas fa-bus"></i> Bus Schedule</button></li>
+                    </ul>
+                </li>
+                
+                <li class="nav-item-dropdown">
+                    <button onclick="toggleDropdown('courseDropdown', this)">
+                        <i class="fas fa-book"></i> Course <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </button>
+                    <ul class="dropdown-menu" id="courseDropdown">
+                        <li><button onclick="switchTab('materials')"><i class="fas fa-folder"></i> Materials</button></li>
+                        <li><button onclick="switchTab('assignmentsTab')"><i class="fas fa-tasks"></i> Assignments</button></li>
+                        <li><button onclick="window.open('https://docs.google.com/spreadsheets/d/1JKqW5xuK5d9in0uEBhnrJrGHvE-TAtlg_XqAXQl4v-Q/edit?gid=0#gid=0', '_blank')"><i class="fas fa-chalkboard"></i> Classroom Code</button></li>
+                    </ul>
+                </li>
+                
+                <li><button onclick="switchTab('photoAlbumTab')"><i class="fas fa-images"></i> Photo Album</button></li>
+                <li><button onclick="switchTab('faculty')"><i class="fas fa-chalkboard-teacher"></i> Faculty</button></li>
+                <li><button onclick="switchTab('social')"><i class="fas fa-hashtag"></i> Social Media</button></li>
+                <li><button onclick="switchTab('discussion')"><i class="fas fa-comments"></i> Discussion</button></li>
+                <li><button onclick="switchTab('notices')"><i class="fas fa-bell"></i> Notices</button></li>
+            </ul>
+            
+            <div style="margin: 15px; padding: 15px; background: #f8fafc; border: 2px solid var(--border-light); border-radius: 16px; text-align: center;">
+                <p style="font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px;"><i class="fas fa-code"></i> Developed by</p>
+                <h4 style="font-size: 14px; color: var(--primary-blue); font-weight: 900; line-height: 1.4;">Nayeem, Sabbir, Sabah, Amirul</h4>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-wrapper">
+            
+            <header class="top-header">
+                <button class="mobile-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <div class="header-spacer"></div>
+                <div class="header-icons">
+                    <div class="header-icon"><i class="fas fa-edit"></i></div>
+                    <div class="header-icon" onclick="window.open('https://www.facebook.com/profile.php?id=61590490967600', '_blank')" style="color: #1877F2; border-color: #1877F2;"><i class="fab fa-facebook-f"></i></div>
+                    <div class="header-icon"><i class="fas fa-bell"></i></div>
+                    <div class="header-icon" id="installAppBtn" onclick="installPortalApp()" title="Install App"><i class="fas fa-download"></i></div>
+                    <!-- User & Logout -->
+                    <div class="header-icon" id="headerProfilePic" onclick="openProfilePopup()" title="View Profile"><i class="fas fa-user"></i></div>
+                    <div class="header-icon" onclick="logoutSystem()" title="Logout" style="color:var(--danger); border-color:var(--danger);"><i class="fas fa-sign-out-alt"></i></div>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+
+                <!-- ================= DASHBOARD TAB ================= -->
+                <div id="dashboard" class="section active">
+                    <div class="dept-hero" style="padding-top: 0;">
+                        <h1>Dep : CSE 65 C</h1>
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="dash-card active-blue" id="liveClassCard" onclick="switchTab('routineTab')" style="cursor: pointer;">
+                            <div class="card-header" style="justify-content: space-between;">
+                                <div style="display:flex; align-items:center; gap:15px;">
+                                    <div class="card-icon" id="timerIcon" style="width: 50px; height: 50px; font-size: 20px;"><i class="fas fa-sync fa-spin"></i></div>
+                                    <div>
+                                        <div class="card-title" id="timerSubtitle" style="font-size: 14px; opacity: 0.9;">Loading...</div>
+                                        <div class="card-sub" style="color: #dbeafe; font-size: 13px;">Live Routine Tracker</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="live-timer-content">
+                                <div class="timer-countdown" id="classCountdown" style="font-size: 40px; margin: 10px 0;">--:--:--</div>
+                                <div class="timer-subject" id="classSubject" style="font-size: 20px;">Fetching schedule...</div>
+                            </div>
+                        </div>
+
+                        <a href="https://metrouni.edu.bd/" target="_blank" class="dash-card">
+                            <div>
+                                <div class="card-header">
+                                    <div class="card-icon bg-blue"><i class="fas fa-globe"></i></div>
+                                    <div><div class="card-title">Main Website</div><div class="card-sub">Official Portal</div></div>
+                                </div>
+                                <div class="line-progress-container">
+                                    <div class="line-progress-track"><div class="line-progress-fill" style="width: 100%;"></div></div>
+                                    <span class="line-progress-text">100%</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span class="btn-deadline"><i class="fas fa-link"></i> Link</span>
+                                <span class="btn-view">Visit Details</span>
+                            </div>
+                        </a>
+
+                        <a href="https://student.metrouni.edu.bd/" target="_blank" class="dash-card">
+                            <div>
+                                <div class="card-header">
+                                    <div class="card-icon bg-orange"><i class="fas fa-user-graduate"></i></div>
+                                    <div><div class="card-title">Student Portal</div><div class="card-sub">ERP System</div></div>
+                                </div>
+                                <div class="line-progress-container">
+                                    <div class="line-progress-track"><div class="line-progress-fill" style="width: 80%;"></div></div>
+                                    <span class="line-progress-text">80%</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span class="btn-deadline"><i class="fas fa-link"></i> Link</span>
+                                <span class="btn-view">Visit Details</span>
+                            </div>
+                        </a>
+
+
+                        <!-- PWA APP DOWNLOAD / INSTALL -->
+                        <div class="dash-card pwa-download-card" id="dashboardInstallCard" onclick="installPortalApp()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();installPortalApp();}">
+                            <div>
+                                <div class="card-header">
+                                    <div class="card-icon"><i class="fas fa-mobile-alt"></i></div>
+                                    <div>
+                                        <div class="card-title">Download CSE 65-C App</div>
+                                        <div class="card-sub" id="installCardSubtext">Install directly from Android Chrome</div>
+                                    </div>
+                                </div>
+                                <div class="line-progress-container">
+                                    <div class="line-progress-track"><div class="line-progress-fill" style="width: 100%;"></div></div>
+                                    <span class="line-progress-text">PWA</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span class="btn-deadline"><i class="fab fa-android"></i> Android / Chrome</span>
+                                <span class="btn-view" id="installCardAction"><i class="fas fa-download" style="margin-right:5px;"></i> Install Now</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-split">
+                        <div class="dash-left">
+                            <div class="traffic-card">
+                                <h3 class="engine-header"><i class="fas fa-chart-line" style="color:var(--primary-blue);"></i> Live Traffic Analytics</h3>
+                                <div class="traffic-chart-container">
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 30%;"></div><span class="day-label">Sun</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 60%;"></div><span class="day-label">Mon</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 45%;"></div><span class="day-label">Tue</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 80%;"></div><span class="day-label">Wed</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 65%;"></div><span class="day-label">Thu</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 20%;"></div><span class="day-label">Fri</span></div>
+                                    <div class="traffic-bar-group"><div class="traffic-bar" style="height: 90%;"></div><span class="day-label">Sat</span></div>
+                                </div>
+                                <div class="traffic-info">
+                                    <div><h4>Total Visitors</h4><p id="totalVisitorsCount">Loading...</p></div>
+                                    <div style="text-align: right;"><h4>Active Users</h4><p id="activeUsersCount"><span class="live-dot"></span> --</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dash-right">
+                            <div class="calendar-container">
+                                <div class="calendar-header">
+                                    <button onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                                    <h3 id="monthYear">Loading...</h3>
+                                    <button onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                                <div class="calendar-days">
+                                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                </div>
+                                <div class="calendar-dates" id="calendarDates"></div>
+                            </div>
+
+                            <h3 class="engine-header"><i class="fas fa-tools" style="color:var(--primary-blue);"></i> Academic Tools</h3>
+                            <div class="engine-grid">
+                                
+                                <div class="engine-card">
+                                    <div class="tool-title"><i class="fas fa-calculator" style="color:var(--accent-orange);"></i> SGPA Calculator</div>
+                                    <div class="sgpa-inputs">
+                                        <select id="gradeSelect">
+                                            <option value="4.00">A+ (4.00)</option><option value="3.75">A (3.75)</option><option value="3.50">A- (3.50)</option><option value="3.25">B+ (3.25)</option><option value="3.00">B (3.00)</option><option value="2.75">B- (2.75)</option><option value="2.50">C+ (2.50)</option><option value="2.25">C (2.25)</option><option value="2.00">D (2.00)</option><option value="0.00">F (0.00)</option>
+                                        </select>
+                                        <select id="creditSelect"><option value="3">3 Cr</option><option value="1.5">1.5 Cr</option></select>
+                                        <button onclick="addCourseToSGPA()"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                    <div class="sgpa-list" id="sgpaCourseList"></div>
+                                    <div class="sgpa-result">
+                                        <div>
+                                            <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Estimated SGPA</span>
+                                            <div style="margin-top: 5px;"><button onclick="resetSGPA()" style="background:transparent; border:none; color:var(--danger); font-size:11px; font-weight:800; cursor:pointer;">Reset Data</button></div>
+                                        </div>
+                                        <h3 id="sgpaDisplay">0.00</h3>
+                                    </div>
+                                </div>
+
+                                <div class="engine-card">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                        <div class="circle-chart-sm" id="attChart" style="--perc: 100%;"><span id="attPercent">100%</span></div>
+                                        <div style="flex:1; padding-left:15px;">
+                                            <div class="tool-title" style="margin-bottom:5px;"><i class="fas fa-clipboard-check" style="color:var(--accent-green);"></i> Attendance</div>
+                                            <div class="att-stats">
+                                                <span>Total: <span id="attTotal" style="color:var(--text-dark);">0</span></span>
+                                                <span>Present: <span id="attPresent" style="color:var(--accent-green);">0</span></span>
+                                            </div>
+                                            <div class="att-btns">
+                                                <button class="att-btn present" onclick="updateAttendance('present')">Present</button>
+                                                <button class="att-btn absent" onclick="updateAttendance('absent')">Absent</button>
+                                            </div>
+                                            <div style="text-align:right; margin-top:5px;"><button onclick="resetAttendance()" style="background:transparent; border:none; color:var(--danger); font-size:11px; font-weight:800; cursor:pointer;">Reset</button></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= NEW ADMIN PANEL SECTION (BUTTON ONLY) ================= -->
+                <div id="adminPanelContent" class="section">
+                    <div id="adminDenied" style="display:none; text-align:center; padding: 60px 20px; background: var(--bg-white); border-radius: 16px; border: 1px solid var(--border-light); margin-top: 20px;">
+                        <i class="fas fa-user-lock" style="font-size: 60px; color: var(--danger); margin-bottom: 20px;"></i>
+                        <h2 style="color: var(--text-dark); font-weight: 900; margin-bottom: 10px; font-size: 28px;">Access Denied</h2>
+                        <p style="color: var(--text-muted); font-size: 16px; font-weight: 600;">শুধুমাত্র এডমিন প্যানেলের মডারেটরদের জন্য এই সেকশনের এক্সেস উন্মুক্ত।</p>
+                    </div>
+                    <div id="adminContent" style="display:none; text-align:center; padding: 60px 20px; background: var(--bg-white); border-radius: 16px; border: 1px solid var(--border-light); margin-top: 20px;">
+                        <i class="fas fa-shield-alt" style="font-size: 60px; color: var(--primary-blue); margin-bottom: 20px;"></i>
+                        <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 10px; color: var(--primary-blue);">Moderator Dashboard</h2>
+                        <p style="color: var(--text-muted); font-size: 15px; font-weight: 600; max-width: 500px; margin: 0 auto 30px auto;">
+                            গুগল সিকিউরিটি পলিসির কারণে এডমিন ডাটাবেস সরাসরি পোর্টালে লোড করা সম্ভব নয়। দয়া করে নিচের বাটনে ক্লিক করে নতুন ট্যাবে ড্যাশবোর্ড ওপেন করুন।
+                        </p>
+                        <!-- NEW SECURE BUTTON LINK PROVIDED BY USER -->
+                        <a href="https://docs.google.com/spreadsheets/d/1bY9_RoDdqWuUc5s8bScMeua31s4Rv4-xtT_fa1xYBaY/edit?usp=sharing" target="_blank" class="btn-drive" style="font-size: 16px; padding: 15px 40px; box-shadow: 0 10px 25px rgba(194, 65, 12, 0.3);">
+                            Open Admin Panel <i class="fas fa-external-link-alt" style="margin-left: 8px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ================= STUDENTS SECTION (PASSWORD REMOVED) ================= -->
+                <div id="students" class="section">
+                    <div id="studentDenied" style="display:none; text-align:center; padding: 60px 20px; background: var(--bg-white); border-radius: 16px; border: 1px solid var(--border-light); margin-top: 20px;">
+                        <i class="fas fa-user-lock" style="font-size: 60px; color: var(--danger); margin-bottom: 20px;"></i>
+                        <h2 style="color: var(--text-dark); font-weight: 900; margin-bottom: 10px; font-size: 28px;">Access Denied</h2>
+                        <p style="color: var(--text-muted); font-size: 16px; font-weight: 600;">শুধুমাত্র এডমিন প্যানেলের মডারেটরদের জন্য এই সেকশনের এক্সেস উন্মুক্ত।</p>
+                    </div>
+
+                    <div id="studentDataContent" style="display: none;">
+                        <div class="content-card-main">
+                            <div class="table-header">
+                                <div>
+                                    <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue);">Regular Students</h2>
+                                    <p style="font-size: 14px; color: var(--text-muted); font-weight: 700;">Total Active: <span id="totalCounter" style="color: var(--accent-orange);">0</span></p>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <div class="search-box">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="searchInput" onkeyup="searchTables()" placeholder="Search by ID or Name..." autocomplete="off">
+                                    </div>
+                                    <button onclick="window.print()" style="padding: 10px 18px; border-radius: 10px; border: 2px solid var(--border-light); background: #fff; cursor: pointer; font-weight: 800; color: var(--text-dark); transition: 0.3s;"><i class="fas fa-print"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="table-container">
+                                <table id="regularTable">
+                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <tbody id="regularTbody">
+                                        <!-- Populated dynamically via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="content-card-main">
+                            <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px;">Re-Admission Students</h2>
+                            <div class="table-container">
+                                <table id="reTable">
+                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <tbody id="reTbody">
+                                        <!-- Populated dynamically via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= ROUTINE SECTION ================= -->
+                <div id="routineTab" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Class Routine</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 18px;">Routine is loaded directly from the API and automatically refreshed every 60 seconds.</p>
+
+                    <div class="routine-sync-bar">
+                        <div class="routine-sync-status" id="routineSyncStatus">
+                            <span class="routine-sync-dot" id="routineSyncDot"></span>
+                            <span id="routineSyncText">Waiting for API sync...</span>
+                        </div>
+                        <button class="routine-refresh-btn" id="routineRefreshBtn" onclick="refreshRoutineFromApi()">
+                            <i class="fas fa-sync-alt"></i> Refresh Routine
+                        </button>
+                    </div>
+                    
+                    <div class="day-tabs" id="routineTabs"></div>
+                    <div id="routineContent"></div>
+                </div>
+
+                <!-- ================= COURSE SECTION (ORIGINAL DYNAMIC) ================= -->
+                <div id="materials" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Course & Folders</h2>
+                    <div class="cards-grid" id="coursesGrid">
+                        <!-- Populated Dynamically via Google Sheets -->
+                    </div>
+                </div>
+
+                <!-- ================= BUS SCHEDULE SECTION ================= -->
+                <div id="busScheduleTab" class="section">
+                    <div class="bus-hero">
+                        <div class="bus-hero-content">
+                            <h2><i class="fas fa-bus-alt"></i> Metropolitan University Bus Schedule</h2>
+                            <p>Official transportation schedule for students and faculty.</p>
+                            <a href="https://drive.google.com/drive/folders/1tmVna6wmSzqXefeZKyJo6jKwcZlxHOpG?usp=drive_link" target="_blank" rel="noopener noreferrer" class="btn-drive"><i class="fab fa-google-drive" style="margin-right:8px;"></i> Open Bus Routine on Google Drive <i class="fas fa-external-link-alt" style="margin-left:5px;"></i></a>
+                        </div>
+                    </div>
+
+                    <div style="margin: 0 0 12px 2px; color: var(--text-muted); font-size: 13px; font-weight: 700;">
+                        <i class="fas fa-images" style="margin-right:6px; color:var(--primary-blue);"></i> Bus photo preview — use the Google Drive button above for the full official routine.
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-wrapper" id="busSlider">
+                            <img src="./bus%20image.jpg" class="slide" alt="Bus Schedule 1" onerror="this.onerror=null; this.src='./bus%20image%20.jpeg';">
+                            <img src="./bus%20image-02.jpg" class="slide" alt="Bus Schedule 2" onerror="this.onerror=null; this.src='./bus%20image%20-02.jpg';">
+                            <img src="./bus%20image-03.jpg" class="slide" alt="Bus Schedule 3" onerror="this.onerror=null; this.src='./bus%20image%20-03.jpg';">
+                            <img src="./bus%20image-04.jpg" class="slide" alt="Bus Schedule 4" onerror="this.onerror=null; this.src='./bus%20image%20-04.jpg';">
+                        </div>
+                        <div class="slider-nav">
+                            <button onclick="moveSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <button onclick="moveSlide(1)"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= PHOTO ALBUM SECTION ================= -->
+                <div id="photoAlbumTab" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Photo Album</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 30px;">Explore our class memories, event photos, and tour galleries.</p>
+                    
+                    <div class="album-card">
+                        <div class="album-cover">
+                            <i class="fas fa-camera-retro"></i>
+                        </div>
+                        <div class="album-info">
+                            <h3>CSE 65 C Gallery</h3>
+                            <p>All official and unofficial photos of our batch are stored securely in this Google Drive folder. Relive the moments!</p>
+                            <a href="https://drive.google.com/drive/folders/1P-qZJYfSG0Rq5pqJOV9XTw5lPAv73Z_C?usp=drive_link" target="_blank" class="btn-drive-album">
+                                <i class="fas fa-folder-open" style="margin-right: 8px;"></i> Open Gallery
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= ASSIGNMENTS SECTION ================= -->
+                <div id="assignmentsTab" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Assignments & Submissions</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 30px;">Manage and submit your course assignments via Google Drive folders.</p>
+                    
+                    <div class="cards-grid">
+                        <div class="dash-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-blue"><i class="fas fa-folder-open"></i></div>
+                                <div><div class="card-title">Sociology</div><div class="card-sub">SOC 0314</div></div>
+                            </div>
+                            <div class="card-footer" style="border-top: 1px solid var(--border-light); padding-top: 15px;">
+                                <span class="btn-deadline" style="color:var(--danger)"><i class="fas fa-clock"></i> Pending</span>
+                                <a href="#" target="_blank" class="btn-view" style="text-decoration:none;">Drive Link <i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="dash-card">
+                            <div class="card-header">
+                                <div class="card-icon bg-green"><i class="fas fa-folder-open"></i></div>
+                                <div><div class="card-title">Matrices & Vector</div><div class="card-sub">MAT 0541</div></div>
+                            </div>
+                            <div class="card-footer" style="border-top: 1px solid var(--border-light); padding-top: 15px;">
+                                <span class="btn-deadline" style="color:var(--danger)"><i class="fas fa-clock"></i> Pending</span>
+                                <a href="#" target="_blank" class="btn-view" style="text-decoration:none;">Drive Link <i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= MODERATOR SECTION ================= -->
+                <div id="members" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Core Members & Moderators</h2>
+                    <div class="cards-grid">
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--accent-green);">
+                            <img src="nayeem.jpg" alt="Nayeem Nur" class="member-img" style="border-color: var(--accent-green);">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Jannatull Nayeem Nur</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 251-115-183</div>
+                            <div style="margin-top: 15px;"><span class="badge badge-advisor" style="font-size: 13px; padding: 6px 15px;">Management Head</span></div>
+                        </div>
+
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
+                            <img src="sabah.jpeg" alt="Sabah" class="member-img" style="border-color: var(--primary-blue);">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Zarin Mashud Sabah</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-144</div>
+                            <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
+                        </div>
+
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--primary-blue);">
+                            <img src="sabbir.jpeg" alt="Sabbir" class="member-img" style="border-color: var(--primary-blue);">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Sabbir kamaly</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-111</div>
+                            <div style="margin-top: 15px;"><span class="badge badge-cr" style="font-size: 13px; padding: 6px 15px;">CR (Representative)</span></div>
+                        </div>
+                        
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid var(--warning);">
+                            <img src="amirul.jpeg" alt="Amirul Islam" class="member-img" style="border-color: var(--warning);">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Amirul Islam</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-141</div>
+                            <div style="margin-top: 15px;"><span class="badge badge-core" style="font-size: 13px; padding: 6px 15px;">Core Member & Management Lead</span></div>
+                        </div>
+
+                        <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(124,58,237,0.10); border: 2px solid #7c3aed; background: linear-gradient(145deg, #ffffff 0%, #f5f3ff 100%);">
+                            <img src="Tarin%20Peer%20Notetaker.jpeg" alt="Khadiza Akther Tarin" class="member-img" style="border-color: #7c3aed;">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Khadiza Akther Tarin</div>
+                            <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-124</div>
+                            <div style="margin-top: 15px;">
+                                <span class="badge badge-notetaker" style="font-size: 13px; padding: 7px 15px;">
+                                    <i class="fas fa-book-open"></i> Peer Notetaker
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= FACULTY SECTION ================= -->
+                <div id="faculty" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 30px; color: var(--text-dark);">Course Teachers</h2>
+                    <div class="cards-grid">
+                        <div class="dash-card" style="text-align: center; padding: 30px 20px;">
+                            <div class="card-icon bg-blue" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-user-tie"></i></div>
+                            <div class="card-title">Arfatul Islam Asif / Archi Arani Basak</div><div class="card-sub" style="margin-top: 5px;">Introduction to Sociology</div>
+                        </div>
+                        <div class="dash-card" style="text-align: center; padding: 30px 20px;">
+                            <div class="card-icon bg-green" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-user-tie"></i></div>
+                            <div class="card-title">Ruma Das</div><div class="card-sub" style="margin-top: 5px;">Matrices, Geometry & Vector</div>
+                        </div>
+                        <div class="dash-card" style="text-align: center; padding: 30px 20px;">
+                            <div class="card-icon bg-orange" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-user-tie"></i></div>
+                            <div class="card-title">Anika Tabassum / Md. Shadman Shakib</div><div class="card-sub" style="margin-top: 5px;">Basic EEE Circuits</div>
+                        </div>
+                        <div class="dash-card" style="text-align: center; padding: 30px 20px;">
+                            <div class="card-icon bg-purple" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;"><i class="fas fa-user-tie"></i></div>
+                            <div class="card-title">Nayem Ahmed / Nasif Istiak Remon</div><div class="card-sub" style="margin-top: 5px;">Data Structure</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= SOCIAL MEDIA SECTION ================= -->
+                <div id="social" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Social Media Connectivity</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 30px;">Direct access to main and subject-wise WhatsApp groups.</p>
+                    
+                    <div class="community-box" style="margin-bottom: 30px;">
+                        <div class="community-main">
+                            <div class="wa-main-icon"><i class="fab fa-whatsapp"></i></div>
+                            <div class="community-info">
+                                <h4>MU CSE 65-C</h4>
+                                <p>Official WhatsApp Community</p>
+                            </div>
+                            <div class="community-actions">
+                                <a href="https://chat.whatsapp.com/H2RDTDUHJkN1c8EmEUPsKM?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="btn-join-main">Join Main Group</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 18px; margin-bottom: 15px; color: var(--text-dark); font-weight: 800;">Subject-wise Subgroups</h3>
+                    <div class="sub-grid">
+                        <a href="https://chat.whatsapp.com/E6RNLgQXEKU1GCOoObaB6X?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="sub-card">
+                            <div class="sub-icon"><i class="fas fa-users"></i></div>
+                            <div class="sub-name">Introduction to Sociology</div>
+                        </a>
+                        <a href="https://chat.whatsapp.com/CJNvPADi1CpDMQejEJYD1x?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="sub-card">
+                            <div class="sub-icon"><i class="fas fa-cube"></i></div>
+                            <div class="sub-name">Matrices, Geometry & Vector</div>
+                        </a>
+                        <a href="https://chat.whatsapp.com/FDU32W2017ID2E7rhplSxT?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="sub-card">
+                            <div class="sub-icon"><i class="fas fa-bolt"></i></div>
+                            <div class="sub-name">Basic EEE Circuits</div>
+                        </a>
+                        <a href="https://chat.whatsapp.com/CvSG8FI4EDSDxxZzQeVqDT?s=cl&p=i&mlu=4&ilr=4" target="_blank" class="sub-card">
+                            <div class="sub-icon"><i class="fas fa-database"></i></div>
+                            <div class="sub-name">Data Structure</div>
+                        </a>
+                    </div>
+
+                    <a href="https://www.facebook.com/profile.php?id=61590490967600" target="_blank" class="fb-link-card" style="margin-top: 30px;">
+                        <div class="fb-icon-wrapper"><i class="fab fa-facebook-f"></i></div>
+                        <div class="fb-text-content">
+                            <h4>Facebook Page</h4>
+                            <p>Follow for official events and university news.</p>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:var(--text-muted)"></i>
+                    </a>
+                </div>
+
+                <!-- Notices Section -->
+                <div id="notices" class="section">
+                    <!-- Populated Dynamically via Google Sheets -->
+                </div>
+
+                <!-- ================= DISCUSSION SECTION ================= -->
+                <div id="discussion" class="section">
+                    <h2 style="font-size: 26px; font-weight: 900; margin-bottom: 5px; color: var(--text-dark);">Discussion & Comments</h2>
+                    <p style="color: var(--text-muted); font-weight: 600; margin-bottom: 30px;">Send suggestions directly via WhatsApp and post locally.</p>
+
+                    <div class="chat-container">
+                        <textarea class="comment-input" id="commentInput" placeholder="Write your suggestion or message here..."></textarea>
+                        <p style="margin-bottom: 15px; font-size: 13px; color: var(--warning); font-weight: 700;">* Note: Your comment will be visible publicly on this device and sent to the selected WhatsApp.</p>
+                        <div class="wa-btn-group">
+                            <button class="btn-send" onclick="submitComment('advisor')"><i class="fab fa-whatsapp" style="font-size:16px;"></i> Advisor (Nayeem)</button>
+                            <button class="btn-send" onclick="submitComment('cr1')"><i class="fab fa-whatsapp" style="font-size:16px;"></i> CR 1 (Sabah)</button>
+                            <button class="btn-send" onclick="submitComment('cr2')"><i class="fab fa-whatsapp" style="font-size:16px;"></i> CR 2 (Sabbir)</button>
+                        </div>
+                    </div>
+                    
+                    <h3 style="font-size: 20px; margin-top: 30px; margin-bottom: 15px; font-weight: 800; color: var(--text-dark);">Public Comments</h3>
+                    <div class="public-comments" id="commentList"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= LOGIN PROFILE DETAILS POPUP ================= -->
+    <div id="profileModal" class="profile-modal-overlay" aria-hidden="true" onclick="profileOverlayClick(event)">
+        <div class="profile-modal-card" role="dialog" aria-modal="true" aria-labelledby="profileModalName">
+            <div class="profile-modal-top">
+                <button class="profile-close-btn" type="button" onclick="closeProfilePopup()" aria-label="Close profile popup">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="profile-popup-avatar" id="profilePopupAvatar">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="profile-modal-name" id="profileModalName">Student</div>
+                <div class="profile-modal-role">CSE 65-C · Student Profile</div>
+            </div>
+            <div class="profile-modal-body">
+                <div class="profile-info-list">
+                    <div class="profile-info-row">
+                        <div class="profile-info-icon"><i class="fas fa-id-card"></i></div>
+                        <div class="profile-info-text">
+                            <div class="profile-info-label">Student ID</div>
+                            <div class="profile-info-value" id="profileModalId">—</div>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-icon"><i class="fas fa-user"></i></div>
+                        <div class="profile-info-text">
+                            <div class="profile-info-label">Student Name</div>
+                            <div class="profile-info-value" id="profileModalFullName">—</div>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <div class="profile-info-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="profile-info-text">
+                            <div class="profile-info-label">Phone Number</div>
+                            <div class="profile-info-value" id="profileModalPhone">Not provided</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-security-note">
+                    <i class="fas fa-shield-alt" style="margin-top:2px;"></i>
+                    <span>For security, your portal password is never displayed in this profile window.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================= GLOBAL DATA VARIABLES =================
+        let studentDatabase = []; 
+        let routineData = {0: [], 1: [], 2: [], 3: [], 4: []};
+        let coursesData = [];
+        let noticesData = [];
+        let selectedRoutineDay = null;
+        let portalFetchInProgress = false;
+        let portalAutoSyncTimer = null;
+        let portalHasLiveData = false;
+        
+        // *************************************************************************
+        // Google Apps Script API: Students + Routine + Courses + Notices
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxqZtxIhOyCDjOKkwygyxsIUIk_iPJBQAfS41KZdRTkt7ajWrJNavJUVN-sVMMZ944X/exec";
+        const PORTAL_AUTO_REFRESH_MS = 60 * 1000; // 60 seconds
+        const PORTAL_CACHE_KEY = "portal_data_cache_v7_students_api_sync";
+        const OFFLINE_CACHE_KEY = "CSE65C_OFFLINE_DATABASE_V1";
+        let portalOfflineMode = false;
+        // *************************************************************************
+
+        let loggedInUser = "Student";
+        let loggedInId = "";
+        let bypassLogin = false;
+
+        window.onload = () => {
+            checkSession(); 
+
+            // প্রি-লোডার সাথে সাথে সরিয়ে ফেলছি
+            setTimeout(() => {
+                document.getElementById('initialPreloader').style.opacity = '0';
+                setTimeout(() => { 
+                    document.getElementById('initialPreloader').style.display = 'none'; 
+                    if(bypassLogin){
+                        document.getElementById('appContainer').style.display = 'flex';
+                        document.body.style.overflowY = 'auto'; 
+                        initPortal(); 
+                    } else {
+                        document.getElementById('loginOverlay').style.display = 'flex';
+                        setTimeout(()=> { document.getElementById('loginOverlay').style.opacity = '1'; }, 50);
+                    }
+                }, 300); 
+            }, 100);
+
+            // First load can use the last successful cache for instant UI,
+            // then immediately replaces it with fresh API data.
+            window.addEventListener('online', () => fetchPortalData({useCache:false}));
+            window.addEventListener('offline', () => {
+                portalOfflineMode = true;
+                loadOfflineDatabase();
+            });
+
+            fetchPortalData({ useCache: true });
+            startPortalAutoSync();
+        };
+
+        function checkSession() {
+            const session = localStorage.getItem('portal_user_session_v2');
+            if (session) {
+                const user = JSON.parse(session);
+                loggedInId = user.id;
+                loggedInUser = user.name;
+                if (user.pic) {
+                    document.getElementById('headerProfilePic').innerHTML = `<img src="${user.pic}" style="width:100%; height:100%; object-fit:cover;">`;
+                }
+                bypassLogin = true;
+            }
+        }
+
+        function logoutSystem() {
+            localStorage.removeItem('portal_user_session_v2');
+            window.location.reload();
+        }
+
+        // ================= PROFILE DETAILS POPUP =================
+        function getLoggedInProfileData() {
+            let saved = {};
+            try {
+                saved = JSON.parse(localStorage.getItem('portal_user_session_v2') || '{}') || {};
+            } catch (e) {
+                saved = {};
+            }
+
+            const matchedStudent = Array.isArray(studentDatabase)
+                ? studentDatabase.find(s => String(s.id || '').trim() === String(saved.id || loggedInId || '').trim())
+                : null;
+
+            const fullName = (saved.fullName || (matchedStudent && matchedStudent.name) || saved.name || loggedInUser || 'Student').toString().trim();
+            return {
+                id: (saved.id || loggedInId || '—').toString().trim(),
+                fullName: fullName || 'Student',
+                phone: (saved.phone || '').toString().trim(),
+                pic: (saved.pic || '').toString()
+            };
+        }
+
+        function openProfilePopup() {
+            const modal = document.getElementById('profileModal');
+            if (!modal) return;
+
+            const profile = getLoggedInProfileData();
+            document.getElementById('profileModalName').textContent = profile.fullName;
+            document.getElementById('profileModalFullName').textContent = profile.fullName;
+            document.getElementById('profileModalId').textContent = profile.id || '—';
+            document.getElementById('profileModalPhone').textContent = profile.phone || 'Not provided';
+
+            const avatar = document.getElementById('profilePopupAvatar');
+            if (profile.pic) {
+                avatar.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = profile.pic;
+                img.alt = profile.fullName + ' profile photo';
+                avatar.appendChild(img);
+            } else {
+                avatar.innerHTML = '<i class="fas fa-user-graduate"></i>';
+            }
+
+            modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
+            requestAnimationFrame(() => modal.classList.add('show'));
+        }
+
+        function closeProfilePopup() {
+            const modal = document.getElementById('profileModal');
+            if (!modal) return;
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+            setTimeout(() => {
+                if (!modal.classList.contains('show')) modal.style.display = 'none';
+            }, 220);
+        }
+
+        function profileOverlayClick(event) {
+            if (event.target && event.target.id === 'profileModal') closeProfilePopup();
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') closeProfilePopup();
+        });
+
+        // ================= PROFILE PIC UPLOAD PREVIEW =================
+        document.getElementById('loginPic').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('avatarPreview');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // ================= BACKGROUND FETCH & DOM UPDATE =================
+        function updateRoutineSyncStatus(state, message) {
+            const textEl = document.getElementById('routineSyncText');
+            const dotEl = document.getElementById('routineSyncDot');
+            const btn = document.getElementById('routineRefreshBtn');
+
+            if (textEl) textEl.innerText = message;
+            if (dotEl) {
+                dotEl.classList.remove('success', 'error');
+                if (state === 'success') dotEl.classList.add('success');
+                if (state === 'error') dotEl.classList.add('error');
+            }
+            if (btn) {
+                const loading = state === 'loading';
+                btn.disabled = loading;
+                btn.classList.toggle('loading', loading);
+            }
+        }
+
+        function formatSyncClock(date) {
+            try {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            } catch (e) {
+                return date.toLocaleTimeString();
+            }
+        }
+
+
+        function updateOfflineStatus(isOffline, message) {
+            let el = document.getElementById('offlineStatusBadge');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'offlineStatusBadge';
+                el.style.cssText = "position:fixed;top:12px;right:12px;z-index:999999;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:800;color:white;background:#047857;box-shadow:0 5px 15px rgba(0,0,0,.2);";
+                document.body.appendChild(el);
+            }
+            el.style.background = isOffline ? '#b45309' : '#047857';
+            el.innerText = message || (isOffline ? 'Offline Mode - Saved Data' : 'Online - Live Sync');
+        }
+
+        function saveOfflineDatabase(data) {
+            try {
+                localStorage.setItem(OFFLINE_CACHE_KEY, JSON.stringify({
+                    savedAt: Date.now(),
+                    data: data
+                }));
+            } catch(e) {
+                console.warn("Offline save failed", e);
+            }
+        }
+
+        function loadOfflineDatabase() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(OFFLINE_CACHE_KEY) || '{}');
+                if(saved.data) {
+                    processData(saved.data);
+                    updateOfflineStatus(true, 'Offline Mode - Last Synced Data');
+                    return true;
+                }
+            } catch(e){}
+            return false;
+        }
+
+        async function fetchPortalData(options = {}) {
+            const { useCache = false, silent = false } = options;
+
+            // Prevent two API requests from running at the same time.
+            if (portalFetchInProgress) return;
+
+            // Use cache only for the first page load. Live refreshes never prefer cache.
+            if (useCache && !portalHasLiveData) {
+                const cachedData = localStorage.getItem(PORTAL_CACHE_KEY);
+                if (cachedData) {
+                    try {
+                        const parsed = JSON.parse(cachedData);
+                        if (parsed && !parsed.error) {
+                            processData(parsed);
+                            updateRoutineSyncStatus('loading', 'Cached routine shown. Checking API...');
+                        }
+                    } catch (e) {
+                        console.warn('Cached portal data could not be parsed:', e);
+                    }
+                }
+            }
+
+            portalFetchInProgress = true;
+            if (!silent) updateRoutineSyncStatus('loading', 'Syncing latest routine from API...');
+
+            try {
+                // Cache-busting query makes sure the browser/proxy requests fresh Apps Script data.
+                const joiner = SHEET_API_URL.includes('?') ? '&' : '?';
+                const freshUrl = `${SHEET_API_URL}${joiner}_ts=${Date.now()}`;
+
+                const response = await fetch(freshUrl, {
+                    method: 'GET',
+                    cache: 'no-store',
+                    redirect: 'follow'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API returned HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (!data || typeof data !== 'object' || data.error) {
+                    throw new Error(data && data.error ? data.error : 'Invalid API response');
+                }
+
+                localStorage.setItem(PORTAL_CACHE_KEY, JSON.stringify(data));
+                saveOfflineDatabase(data);
+                processData(data);
+                portalOfflineMode = false;
+                updateOfflineStatus(false, 'Online - Live Database');
+                portalHasLiveData = true;
+
+                console.info(`[Portal API] Students loaded: ${studentDatabase.length}`);
+                console.info(`[Portal API] Routine rows loaded: ${Object.values(routineData).reduce((n, arr) => n + arr.length, 0)}`);
+
+                const syncedAt = new Date();
+                updateRoutineSyncStatus('success', `Live API synced: ${formatSyncClock(syncedAt)}`);
+
+                // If a saved session opened the portal before API completed, refresh all visible portal widgets.
+                if (bypassLogin && document.getElementById('appContainer').style.display === 'flex') {
+                    updateLiveTimer();
+                }
+            } catch (error) {
+                console.error('API Fetch Error:', error);
+                portalOfflineMode = true;
+                if(!loadOfflineDatabase()) {
+                    updateRoutineSyncStatus('error', `No offline data available.`);
+                } else {
+                    updateRoutineSyncStatus('success', `Offline data loaded`);
+                }
+            } finally {
+                portalFetchInProgress = false;
+                const btn = document.getElementById('routineRefreshBtn');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                }
+            }
+        }
+
+        function refreshRoutineFromApi() {
+            return fetchPortalData({ useCache: false, silent: false });
+        }
+
+        function startPortalAutoSync() {
+            if (portalAutoSyncTimer) clearInterval(portalAutoSyncTimer);
+
+            portalAutoSyncTimer = setInterval(() => {
+                fetchPortalData({ useCache: false, silent: true });
+            }, PORTAL_AUTO_REFRESH_MS);
+
+            // When a user returns to the tab, refresh immediately instead of waiting up to 60 seconds.
+            if (!window.portalVisibilitySyncBound) {
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') {
+                        fetchPortalData({ useCache: false, silent: true });
+                    }
+                });
+                window.portalVisibilitySyncBound = true;
+            }
+        }
+
+        function normalizeApiKey(key) {
+            return String(key || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
+
+        function unwrapApiArray(value) {
+            if (Array.isArray(value)) return value;
+            if (value && typeof value === 'object') {
+                if (Array.isArray(value.data)) return value.data;
+                if (Array.isArray(value.rows)) return value.rows;
+                if (Array.isArray(value.values)) return value.values;
+            }
+            return [];
+        }
+
+        // Finds a sheet collection even if Apps Script changes case/spacing,
+        // e.g. "Class Routine", "classRoutine", "Routine", etc.
+        function getApiCollection(data, aliases) {
+            const containers = [
+                data,
+                data && data.data,
+                data && data.result,
+                data && data.payload,
+                data && data.sheets
+            ].filter(v => v && typeof v === 'object');
+
+            const wanted = new Set(aliases.map(normalizeApiKey));
+
+            for (const container of containers) {
+                for (const key of Object.keys(container)) {
+                    if (wanted.has(normalizeApiKey(key))) {
+                        const arr = unwrapApiArray(container[key]);
+                        if (arr.length || Array.isArray(container[key])) return arr;
+                    }
+                }
+            }
+            return [];
+        }
+
+        function normalizeStudentId(value) {
+            let raw = String(value ?? '').trim();
+            if (!raw) return '';
+            const digits = raw.replace(/\D/g, '');
+            if (digits.length === 9) {
+                return `${digits.slice(0,3)}-${digits.slice(3,6)}-${digits.slice(6,9)}`;
+            }
+            return raw;
+        }
+
+        function isHeaderLikeStudent(id, name) {
+            const a = String(id || '').trim().toLowerCase();
+            const b = String(name || '').trim().toLowerCase();
+            return (a === 'id' && b === 'name') || a === 'studentid' || a === 'student_id';
+        }
+
+        function processData(data) {
+            // ================= 1. STUDENTS =================
+            // Supports clean headers as well as the current Sheet's legacy
+            // "badage" typo, uppercase TYPE, and accidental repeated header row.
+            const rawStudents = getApiCollection(data, ['Students', 'Student']);
+            const seenStudentIds = new Set();
+
+            studentDatabase = rawStudents.map(s => {
+                s = s || {};
+                const id = normalizeStudentId(s.id ?? s.ID ?? s.Id ?? s.student_id ?? s.studentId ?? s['Student ID'] ?? '');
+                const name = String(s.name ?? s.Name ?? s.NAME ?? s.student_name ?? s.studentName ?? s['Student Name'] ?? '').trim();
+                const badge = String(s.badge ?? s.Badge ?? s.BADGE ?? s.badage ?? s.Badage ?? s.BADAGE ?? '').trim();
+                const type = String(s.type ?? s.Type ?? s.TYPE ?? s.student_type ?? '').trim();
+                const password = String(s.password ?? s.Password ?? s.PASSWORD ?? '').trim();
+                return { id, name, badge, type, password };
+            }).filter(s => {
+                // Remove the duplicate header row and the blank "re" row.
+                if (!s.id || !s.name || isHeaderLikeStudent(s.id, s.name)) return false;
+                if (seenStudentIds.has(s.id)) return false;
+                seenStudentIds.add(s.id);
+                return true;
+            });
+
+            // ================= 2. CLASS ROUTINE =================
+            // Supports BOTH schemas:
+            // New Sheet: day | sub | start | end | teacher
+            // Legacy API: DAY | TIME | COURSE | ROOM | FACULTY
+            const rawRoutine = getApiCollection(data, ['Class Routine', 'Routine', 'ClassRoutine']);
+            routineData = {0: [], 1: [], 2: [], 3: [], 4: []};
+            const dayMap = {
+                sunday: 0, sun: 0,
+                monday: 1, mon: 1,
+                tuesday: 2, tue: 2, tues: 2,
+                wednesday: 3, wed: 3,
+                thursday: 4, thu: 4, thurs: 4
+            };
+
+            rawRoutine.forEach(r => {
+                r = r || {};
+                const dayVal = r.day ?? r.Day ?? r.DAY ?? r.day_index ?? r.dayIndex;
+                if (dayVal === undefined || dayVal === null || String(dayVal).trim() === '') return;
+
+                const dayKey = String(dayVal).toLowerCase().trim();
+                const index = Object.prototype.hasOwnProperty.call(dayMap, dayKey)
+                    ? dayMap[dayKey]
+                    : parseInt(dayVal, 10);
+                if (!Object.prototype.hasOwnProperty.call(routineData, index)) return;
+
+                let startT = String(r.start ?? r.Start ?? r.START ?? '').trim();
+                let endT = String(r.end ?? r.End ?? r.END ?? '').trim();
+
+                // Fall back to the old combined TIME field.
+                if (!startT && !endT) {
+                    const timeStr = String(r.Time ?? r.TIME ?? r.time ?? '').trim();
+                    const times = timeStr.split(/\s*[-–—]\s*/);
+                    startT = times[0] ? times[0].trim() : '';
+                    endT = times[1] ? times[1].trim() : '';
+                }
+
+                const courseName = String(
+                    r.sub ?? r.Sub ?? r.SUB ??
+                    r.course ?? r.Course ?? r.COURSE ??
+                    r.subject ?? r.Subject ?? ''
+                ).trim();
+                const roomNo = String(r.room ?? r.Room ?? r.ROOM ?? '').trim();
+                const teacherName = String(
+                    r.teacher ?? r.Teacher ?? r.TEACHER ??
+                    r.faculty ?? r.Faculty ?? r.FACULTY ?? ''
+                ).trim();
+
+                if (!courseName && !startT && !endT) return;
+
+                // Avoid appending a room twice when `sub` already includes it.
+                let subjectFull = courseName;
+                if (roomNo && !courseName.includes(`(${roomNo})`)) {
+                    subjectFull = `${courseName} (${roomNo})`;
+                }
+
+                routineData[index].push({
+                    sub: subjectFull || 'Untitled Class',
+                    start: startT,
+                    end: endT,
+                    teacher: teacherName || 'Not specified'
+                });
+            });
+
+            // Keep each day's classes in chronological order.
+            Object.keys(routineData).forEach(dayIndex => {
+                routineData[dayIndex].sort((a, b) => parseTimeToMinutes(a.start) - parseTimeToMinutes(b.start));
+            });
+
+            // ================= 3. COURSES + NOTICES =================
+            const incomingCourses = getApiCollection(data, ['Courses', 'Course']);
+            const incomingNotices = getApiCollection(data, ['Notices', 'Notice']);
+            if (incomingCourses.length) coursesData = incomingCourses;
+            if (incomingNotices.length) noticesData = incomingNotices;
+
+            if (typeof populateTables === 'function') populateTables();
+            if (typeof renderCourses === 'function') renderCourses();
+            if (typeof renderNotices === 'function') renderNotices();
+            if (typeof initRoutine === 'function') initRoutine();
+            if (typeof updateLiveTimer === 'function') updateLiveTimer();
+        }
+
+        let currentFocus = -1;
+
+        document.getElementById('loginId').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, ''); 
+            let formattedVal = '';
+            for(let i = 0; i < val.length; i++) {
+                if(i === 3 || i === 6) formattedVal += '-';
+                formattedVal += val[i];
+            }
+            e.target.value = formattedVal;
+            currentFocus = -1; 
+
+            const suggestionsBox = document.getElementById('idSuggestions');
+            if (val.length > 0) {
+                const matches = studentDatabase.filter(s => {
+                    if(!s.id) return false;
+                    let sRaw = s.id.replace(/\D/g, '');
+                    return sRaw.includes(val);
+                });
+                
+                if (matches.length > 0) {
+                    suggestionsBox.innerHTML = '';
+                    matches.forEach(match => {
+                        let div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.innerHTML = `<span><i class="fas fa-id-card" style="margin-right:8px; color:var(--primary-blue);"></i>${match.id}</span> <span style="color:var(--accent-orange); font-weight:700;">${match.name ? match.name.split(' ')[0] : 'Student'}</span>`;
+                        div.onclick = function() {
+                            document.getElementById('loginId').value = match.id;
+                            document.getElementById('loginName').value = match.name;
+                            suggestionsBox.style.display = 'none';
+                            document.getElementById('loginPhone').focus();
+                        };
+                        suggestionsBox.appendChild(div);
+                    });
+                    suggestionsBox.style.display = 'block';
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            } else {
+                suggestionsBox.style.display = 'none';
+            }
+
+            const student = studentDatabase.find(s => s.id === formattedVal);
+            if(student) {
+                document.getElementById('loginName').value = student.name;
+            } else {
+                document.getElementById('loginName').value = "";
+            }
+        });
+
+        document.getElementById('loginId').addEventListener('keydown', function(e) {
+            let x = document.getElementById("idSuggestions");
+            if (x) x = x.getElementsByTagName("div");
+            if (!x || x.length === 0) return;
+
+            if (e.keyCode == 40) { 
+                currentFocus++;
+                addActive(x);
+            } else if (e.keyCode == 38) { 
+                currentFocus--;
+                addActive(x);
+            } else if (e.keyCode == 13) { 
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    if (x) x[currentFocus].click();
+                } else if (x.length == 1) {
+                    x[0].click(); 
+                }
+            }
+        });
+
+        document.getElementById('loginPhone').addEventListener('keydown', function (e) {
+            if (e.keyCode === 13) document.getElementById('loginPwd').focus();
+        });
+
+        function addActive(x) {
+            if (!x) return false;
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            x[currentFocus].classList.add("active-nav");
+            x[currentFocus].scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        function removeActive(x) {
+            for (let i = 0; i < x.length; i++) {
+                x[i].classList.remove("active-nav");
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            if(e.target.id !== 'loginId') {
+                document.getElementById('idSuggestions').style.display = 'none';
+            }
+        });
+
+        document.getElementById('loginPwd').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') attemptLogin();
+        });
+
+        function attemptLogin() {
+            const idVal = document.getElementById('loginId').value.trim();
+            const pwdVal = document.getElementById('loginPwd').value;
+            const err = document.getElementById('loginError');
+            
+            const student = studentDatabase.find(s => s.id === idVal);
+            
+            if(!student) {
+                err.innerText = "Error: Student ID not found! Wait a sec to load database";
+                err.style.display = 'block';
+                return;
+            }
+            if(pwdVal !== '65-C') {
+                err.innerText = "Error: Incorrect Password!";
+                err.style.display = 'block';
+                return;
+            }
+
+            loggedInUser = student.name ? student.name.split(" ")[0] : "Student"; 
+            loggedInId = student.id; 
+            err.style.display = 'none';
+
+            const fileInput = document.getElementById('loginPic');
+            if(fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    finalizeLogin(e.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                finalizeLogin("");
+            }
+        }
+
+        function finalizeLogin(picData) {
+            const phoneVal = document.getElementById('loginPhone').value.trim();
+            const fullNameVal = document.getElementById('loginName').value.trim() || loggedInUser;
+            localStorage.setItem('portal_user_session_v2', JSON.stringify({
+                id: loggedInId,
+                name: loggedInUser,
+                fullName: fullNameVal,
+                phone: phoneVal,
+                pic: picData
+            }));
+
+            saveLoginRequest({
+                id: loggedInId,
+                name: fullNameVal,
+                phone: phoneVal,
+                pic: picData
+            });
+            
+            if(picData) {
+                document.getElementById('headerProfilePic').innerHTML = `<img src="${picData}" style="width:100%; height:100%; object-fit:cover;">`;
+            }
+
+            document.getElementById('loginOverlay').style.opacity = '0';
+            checkAdminAccess();
+
+            setTimeout(() => {
+                document.getElementById('loginOverlay').style.display = 'none';
+                const p2 = document.getElementById('portalPreloader');
+                p2.style.display = 'flex';
+                p2.style.opacity = '1';
+                document.getElementById('postLoginSuccess').style.display = 'block';
+                
+                setTimeout(() => {
+                    p2.style.opacity = '0';
+                    setTimeout(() => { 
+                        p2.style.display = 'none'; 
+                        document.getElementById('appContainer').style.display = 'flex';
+                        document.body.style.overflowY = 'auto'; 
+                        initPortal(); 
+                    }, 200);
+                }, 300);
+            }, 100);
+        }
+
+        async function saveLoginRequest(user){
+            try{
+                await fetch(SHEET_API_URL,{
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({
+                        action:"loginRequest",
+                        timestamp:new Date().toISOString(),
+                        studentId:user.id,
+                        name:user.name,
+                        phone:user.phone,
+                        photo:user.pic,
+                        status:"Pending",
+                        activate:"Activate"
+                    })
+                });
+            }catch(e){ console.warn("Login request sync failed",e); }
+        }
+
+        function checkAdminAccess() {
+            const coreMemberIDs = ["251-115-183", "261-115-144", "261-115-111", "261-115-141"];
+            const isCoreMember = coreMemberIDs.includes(normalizeStudentId(loggedInId));
+
+            // Student Information is a portal feature and is visible to every logged-in student.
+            // Admin Panel remains restricted to the four moderator/core IDs above.
+            const studentDenied = document.getElementById('studentDenied');
+            const studentDataContent = document.getElementById('studentDataContent');
+            if (studentDenied) studentDenied.style.display = 'none';
+            if (studentDataContent) studentDataContent.style.display = 'block';
+
+            const adminDenied = document.getElementById('adminDenied');
+            const adminContent = document.getElementById('adminContent');
+            if (adminDenied) adminDenied.style.display = isCoreMember ? 'none' : 'block';
+            if (adminContent) adminContent.style.display = isCoreMember ? 'block' : 'none';
+        }
+
+        function initPortal() {
+            populateTables();
+            loadComments();
+            renderCourses(); 
+            renderNotices(); 
+            initRoutine(); 
+            loadAttendance();
+            renderCalendar(); 
+            checkAdminAccess(); 
+
+            if(!window.timerInitialized) {
+                setInterval(updateLiveTimer, 1000); 
+                initLiveTraffic();
+                window.timerInitialized = true;
+            }
+            updateLiveTimer();
+        }
+
+        let currentSlide = 0;
+        function moveSlide(direction) {
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            document.getElementById('busSlider').style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        function initLiveTraffic() {
+            let totalVisits = localStorage.getItem('portal_total_visits') || 1425;
+            totalVisits = parseInt(totalVisits) + 1; 
+            localStorage.setItem('portal_total_visits', totalVisits);
+            document.getElementById('totalVisitorsCount').innerText = totalVisits.toLocaleString();
+
+            setInterval(() => {
+                let activeUsers = Math.floor(Math.random() * (28 - 12 + 1)) + 12;
+                document.getElementById('activeUsersCount').innerHTML = `<span class="live-dot"></span> ${activeUsers}`;
+            }, 5000);
+            document.getElementById('activeUsersCount').innerHTML = `<span class="live-dot"></span> ${Math.floor(Math.random() * (28 - 12 + 1)) + 12}`;
+        }
+
+        let currDate = new Date();
+        let currMonth = currDate.getMonth();
+        let currYear = currDate.getFullYear();
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        function renderCalendar() {
+            document.getElementById('monthYear').innerText = `${months[currMonth]} ${currYear}`;
+            let firstDay = new Date(currYear, currMonth, 1).getDay();
+            let lastDate = new Date(currYear, currMonth + 1, 0).getDate();
+            
+            let datesHtml = "";
+            for (let i = 0; i < firstDay; i++) {
+                datesHtml += `<div class="calendar-date empty"></div>`;
+            }
+            
+            let today = new Date();
+            for (let i = 1; i <= lastDate; i++) {
+                let isToday = i === today.getDate() && currMonth === today.getMonth() && currYear === today.getFullYear() ? "today" : "";
+                datesHtml += `<div class="calendar-date ${isToday}">${i}</div>`;
+            }
+            document.getElementById('calendarDates').innerHTML = datesHtml;
+        }
+
+        function changeMonth(dir) {
+            currMonth += dir;
+            if (currMonth < 0) { currMonth = 11; currYear--; }
+            else if (currMonth > 11) { currMonth = 0; currYear++; }
+            renderCalendar();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.sidebar-menu button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            if (typeof event !== 'undefined' && event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
+            if(window.innerWidth <= 992) {
+                document.getElementById('sidebar').classList.remove('show');
+            }
+        }
+
+        function toggleDropdown(id, element) {
+            const dropdown = document.getElementById(id);
+            const parent = element.parentElement;
+            
+            if(dropdown.classList.contains('show')){
+                dropdown.classList.remove('show');
+                parent.classList.remove('show-dropdown');
+            } else {
+                dropdown.classList.add('show');
+                parent.classList.add('show-dropdown');
+            }
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('show'); }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function populateTables() {
+            const regTbody = document.getElementById('regularTbody');
+            const reTbody = document.getElementById('reTbody');
+            const totalCounter = document.getElementById('totalCounter');
+            if (!regTbody || !reTbody) return;
+
+            regTbody.innerHTML = '';
+            reTbody.innerHTML = '';
+
+            if (!Array.isArray(studentDatabase) || studentDatabase.length === 0) {
+                regTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Loading student information from API...</td></tr>`;
+                reTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No data loaded yet.</td></tr>`;
+                if (totalCounter) totalCounter.innerText = '0';
+                return;
+            }
+
+            let regCount = 0;
+            let reCount = 0;
+
+            studentDatabase.forEach(s => {
+                if (!s || !s.id || !s.name) return;
+
+                const badgeValue = String(s.badge || '').trim();
+                const badgeKey = badgeValue.toLowerCase();
+                let badgeClass = 'badge-advisor';
+                let badgeIcon = '';
+                if (badgeKey === 'cr' || badgeKey === 'x-cr') badgeClass = 'badge-cr';
+                else if (badgeKey === 'core member') badgeClass = 'badge-core';
+                else if (badgeKey === 'peer notetaker') {
+                    badgeClass = 'badge-notetaker';
+                    badgeIcon = '<i class="fas fa-book-open" aria-hidden="true"></i>';
+                }
+
+                const badgeHtml = badgeValue
+                    ? `<span class="badge ${badgeClass}">${badgeIcon}${escapeHtml(badgeValue)}</span>`
+                    : '';
+
+                const safeId = escapeHtml(s.id);
+                const safeName = escapeHtml(s.name);
+                const isActivated = (String(s.id).trim() === String(loggedInId).trim());
+                const loginBadge = isActivated
+                    ? `<span class="badge badge-activated">ACTIVATED</span>`
+                    : '';
+
+                // Rows with a visible badge receive a premium role-based gradient.
+                let rowClass = '';
+                if (badgeKey === 'cr') rowClass = 'student-highlight row-cr';
+                else if (badgeKey === 'x-cr') rowClass = 'student-highlight row-xcr';
+                else if (badgeKey === 'core member') rowClass = 'student-highlight row-core';
+                else if (badgeKey === 'peer notetaker') rowClass = 'student-highlight row-notetaker';
+                else if (badgeValue) rowClass = 'student-highlight row-advisor';
+                else if (isActivated) rowClass = 'student-highlight row-activated';
+
+                const visibleBadges = `${badgeHtml} ${loginBadge}`.trim();
+                const studentType = String(s.type || '').trim().toLowerCase();
+
+                if (studentType === 're' || studentType === 're-admission' || studentType === 'readmission') {
+                    reCount++;
+                    reTbody.innerHTML += `<tr class="${rowClass}"><td>${reCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
+                } else {
+                    regCount++;
+                    regTbody.innerHTML += `<tr class="${rowClass}"><td>${regCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
+                }
+            });
+
+            if (regCount === 0) {
+                regTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No regular students found.</td></tr>`;
+            }
+            if (reCount === 0) {
+                reTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No re-admission students found.</td></tr>`;
+            }
+            if (totalCounter) totalCounter.innerText = regCount + reCount;
+        }
+
+        function searchTables() {
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            document.querySelectorAll("#regularTable tbody tr, #reTable tbody tr").forEach(row => {
+                row.style.display = row.innerText.toUpperCase().includes(input) ? "" : "none";
+            });
+        }
+        
+        const activeDays = [
+            { index: 0, name: "Sunday" },
+            { index: 1, name: "Monday" },
+            { index: 2, name: "Tuesday" },
+            { index: 3, name: "Wednesday" },
+            { index: 4, name: "Thursday" }
+        ];
+        
+        // Converts the mixed time style used in the Sheet into minutes since midnight.
+        // Current routine uses 09:00/10:30 in the morning and 01:30-06:00 for afternoon/evening.
+        function parseTimeToMinutes(timeStr) {
+            if (timeStr === undefined || timeStr === null || String(timeStr).trim() === '') return Number.POSITIVE_INFINITY;
+
+            let raw = String(timeStr).trim();
+            const lower = raw.toLowerCase();
+            const isPM = /\bpm\b/.test(lower);
+            const isAM = /\bam\b/.test(lower);
+
+            // Also accept ISO-like date/time strings if Apps Script serializes a time as a Date.
+            const isoMatch = raw.match(/T(\d{1,2}):(\d{2})(?::\d{2})?/);
+            if (isoMatch) raw = `${isoMatch[1]}:${isoMatch[2]}`;
+
+            const match = raw.match(/(\d{1,2})\s*:\s*(\d{1,2})/);
+            if (!match) return Number.POSITIVE_INFINITY;
+
+            let h = parseInt(match[1], 10);
+            let m = parseInt(match[2], 10);
+            if (Number.isNaN(h) || Number.isNaN(m)) return Number.POSITIVE_INFINITY;
+
+            if (isPM && h !== 12) h += 12;
+            if (isAM && h === 12) h = 0;
+
+            // The current Sheet mixes 24-hour values (16:30/18:00) with
+            // afternoon values written as 01:30/02:30/03:00/04:30/06:00.
+            // Without AM/PM, 1-6 are therefore treated as PM.
+            if (!isAM && !isPM && h >= 1 && h <= 6) h += 12;
+
+            h = h % 24;
+            return (h * 60) + m;
+        }
+
+        function formatSpreadsheetTime(timeStr) {
+            if (!timeStr) return '';
+            const total = parseTimeToMinutes(timeStr);
+            if (!Number.isFinite(total)) return String(timeStr).trim();
+
+            const h24 = Math.floor(total / 60) % 24;
+            const m = total % 60;
+            const ampm = h24 >= 12 ? 'PM' : 'AM';
+            const h12 = (h24 % 12) || 12;
+            return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+        }
+
+
+        function initRoutine() {
+            const tabsContainer = document.getElementById('routineTabs');
+            if(!tabsContainer) return;
+            tabsContainer.innerHTML = '';
+            
+            let currentDay = new Date().getDay();
+            if (currentDay === 5 || currentDay === 6) currentDay = 0;
+
+            const validSelectedDay = activeDays.some(d => d.index === selectedRoutineDay);
+            const dayToShow = validSelectedDay ? selectedRoutineDay : currentDay;
+
+            activeDays.forEach(dayObj => {
+                tabsContainer.innerHTML += `<div class="day-tab ${dayObj.index === dayToShow ? 'active' : ''}" onclick="selectRoutineDay(${dayObj.index}, this)">${dayObj.name}</div>`;
+            });
+            
+            selectRoutineDay(dayToShow, tabsContainer.querySelector('.active'));
+        }
+
+        function selectRoutineDay(dayIndex, element) {
+            selectedRoutineDay = dayIndex;
+            document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+            if(element) element.classList.add('active');
+            
+            const content = document.getElementById('routineContent');
+            if(!content) return;
+            content.innerHTML = '';
+            
+            if(!routineData[dayIndex] || routineData[dayIndex].length === 0) {
+                content.innerHTML = `<div style="text-align:center; padding: 40px; background:#fff; border-radius:16px; border:2px dashed var(--border-light);"><p style="color:var(--text-muted); font-size:16px; font-weight:600;">No classes scheduled for this day.</p></div>`;
+                return;
+            }
+
+            const sortedClasses = [...routineData[dayIndex]].sort((a, b) => parseTimeToMinutes(a.start) - parseTimeToMinutes(b.start));
+
+            sortedClasses.forEach(cls => {
+                const startMins = parseTimeToMinutes(cls.start);
+                const endMins = parseTimeToMinutes(cls.end);
+                let timeDisplay = `${formatSpreadsheetTime(cls.start)} - ${formatSpreadsheetTime(cls.end)}`;
+                content.innerHTML += `
+                <div class="routine-card" data-routine-day="${dayIndex}" data-start-mins="${startMins}" data-end-mins="${endMins}">
+                    <div class="time-block">
+                        <div class="time">${timeDisplay}</div>
+                    </div>
+                    <div class="info-block">
+                        <h4>${escapeHtml(cls.sub)}</h4>
+                        <p>Teacher: <span style="font-weight: 500;">${escapeHtml(cls.teacher)}</span></p>
+                        <div class="routine-status neutral"><i class="fas fa-calendar-alt"></i><span>Scheduled Class</span></div>
+                    </div>
+                </div>`;
+            });
+
+            updateRoutineCardStates(new Date());
+        }
+
+        function formatDurationHuman(ms, includeSeconds = true) {
+            const safeMs = Math.max(0, Number(ms) || 0);
+            const totalSeconds = Math.floor(safeMs / 1000);
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const sec = totalSeconds % 60;
+
+            const parts = [];
+            if (h > 0) parts.push(`${h} ঘণ্টা`);
+            if (m > 0 || h > 0) parts.push(`${m} মিনিট`);
+            if (includeSeconds) parts.push(`${sec} সেকেন্ড`);
+            return parts.join(' ') || (includeSeconds ? '0 সেকেন্ড' : '0 মিনিট');
+        }
+
+        function getTimeDateForToday(now, totalMinutes) {
+            const d = new Date(now);
+            const h = Math.floor(totalMinutes / 60);
+            const m = totalMinutes % 60;
+            d.setHours(h, m, 0, 0);
+            return d;
+        }
+
+        function getNextClass(now) {
+            const day = now.getDay();
+            const todayClasses = Array.isArray(routineData[day])
+                ? [...routineData[day]]
+                    .filter(cls => cls && cls.start && cls.end)
+                    .map(cls => ({
+                        ...cls,
+                        startMins: parseTimeToMinutes(cls.start),
+                        endMins: parseTimeToMinutes(cls.end)
+                    }))
+                    .filter(cls => Number.isFinite(cls.startMins) && Number.isFinite(cls.endMins))
+                    .sort((a, b) => a.startMins - b.startMins)
+                : [];
+
+            if (todayClasses.length === 0) {
+                return { status: 'none' };
+            }
+
+            const nowTs = now.getTime();
+            for (const cls of todayClasses) {
+                const startDate = getTimeDateForToday(now, cls.startMins);
+                const endDate = getTimeDateForToday(now, cls.endMins);
+
+                if (nowTs >= startDate.getTime() && nowTs < endDate.getTime()) {
+                    return {
+                        status: 'ongoing',
+                        sub: cls.sub,
+                        start: cls.start,
+                        end: cls.end,
+                        endTime: endDate,
+                        endsInMs: endDate.getTime() - nowTs
+                    };
+                }
+
+                if (nowTs < startDate.getTime()) {
+                    return {
+                        status: 'upcoming',
+                        sub: cls.sub,
+                        start: cls.start,
+                        end: cls.end,
+                        time: startDate,
+                        startsInMs: startDate.getTime() - nowTs
+                    };
+                }
+            }
+
+            return { status: 'finished' };
+        }
+
+        function updateRoutineCardStates(now = new Date()) {
+            const cards = document.querySelectorAll('.routine-card[data-routine-day]');
+            if (!cards.length) return;
+
+            const currentDay = now.getDay();
+            const nowMinutesExact = (now.getHours() * 60) + now.getMinutes() + (now.getSeconds() / 60);
+
+            cards.forEach(card => {
+                card.classList.remove('status-upcoming', 'status-live', 'status-ended');
+                const statusEl = card.querySelector('.routine-status');
+                if (!statusEl) return;
+
+                const cardDay = Number(card.dataset.routineDay);
+                const startMins = Number(card.dataset.startMins);
+                const endMins = Number(card.dataset.endMins);
+
+                // Only today's routine receives live time-based colour states.
+                if (cardDay !== currentDay || !Number.isFinite(startMins) || !Number.isFinite(endMins)) {
+                    statusEl.className = 'routine-status neutral';
+                    statusEl.innerHTML = '<i class="fas fa-calendar-alt"></i><span>Scheduled Class</span>';
+                    return;
+                }
+
+                if (nowMinutesExact < startMins) {
+                    const startDate = getTimeDateForToday(now, startMins);
+                    const remaining = startDate.getTime() - now.getTime();
+                    card.classList.add('status-upcoming');
+                    statusEl.className = 'routine-status';
+                    statusEl.innerHTML = `<i class="fas fa-hourglass-half"></i><span>শুরু হতে ${formatDurationHuman(remaining, false)} বাকি</span>`;
+                } else if (nowMinutesExact >= startMins && nowMinutesExact < endMins) {
+                    const endDate = getTimeDateForToday(now, endMins);
+                    const remaining = endDate.getTime() - now.getTime();
+                    card.classList.add('status-live');
+                    statusEl.className = 'routine-status';
+                    statusEl.innerHTML = `<i class="fas fa-broadcast-tower fa-beat"></i><span>ক্লাস চলছে • শেষ হতে ${formatDurationHuman(remaining, false)}</span>`;
+                } else {
+                    card.classList.add('status-ended');
+                    statusEl.className = 'routine-status';
+                    statusEl.innerHTML = '<i class="fas fa-check-circle"></i><span>ক্লাস শেষ</span>';
+                }
+            });
+        }
+
+        function updateLiveTimer() {
+            const now = new Date();
+            const modernCard = document.getElementById('liveClassCard');
+            const countdownEl = document.getElementById('classCountdown');
+            const subjectEl = document.getElementById('classSubject');
+            const subtitleEl = document.getElementById('timerSubtitle');
+            const iconEl = document.getElementById('timerIcon');
+            const nextCls = getNextClass(now);
+
+            // Keep Class Routine cards synced every second without rebuilding the DOM.
+            updateRoutineCardStates(now);
+            
+            if (modernCard && countdownEl && subjectEl && subtitleEl && iconEl) {
+                if (nextCls.status === 'ongoing') {
+                    modernCard.className = 'dash-card live-alert';
+                    subtitleEl.innerText = `ক্লাস চলছে • শেষ হতে ${formatDurationHuman(nextCls.endsInMs, false)}`;
+                    subjectEl.innerHTML = `${escapeHtml(nextCls.sub.split(' (')[0])}<div class="tracker-exact-time">শেষ হবে ${formatSpreadsheetTime(nextCls.end)}</div>`;
+                    countdownEl.innerText = 'LIVE';
+                    iconEl.innerHTML = '<i class="fas fa-broadcast-tower fa-beat"></i>';
+                } else if (nextCls.status === 'upcoming') {
+                    modernCard.className = 'dash-card live-upcoming';
+                    subtitleEl.innerText = 'পরবর্তী ক্লাস শুরু হতে বাকি';
+                    subjectEl.innerHTML = `${escapeHtml(nextCls.sub.split(' (')[0])}<div class="tracker-exact-time">শুরু ${formatSpreadsheetTime(nextCls.start)}</div>`;
+                    countdownEl.innerText = formatDurationHuman(nextCls.startsInMs, true);
+                    iconEl.innerHTML = '<i class="fas fa-hourglass-half fa-beat-fade"></i>';
+                } else {
+                    modernCard.className = 'dash-card live-finished';
+                    subtitleEl.innerText = 'আজকের ক্লাস স্ট্যাটাস';
+                    subjectEl.innerText = 'আজকে আর কোনো ক্লাস নেই';
+                    countdownEl.innerText = 'CLASS END';
+                    iconEl.innerHTML = '<i class="fas fa-calendar-check"></i>';
+                }
+            }
+        }
+
+        // ================= DYNAMIC COURSES =================
+        function renderCourses() {
+            const coursesContainer = document.getElementById('coursesGrid');
+            if(!coursesContainer) return;
+            coursesContainer.innerHTML = '';
+            
+            if(coursesData.length === 0) {
+                coursesContainer.innerHTML = `<p style="color:var(--text-muted);">No courses loaded.</p>`;
+                return;
+            }
+
+            coursesData.forEach(course => {
+                coursesContainer.innerHTML += `
+                <div class="dash-card" style="cursor: pointer; text-align: center; padding: 30px 20px;" onclick="window.open('${course.link}', '_blank')">
+                    <div class="card-icon ${course.color || 'bg-blue'}" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 24px;">
+                        <i class="fas ${course.icon || 'fa-folder'}"></i>
+                    </div>
+                    <div class="card-title">${course.title || course.Title}</div>
+                    <div class="card-sub" style="margin-top: 5px; margin-bottom: 15px;">${course.code || course.Code}</div>
+                    <a href="${course.link}" target="_blank" class="btn-drive" style="width: 100%; padding: 10px; font-size: 13px;">Open Folder</a>
+                </div>`;
+            });
+        }
+
+        // ================= DYNAMIC NOTICES =================
+        function renderNotices() {
+            const noticeContainer = document.getElementById('notices');
+            if(!noticeContainer) return;
+            noticeContainer.innerHTML = `<h2 style="font-size: 26px; font-weight: 900; margin-bottom: 25px; color: var(--text-dark);">Notice Board</h2>`;
+            
+            if(noticesData.length === 0) {
+                noticeContainer.innerHTML += `<p style="color:var(--text-muted);">No new notices.</p>`;
+                return;
+            }
+
+            noticesData.forEach(notice => {
+                noticeContainer.innerHTML += `
+                    <div class="content-card-main" style="border-left: 6px solid ${notice.color || notice.Color || 'var(--primary-blue)'}; margin-bottom: 20px;">
+                        <h4 style="font-size: 18px; margin-bottom: 10px; color: var(--text-dark); display: flex; align-items: center; gap:12px; font-weight: 900;">
+                            <div style="width:35px; height:35px; font-size:16px; border-radius:10px; display:flex; justify-content:center; align-items:center; background: ${notice.color || notice.Color || 'var(--primary-blue)'}20;">
+                                <i class="fas ${notice.icon || notice.Icon || 'fa-bell'}" style="color: ${notice.color || notice.Color || 'var(--primary-blue)'};"></i>
+                            </div> 
+                            <span>${notice.title || notice.Title}</span>
+                        </h4>
+                        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; font-weight: 600;">${notice.body || notice.Body}</p>
+                    </div>`;
+            });
+        }
+
+        let addedCourses = [];
+        function addCourseToSGPA() {
+            const grade = parseFloat(document.getElementById('gradeSelect').value);
+            const credit = parseFloat(document.getElementById('creditSelect').value);
+            const gradeText = document.getElementById('gradeSelect').options[document.getElementById('gradeSelect').selectedIndex].text;
+            addedCourses.push({grade, credit, text: `${credit} Cr | ${gradeText}`});
+            updateSGPADisplay();
+        }
+        function updateSGPADisplay() {
+            const listDiv = document.getElementById('sgpaCourseList');
+            const resultDiv = document.getElementById('sgpaDisplay');
+            listDiv.innerHTML = "";
+            let totalCredits = 0, totalPoints = 0;
+            addedCourses.forEach((c, i) => {
+                totalCredits += c.credit; totalPoints += (c.credit * c.grade);
+                listDiv.innerHTML += `<div><span style="font-weight:800; color:var(--primary-blue);">C-${i+1}</span> <span style="font-weight:700; color:var(--text-dark);">${c.text}</span></div>`;
+            });
+            resultDiv.innerText = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "0.00";
+        }
+        function resetSGPA() { addedCourses = []; updateSGPADisplay(); }
+
+        let attData = { present: 0, absent: 0 };
+        function loadAttendance() {
+            let saved = localStorage.getItem('cse65c_att_v7');
+            if(saved) attData = JSON.parse(saved);
+            renderAttendance();
+        }
+        function updateAttendance(type) {
+            if(type === 'present') attData.present++;
+            if(type === 'absent') attData.absent++;
+            localStorage.setItem('cse65c_att_v7', JSON.stringify(attData));
+            renderAttendance();
+        }
+        function resetAttendance() {
+            attData = { present: 0, absent: 0 };
+            localStorage.setItem('cse65c_att_v7', JSON.stringify(attData));
+            renderAttendance();
+        }
+        function renderAttendance() {
+            const total = attData.present + attData.absent;
+            const pct = total === 0 ? 0 : Math.round((attData.present / total) * 100);
+            document.getElementById('attTotal').innerText = total;
+            document.getElementById('attPresent').innerText = attData.present;
+            document.getElementById('attPercent').innerText = `${pct}%`;
+            document.getElementById('attChart').style.setProperty('--perc', `${pct}%`);
+            
+            if(pct >= 70) document.getElementById('attChart').style.background = `conic-gradient(var(--accent-green) var(--perc), #e2e8f0 0)`;
+            else if(pct >= 50) document.getElementById('attChart').style.background = `conic-gradient(var(--warning) var(--perc), #e2e8f0 0)`;
+            else document.getElementById('attChart').style.background = `conic-gradient(var(--danger) var(--perc), #e2e8f0 0)`;
+        }
+
+        function submitComment(target) {
+            const text = document.getElementById('commentInput').value.trim();
+            if(!text) { alert("Please write a message!"); return; }
+            let phone = target === 'advisor' ? "8801609360033" : target === 'cr1' ? "8801334966474" : "8801727489737";
+            
+            let comments = JSON.parse(localStorage.getItem('portalComments_v7')) || [];
+            comments.unshift({ text, time: new Date().toLocaleString(), author: loggedInUser });
+            localStorage.setItem('portalComments_v7', JSON.stringify(comments));
+
+            loadComments();
+            document.getElementById('commentInput').value = "";
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent("Message from " + loggedInUser + ": \n" + text)}`, '_blank');
+        }
+
+        function loadComments() {
+            const clist = document.getElementById('commentList');
+            let comments = JSON.parse(localStorage.getItem('portalComments_v7')) || [];
+            clist.innerHTML = comments.length === 0 ? `<p style="color:var(--text-muted); font-size:14px; font-weight: 500;">No comments yet.</p>` : "";
+            comments.forEach(c => {
+                let authorName = c.author ? c.author : "Student";
+                clist.innerHTML += `
+                    <div class="comment-msg">
+                        <div class="comment-avatar"><i class="fas fa-user"></i></div>
+                        <div class="comment-content">
+                            <h5>${authorName} <span>${c.time}</span></h5>
+                            <p>${c.text}</p>
+                        </div>
+                    </div>`;
+            });
+        }
+
+
+        // ================= PWA INSTALLATION =================
+        let deferredInstallPrompt = null;
+
+        function isPortalInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        }
+
+        function updateInstallButtons(show) {
+            const headerBtn = document.getElementById('installAppBtn');
+            const loginBtn = document.getElementById('loginInstallBtn');
+            const dashboardCard = document.getElementById('dashboardInstallCard');
+            const cardSubtext = document.getElementById('installCardSubtext');
+            const cardAction = document.getElementById('installCardAction');
+            const installed = isPortalInstalled();
+            const shouldShowPromptButtons = !!show && !installed;
+
+            if (headerBtn) headerBtn.style.display = shouldShowPromptButtons ? 'flex' : 'none';
+            if (loginBtn) loginBtn.style.display = shouldShowPromptButtons ? 'block' : 'none';
+
+            // Keep a visible dashboard download option in the browser even before
+            // Chrome fires beforeinstallprompt. Hide it only after installation.
+            if (dashboardCard) dashboardCard.style.display = installed ? 'none' : 'flex';
+            if (cardSubtext) {
+                cardSubtext.textContent = show
+                    ? 'Ready to install on this device'
+                    : 'Install directly from Android Chrome';
+            }
+            if (cardAction) {
+                cardAction.innerHTML = show
+                    ? '<i class="fas fa-download" style="margin-right:5px;"></i> Install Now'
+                    : '<i class="fab fa-chrome" style="margin-right:5px;"></i> Download App';
+            }
+
+            document.documentElement.classList.toggle('pwa-installed', installed);
+        }
+
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+            updateInstallButtons(true);
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredInstallPrompt = null;
+            updateInstallButtons(false);
+        });
+
+        async function installPortalApp() {
+            if (isPortalInstalled()) {
+                alert('CSE 65-C App is already installed on this device.');
+                return;
+            }
+
+            if (!deferredInstallPrompt) {
+                alert('Chrome menu (⋮) খুলে “Install app” অথবা “Add to Home screen” নির্বাচন করুন। GitHub Pages অবশ্যই HTTPS-এ চালু থাকতে হবে।');
+                return;
+            }
+
+            deferredInstallPrompt.prompt();
+            try {
+                await deferredInstallPrompt.userChoice;
+            } catch (e) {
+                console.warn('Install prompt closed:', e);
+            }
+            deferredInstallPrompt = null;
+            updateInstallButtons(false);
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js', { scope: './' })
+                    .then(registration => console.log('CSE 65-C service worker ready:', registration.scope))
+                    .catch(error => console.warn('Service worker registration failed:', error));
+                updateInstallButtons(false);
+            });
+        }
+
+    </script>
+</body>
+</html>

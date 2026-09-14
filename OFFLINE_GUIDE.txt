@@ -1,0 +1,21 @@
+CSE 65-C Offline PWA
+
+Deploy:
+1. Replace index.html
+2. Replace service-worker.js
+3. Keep Code.gs same
+4. First open with internet and login/sync.
+5. After sync, portal works without internet using saved data.
+
+Offline available:
+- Dashboard
+- Student data
+- Routine
+- Courses
+- Notices
+- Calculators
+
+Internet required:
+- New updates
+- New login verification
+- Google Drive files
