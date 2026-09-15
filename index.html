@@ -1105,7 +1105,54 @@
             *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
         }
 
-    </style>
+    
+/* ================= DARK / LIGHT THEME ENGINE ================= */
+body.dark-theme {
+    --bg-body:#020617;
+    --bg-white:#0f172a;
+    --text-dark:#e2e8f0;
+    --text-muted:#94a3b8;
+    --border-light:#334155;
+    --primary-light:#1e293b;
+}
+body.dark-theme .top-header,
+body.dark-theme .sidebar,
+body.dark-theme .content-card-main,
+body.dark-theme .dash-card,
+body.dark-theme .routine-card,
+body.dark-theme .calendar-container,
+body.dark-theme .traffic-card,
+body.dark-theme .chat-container,
+body.dark-theme .album-card {
+    background:rgba(15,23,42,.94);
+    color:var(--text-dark);
+}
+body.dark-theme th { background:#1e293b; color:#cbd5e1; }
+body.dark-theme td { color:#e2e8f0; border-color:#334155; }
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+    background:#1e293b !important;
+    color:#e2e8f0 !important;
+    border-color:#475569 !important;
+}
+body.dark-theme .profile-info-row { background:#1e293b; }
+body.dark-theme::before {
+    background:
+      radial-gradient(circle at 15% 20%,rgba(37,99,235,.18),transparent 28%),
+      linear-gradient(135deg,#020617,#111827);
+}
+.theme-toggle-btn {
+    background:var(--bg-body);
+    color:var(--text-dark);
+    border:1px solid var(--border-light);
+}
+@media(max-width:700px){
+    #regularTable th:first-child,#regularTable td:first-child,
+    #reTable th:first-child,#reTable td:first-child {display:none;}
+}
+
+</style>
 </head>
 <body>
 
@@ -1247,6 +1294,7 @@
                     <div class="header-icon" onclick="window.open('https://www.facebook.com/profile.php?id=61590490967600', '_blank')" style="color: #1877F2; border-color: #1877F2;"><i class="fab fa-facebook-f"></i></div>
                     <div class="header-icon" onclick="switchTab('notices')" title="Notices"><i class="fas fa-bell"></i></div>
                     <div class="header-icon" id="installAppBtn" onclick="installPortalApp()" title="Install App"><i class="fas fa-download"></i></div>
+<div class="header-icon theme-toggle-btn" onclick="toggleTheme()" title="Change Theme"><i class="fas fa-moon"></i></div>
                     <!-- User & Logout -->
                     <div class="header-icon" id="headerProfilePic" onclick="openProfilePopup()" title="View Profile"><i class="fas fa-user"></i></div>
                     <div class="header-icon" onclick="logoutSystem()" title="Logout" style="color:var(--danger); border-color:var(--danger);"><i class="fas fa-sign-out-alt"></i></div>
@@ -1774,7 +1822,31 @@
     </div>
 
     <script>
-        // ================= GLOBAL DATA VARIABLES =================
+        
+// ================= BANGLADESH TIME ENGINE =================
+function getBDTime(){
+    return new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Dhaka"}));
+}
+
+function toggleTheme(){
+    document.body.classList.toggle('dark-theme');
+    const dark=document.body.classList.contains('dark-theme');
+    localStorage.setItem('portal_theme', dark?'dark':'light');
+    const icon=document.querySelector('.theme-toggle-btn i');
+    if(icon) icon.className=dark?'fas fa-sun':'fas fa-moon';
+}
+
+function loadPortalTheme(){
+    if(localStorage.getItem('portal_theme')==='dark'){
+        document.body.classList.add('dark-theme');
+        setTimeout(()=>{
+          const icon=document.querySelector('.theme-toggle-btn i');
+          if(icon) icon.className='fas fa-sun';
+        },300);
+    }
+}
+
+// ================= GLOBAL DATA VARIABLES =================
         let studentDatabase = []; 
         let routineData = {0: [], 1: [], 2: [], 3: [], 4: []};
         let coursesData = [];
@@ -1798,6 +1870,7 @@
         let bypassLogin = false;
 
         window.onload = () => {
+            loadPortalTheme();
             checkSession(); 
 
             // প্রি-লোডার সাথে সাথে সরিয়ে ফেলছি
@@ -2560,7 +2633,7 @@
             document.getElementById('activeUsersCount').innerHTML = `<span class="live-dot"></span> ${Math.floor(Math.random() * (28 - 12 + 1)) + 12}`;
         }
 
-        let currDate = new Date();
+        let currDate = getBDTime();
         let currMonth = currDate.getMonth();
         let currYear = currDate.getFullYear();
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -2575,7 +2648,7 @@
                 datesHtml += `<div class="calendar-date empty"></div>`;
             }
             
-            let today = new Date();
+            let today = getBDTime();
             for (let i = 1; i <= lastDate; i++) {
                 let isToday = i === today.getDate() && currMonth === today.getMonth() && currYear === today.getFullYear() ? "today" : "";
                 datesHtml += `<div class="calendar-date ${isToday}">${i}</div>`;
@@ -2767,7 +2840,7 @@
             if(!tabsContainer) return;
             tabsContainer.innerHTML = '';
             
-            let currentDay = new Date().getDay();
+            let currentDay = getBDTime().getDay();
             if (currentDay === 5 || currentDay === 6) currentDay = 0;
 
             const validSelectedDay = activeDays.some(d => d.index === selectedRoutineDay);
@@ -2887,7 +2960,7 @@
             return { status: 'finished' };
         }
 
-        function updateRoutineCardStates(now = new Date()) {
+        function updateRoutineCardStates(now = getBDTime()) {
             const cards = document.querySelectorAll('.routine-card[data-routine-day]');
             if (!cards.length) return;
 
@@ -2931,7 +3004,7 @@
         }
 
         function updateLiveTimer() {
-            const now = new Date();
+            const now = getBDTime();
             const modernCard = document.getElementById('liveClassCard');
             const countdownEl = document.getElementById('classCountdown');
             const subjectEl = document.getElementById('classSubject');
