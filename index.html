@@ -1014,6 +1014,97 @@
             }
         }
 
+
+
+        /* ================= 2026 ARCHITECTURAL PORTAL UPGRADE ================= */
+        body::before {
+            content: ''; position: fixed; inset: 0; z-index: -3; pointer-events: none;
+            background:
+              linear-gradient(rgba(15,28,64,.035) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(15,28,64,.035) 1px, transparent 1px),
+              radial-gradient(circle at 12% 18%, rgba(37,99,235,.13), transparent 26%),
+              radial-gradient(circle at 88% 78%, rgba(194,65,12,.10), transparent 28%),
+              linear-gradient(135deg, #f8fbff 0%, #eef4ff 46%, #fff8f3 100%);
+            background-size: 34px 34px, 34px 34px, auto, auto, auto;
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: .5;
+            background:
+              linear-gradient(120deg, transparent 0 47%, rgba(15,28,64,.055) 47% 47.35%, transparent 47.35% 100%),
+              linear-gradient(60deg, transparent 0 67%, rgba(37,99,235,.045) 67% 67.3%, transparent 67.3% 100%);
+        }
+        .main-wrapper { position: relative; isolation: isolate; }
+        .main-wrapper::before {
+            content: ''; position: fixed; right: -90px; bottom: -90px; width: 360px; height: 360px;
+            border: 1px solid rgba(37,99,235,.09); border-radius: 38% 62% 55% 45%; z-index: -1;
+            box-shadow: 0 0 0 34px rgba(37,99,235,.025), 0 0 0 68px rgba(194,65,12,.018);
+            animation: architectureFloat 14s ease-in-out infinite alternate; pointer-events: none;
+        }
+        @keyframes architectureFloat { to { transform: translate(-28px,-24px) rotate(9deg); } }
+
+        .top-header { background: rgba(255,255,255,.82); backdrop-filter: blur(18px) saturate(145%); -webkit-backdrop-filter: blur(18px) saturate(145%); box-shadow: 0 8px 30px rgba(15,28,64,.055); }
+        .dashboard-container { position: relative; }
+        .section.active { animation: sectionReveal .58s cubic-bezier(.2,.75,.25,1); transform-origin: top center; }
+        @keyframes sectionReveal { from { opacity:0; transform:translateY(18px) scale(.988); filter:blur(3px); } to { opacity:1; transform:none; filter:none; } }
+
+        .content-card-main, .dash-card, .routine-card, .chat-container, .progress-banner-card, .profile-info-row {
+            position: relative; overflow: hidden; transform: translateZ(0);
+        }
+        .content-card-main::before, .dash-card::before, .routine-card::before, .chat-container::before, .progress-banner-card::before {
+            content:''; position:absolute; inset:0; pointer-events:none; opacity:0;
+            background:linear-gradient(115deg, transparent 20%, rgba(255,255,255,.62) 48%, transparent 72%);
+            transform:translateX(-115%); transition:opacity .25s ease;
+        }
+        .content-card-main:hover::before, .dash-card:hover::before, .routine-card:hover::before, .chat-container:hover::before, .progress-banner-card:hover::before {
+            opacity:1; animation:cardLightSweep .85s ease;
+        }
+        @keyframes cardLightSweep { to { transform:translateX(115%); } }
+        .content-card-main:hover, .routine-card:hover, .chat-container:hover, .progress-banner-card:hover {
+            transform: translateY(-5px); border-color: rgba(37,99,235,.34); box-shadow: 0 18px 42px rgba(15,28,64,.11); transition: transform .32s ease, box-shadow .32s ease, border-color .32s ease;
+        }
+        .cards-grid .dash-card:nth-child(3n+1) { animation: cardArrivalA .55s both; }
+        .cards-grid .dash-card:nth-child(3n+2) { animation: cardArrivalB .65s both; }
+        .cards-grid .dash-card:nth-child(3n) { animation: cardArrivalC .72s both; }
+        @keyframes cardArrivalA { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+        @keyframes cardArrivalB { from{opacity:0;transform:translateX(18px)} to{opacity:1;transform:none} }
+        @keyframes cardArrivalC { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:none} }
+
+        .dept-hero { position: relative; padding: 16px 12px 28px !important; }
+        .dept-hero::before { content:''; position:absolute; width:min(520px,78vw); height:72px; border-radius:50%; background:rgba(37,99,235,.08); filter:blur(26px); z-index:-1; }
+
+        @media screen and (max-width: 992px) {
+            body { overflow-x:hidden; }
+            .dashboard-container { padding: 18px 14px 92px; }
+            .top-header { padding: 12px 13px; min-height: 68px; }
+            .header-icons { gap: 9px; }
+            .header-icon { width: 43px; height: 43px; min-width:43px; font-size:16px; border-width:1.5px; box-shadow:0 5px 14px rgba(15,28,64,.08); background:rgba(255,255,255,.88); }
+            .header-icon:active { transform:scale(.91); }
+            #headerProfilePic { width:48px; height:48px; min-width:48px; border:2px solid rgba(37,99,235,.38); box-shadow:0 6px 18px rgba(37,99,235,.18); }
+            .mobile-toggle { width:43px; height:43px; border-radius:13px; background:#eef2ff; font-size:20px; }
+            .dept-hero h1 { font-size: clamp(25px,8vw,34px); }
+            .cards-grid { grid-template-columns:1fr; gap:16px; }
+            .dash-card, .content-card-main, .chat-container, .progress-banner-card { border-radius:20px; padding:20px; box-shadow:0 10px 28px rgba(15,28,64,.075); }
+            .dash-card:hover, .content-card-main:hover, .routine-card:hover, .chat-container:hover, .progress-banner-card:hover { transform:translateY(-3px) scale(1.006); }
+            .sidebar { width:min(86vw,310px); background:rgba(255,255,255,.96); backdrop-filter:blur(18px); }
+            .sidebar-menu button { min-height:48px; border-radius:15px; font-size:15px; }
+            .sidebar-menu button i { font-size:18px; }
+            .profile-modal-card { border-radius:26px; box-shadow:0 30px 70px rgba(2,6,23,.28); }
+            .profile-popup-avatar { width:104px; height:104px; }
+            .profile-info-row { min-height:64px; border-radius:16px; }
+        }
+        @media screen and (max-width: 560px) {
+            .header-icons { gap:7px; max-width:calc(100vw - 72px); overflow-x:auto; scrollbar-width:none; padding:4px 1px; }
+            .header-icons::-webkit-scrollbar { display:none; }
+            .header-icon { width:42px; height:42px; min-width:42px; }
+            #headerProfilePic { width:47px; height:47px; min-width:47px; }
+            .dept-hero { padding-top:10px !important; }
+            .section > h2 { font-size:24px !important; }
+            .content-card-main { margin-bottom:17px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
+        }
+
     </style>
 </head>
 <body>
@@ -1154,7 +1245,7 @@
                 <div class="header-icons">
                     <div class="header-icon"><i class="fas fa-edit"></i></div>
                     <div class="header-icon" onclick="window.open('https://www.facebook.com/profile.php?id=61590490967600', '_blank')" style="color: #1877F2; border-color: #1877F2;"><i class="fab fa-facebook-f"></i></div>
-                    <div class="header-icon"><i class="fas fa-bell"></i></div>
+                    <div class="header-icon" onclick="switchTab('notices')" title="Notices"><i class="fas fa-bell"></i></div>
                     <div class="header-icon" id="installAppBtn" onclick="installPortalApp()" title="Install App"><i class="fas fa-download"></i></div>
                     <!-- User & Logout -->
                     <div class="header-icon" id="headerProfilePic" onclick="openProfilePopup()" title="View Profile"><i class="fas fa-user"></i></div>
