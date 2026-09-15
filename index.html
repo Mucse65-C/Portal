@@ -1695,7 +1695,7 @@
         
         // *************************************************************************
         // Google Apps Script API: Students + Routine + Courses + Notices
-        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxqZtxIhOyCDjOKkwygyxsIUIk_iPJBQAfS41KZdRTkt7ajWrJNavJUVN-sVMMZ944X/exec";
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbx0UgUgU6xF8kwzCG3rxMiolv0xfic-rJ0zoTbiY4HFHhhfaYAc0mxOCHp1tWBkBVVI/exec";
         const PORTAL_AUTO_REFRESH_MS = 60 * 1000; // 60 seconds
         const PORTAL_CACHE_KEY = "portal_data_cache_v7_students_api_sync";
         const OFFLINE_CACHE_KEY = "CSE65C_OFFLINE_DATABASE_V1";
@@ -1862,16 +1862,40 @@
         }
 
 
+        let onlineStatusAlreadyShown = false;
+        let onlineStatusHideTimer = null;
+
         function updateOfflineStatus(isOffline, message) {
             let el = document.getElementById('offlineStatusBadge');
             if (!el) {
                 el = document.createElement('div');
                 el.id = 'offlineStatusBadge';
-                el.style.cssText = "position:fixed;top:12px;right:12px;z-index:999999;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:800;color:white;background:#047857;box-shadow:0 5px 15px rgba(0,0,0,.2);";
-                document.body.appendChild(el);
+                el.style.cssText = "display:none;width:max-content;max-width:calc(100% - 30px);margin:0 auto 18px;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:800;color:#fff;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.12);position:relative;z-index:5;";
+                const dashboard = document.getElementById('dashboard');
+                const hero = dashboard ? dashboard.querySelector('.dept-hero') : null;
+                if (hero) hero.insertAdjacentElement('afterend', el);
+                else if (dashboard) dashboard.prepend(el);
+                else document.body.appendChild(el);
             }
-            el.style.background = isOffline ? '#b45309' : '#047857';
-            el.innerText = message || (isOffline ? 'Offline Mode - Saved Data' : 'Online - Live Sync');
+
+            if (isOffline) {
+                if (onlineStatusHideTimer) clearTimeout(onlineStatusHideTimer);
+                el.style.background = '#b45309';
+                el.innerText = message || 'Offline Mode - Last Synced Data';
+                el.style.display = 'block';
+                return;
+            }
+
+            if (onlineStatusAlreadyShown) {
+                el.style.display = 'none';
+                return;
+            }
+
+            onlineStatusAlreadyShown = true;
+            el.style.background = '#047857';
+            el.innerText = message || 'Online - Live Database';
+            el.style.display = 'block';
+            onlineStatusHideTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
         }
 
         function saveOfflineDatabase(data) {
@@ -2067,13 +2091,29 @@
                 const badge = String(s.badge ?? s.Badge ?? s.BADGE ?? s.badage ?? s.Badage ?? s.BADAGE ?? '').trim();
                 const type = String(s.type ?? s.Type ?? s.TYPE ?? s.student_type ?? '').trim();
                 const password = String(s.password ?? s.Password ?? s.PASSWORD ?? '').trim();
-                return { id, name, badge, type, password };
+                const activate = String(s.activate ?? s.Activate ?? s.ACTIVATE ?? s.activated ?? s.Activated ?? s.ACTIVATED ?? s.status ?? s.Status ?? s.STATUS ?? '').trim();
+                return { id, name, badge, type, password, activate };
             }).filter(s => {
                 // Remove the duplicate header row and the blank "re" row.
                 if (!s.id || !s.name || isHeaderLikeStudent(s.id, s.name)) return false;
                 if (seenStudentIds.has(s.id)) return false;
                 seenStudentIds.add(s.id);
                 return true;
+            });
+
+            // Merge activation data from login-request/login-log sheets when the API exposes them.
+            // This keeps ACTIVATED visible for every student who has logged in, not only the current device user.
+            const loginRows = getApiCollection(data, ['Login Requests', 'Login Request', 'LoginRequests', 'LoginRequest', 'Logins', 'Login']);
+            const activatedIds = new Set();
+            loginRows.forEach(row => {
+                row = row || {};
+                const rowId = normalizeStudentId(row.studentId ?? row.student_id ?? row.id ?? row.ID ?? row['Student ID'] ?? '');
+                const activationValue = String(row.activate ?? row.Activate ?? row.ACTIVATE ?? row.activated ?? row.Activated ?? row.status ?? row.Status ?? '').trim().toLowerCase();
+                if (rowId && ['activate','activated','active','yes','true','1'].includes(activationValue)) activatedIds.add(rowId);
+            });
+            studentDatabase.forEach(student => {
+                const activationValue = String(student.activate || '').trim().toLowerCase();
+                student.isActivated = activatedIds.has(student.id) || ['activate','activated','active','yes','true','1'].includes(activationValue);
             });
 
             // ================= 2. CLASS ROUTINE =================
@@ -2335,22 +2375,42 @@
         }
 
         async function saveLoginRequest(user){
+            const payload = {
+                action:"loginRequest",
+                timestamp:new Date().toISOString(),
+                studentId:user.id,
+                id:user.id,
+                name:user.name,
+                phone:user.phone,
+                photo:user.pic,
+                status:"Activated",
+                activate:"Activate"
+            };
+
+            // Show ACTIVATED immediately after a successful local login.
+            const localStudent = studentDatabase.find(s => normalizeStudentId(s.id) === normalizeStudentId(user.id));
+            if (localStudent) {
+                localStudent.activate = 'Activate';
+                localStudent.isActivated = true;
+                if (typeof populateTables === 'function') populateTables();
+            }
+
             try{
-                await fetch(SHEET_API_URL,{
+                const response = await fetch(SHEET_API_URL,{
                     method:"POST",
-                    headers:{"Content-Type":"application/json"},
-                    body:JSON.stringify({
-                        action:"loginRequest",
-                        timestamp:new Date().toISOString(),
-                        studentId:user.id,
-                        name:user.name,
-                        phone:user.phone,
-                        photo:user.pic,
-                        status:"Pending",
-                        activate:"Activate"
-                    })
+                    headers:{"Content-Type":"text/plain;charset=utf-8"},
+                    body:JSON.stringify(payload),
+                    redirect:"follow"
                 });
-            }catch(e){ console.warn("Login request sync failed",e); }
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                // Pull the shared database again so all activation states come from the API.
+                setTimeout(() => fetchPortalData({ useCache:false, silent:true }), 1200);
+                return true;
+            }catch(e){
+                console.warn("Login request sync failed",e);
+                return false;
+            }
         }
 
         function checkAdminAccess() {
@@ -2515,9 +2575,9 @@
 
                 const safeId = escapeHtml(s.id);
                 const safeName = escapeHtml(s.name);
-                const isActivated = (String(s.id).trim() === String(loggedInId).trim());
+                const isActivated = !!s.isActivated;
                 const loginBadge = isActivated
-                    ? `<span class="badge badge-activated">ACTIVATED</span>`
+                    ? `<span class="badge badge-activated"><i class="fas fa-check-circle" aria-hidden="true" style="margin-right:4px;"></i>ACTIVATED</span>`
                     : '';
 
                 // Rows with a visible badge receive a premium role-based gradient.
