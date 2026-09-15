@@ -18,8 +18,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         /* ================= LIGHT THEME VARIABLES ================= */
@@ -1102,504 +1101,62 @@
             .section > h2 { font-size:24px !important; }
             .content-card-main { margin-bottom:17px; }
         }
+
+        /* ================= MOBILE STUDENT TABLE: HIDE REDUNDANT SERIAL ================= */
+        @media screen and (max-width: 700px) {
+            #regularTable .serial-col,
+            #reTable .serial-col {
+                display: none !important;
+            }
+
+            #regularTable,
+            #reTable {
+                min-width: 0 !important;
+                width: 100%;
+                table-layout: auto;
+            }
+
+            #regularTable th,
+            #regularTable td,
+            #reTable th,
+            #reTable td {
+                padding: 14px 12px;
+            }
+
+            #regularTable th:nth-child(2),
+            #regularTable td:nth-child(2),
+            #reTable th:nth-child(2),
+            #reTable td:nth-child(2) {
+                width: 42%;
+                white-space: nowrap;
+            }
+
+            #regularTable th:nth-child(3),
+            #regularTable td:nth-child(3),
+            #reTable th:nth-child(3),
+            #reTable td:nth-child(3) {
+                width: 58%;
+            }
+
+            /* Serial column is hidden, so move the role/accent stripe to Student ID. */
+            #regularTbody tr.student-highlight td:nth-child(2),
+            #reTbody tr.student-highlight td:nth-child(2) {
+                border-left: 5px solid transparent;
+                font-weight: 900;
+            }
+            #regularTbody tr.row-cr td:nth-child(2), #reTbody tr.row-cr td:nth-child(2) { border-left-color:#2563eb; }
+            #regularTbody tr.row-xcr td:nth-child(2), #reTbody tr.row-xcr td:nth-child(2) { border-left-color:#0891b2; }
+            #regularTbody tr.row-core td:nth-child(2), #reTbody tr.row-core td:nth-child(2) { border-left-color:#f59e0b; }
+            #regularTbody tr.row-notetaker td:nth-child(2), #reTbody tr.row-notetaker td:nth-child(2) { border-left-color:#7c3aed; }
+            #regularTbody tr.row-advisor td:nth-child(2), #reTbody tr.row-advisor td:nth-child(2) { border-left-color:#16a34a; }
+            #regularTbody tr.row-activated td:nth-child(2), #reTbody tr.row-activated td:nth-child(2) { border-left-color:#22c55e; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
         }
 
-    
-
-/* ==============================================================
-   ULTIMATE V5 — TYPOGRAPHY / LIGHT-DARK DESIGN / MOBILE POLISH
-   ============================================================== */
-:root{
-    --font-main:'Poppins','Kalpurush',sans-serif;
-    --font-bangla:'Kalpurush','Poppins',sans-serif;
-    --font-code:'Poppins','Kalpurush',sans-serif;
-
-    --surface-0:#f5f8ff;
-    --surface-1:#ffffff;
-    --surface-2:#f8fafc;
-    --surface-3:#eef2ff;
-    --surface-glass:rgba(255,255,255,.84);
-    --ink-1:#0f172a;
-    --ink-2:#475569;
-    --ink-3:#64748b;
-    --line:#dbe4f0;
-    --line-strong:#cbd5e1;
-    --blue-1:#0f1c40;
-    --blue-2:#1d4ed8;
-    --blue-3:#3b82f6;
-    --green-1:#047857;
-    --green-2:#10b981;
-    --orange-1:#c2410c;
-    --orange-2:#f97316;
-    --purple-1:#6d28d9;
-    --danger-1:#b91c1c;
-    --shadow-soft:0 12px 34px rgba(15,28,64,.08);
-    --shadow-float:0 20px 48px rgba(15,28,64,.14);
-    --card-radius:20px;
-
-    /* map legacy tokens to the unified theme */
-    --bg-body:var(--surface-0);
-    --bg-white:var(--surface-1);
-    --text-dark:var(--ink-1);
-    --text-muted:var(--ink-2);
-    --border-light:var(--line);
-    --primary-blue:var(--blue-1);
-    --primary-light:var(--surface-3);
-}
-
-body.dark-theme{
-    --surface-0:#050816;
-    --surface-1:#0b1220;
-    --surface-2:#111a2d;
-    --surface-3:#17233a;
-    --surface-glass:rgba(11,18,32,.88);
-    --ink-1:#f8fafc;
-    --ink-2:#cbd5e1;
-    --ink-3:#94a3b8;
-    --line:#26344d;
-    --line-strong:#3b4b67;
-    --blue-1:#7ab8ff;
-    --blue-2:#3b82f6;
-    --blue-3:#60a5fa;
-    --green-1:#34d399;
-    --green-2:#10b981;
-    --orange-1:#fb923c;
-    --orange-2:#f97316;
-    --purple-1:#a78bfa;
-    --danger-1:#fb7185;
-    --shadow-soft:0 12px 38px rgba(0,0,0,.28);
-    --shadow-float:0 24px 60px rgba(0,0,0,.42);
-
-    --bg-body:var(--surface-0);
-    --bg-white:var(--surface-1);
-    --text-dark:var(--ink-1);
-    --text-muted:var(--ink-2);
-    --border-light:var(--line);
-    --primary-blue:var(--blue-1);
-    --primary-light:var(--surface-3);
-}
-
-html{color-scheme:light;}
-body.dark-theme{color-scheme:dark;}
-html,body{font-family:var(--font-main);}
-*{font-family:'Poppins','Kalpurush',sans-serif;}
-:lang(bn),[lang="bn"],.bangla-text{font-family:'Kalpurush','Poppins',sans-serif!important;}
-.cyber-text,.timer-countdown,.time-block .time,.traffic-info p{font-family:'Poppins','Kalpurush',sans-serif!important;}
-
-body{
-    background:var(--surface-0);
-    color:var(--ink-1);
-    transition:background-color .4s ease,color .35s ease;
-}
-
-/* Architecture preserved and upgraded for both themes */
-body::before{
-    background:
-      linear-gradient(rgba(29,78,216,.045) 1px, transparent 1px),
-      linear-gradient(90deg,rgba(29,78,216,.045) 1px,transparent 1px),
-      radial-gradient(circle at 12% 18%,rgba(37,99,235,.14),transparent 25%),
-      radial-gradient(circle at 88% 78%,rgba(249,115,22,.10),transparent 28%),
-      linear-gradient(135deg,#f8fbff 0%,#eef4ff 46%,#fff8f3 100%)!important;
-    background-size:34px 34px,34px 34px,auto,auto,auto!important;
-    transition:background .55s ease,opacity .55s ease;
-}
-body.dark-theme::before{
-    background:
-      linear-gradient(rgba(96,165,250,.055) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(96,165,250,.055) 1px,transparent 1px),
-      radial-gradient(circle at 14% 15%,rgba(37,99,235,.26),transparent 27%),
-      radial-gradient(circle at 86% 82%,rgba(168,85,247,.15),transparent 31%),
-      linear-gradient(135deg,#030611 0%,#071021 52%,#0b1120 100%)!important;
-    background-size:34px 34px,34px 34px,auto,auto,auto!important;
-}
-body::after{transition:opacity .5s ease,background .5s ease;}
-body.dark-theme::after{
-    opacity:.72;
-    background:
-      linear-gradient(120deg,transparent 0 47%,rgba(96,165,250,.075) 47% 47.25%,transparent 47.25% 100%),
-      linear-gradient(60deg,transparent 0 67%,rgba(167,139,250,.055) 67% 67.25%,transparent 67.25% 100%);
-}
-.main-wrapper::before{
-    transition:box-shadow .5s ease,border-color .5s ease,opacity .5s ease;
-}
-body.dark-theme .main-wrapper::before{
-    border-color:rgba(96,165,250,.20);
-    box-shadow:0 0 0 34px rgba(59,130,246,.045),0 0 0 68px rgba(168,85,247,.025),0 0 80px rgba(59,130,246,.08);
-}
-
-/* Surfaces */
-.top-header{
-    background:var(--surface-glass)!important;
-    border-color:var(--line)!important;
-    backdrop-filter:blur(20px) saturate(150%);
-    -webkit-backdrop-filter:blur(20px) saturate(150%);
-    transition:background .35s ease,border-color .35s ease,box-shadow .35s ease;
-}
-.sidebar,.content-card-main,.dash-card,.traffic-card,.calendar-container,.chat-container,.album-card,
-.profile-modal-card,.engine-card,.community-box,.sub-card,.comment-msg,.routine-sync-bar,.suggestions-box,
-#adminDenied,#adminContent,#studentDenied{
-    background:var(--surface-1)!important;
-    color:var(--ink-1)!important;
-    border-color:var(--line)!important;
-    box-shadow:var(--shadow-soft);
-    transition:background .35s ease,color .35s ease,border-color .35s ease,box-shadow .35s ease,transform .3s ease;
-}
-body.dark-theme .sidebar{background:rgba(8,14,28,.97)!important;}
-body.dark-theme .top-header{box-shadow:0 10px 34px rgba(0,0,0,.28);}
-
-/* Never blanket-force span colors: badges, icons and semantic states keep their own contrast. */
-h1,h2,h3,h4,h5,h6,.card-title,.tool-title,.engine-header,.profile-info-value,.sub-name,.community-info h4,.comment-content h5{
-    color:var(--ink-1)!important;
-}
-p,.card-sub,.day-label,.profile-info-label,.community-info p,.fb-text-content p,.comment-content span,.routine-sync-status{
-    color:var(--ink-2)!important;
-}
-
-/* Sidebar */
-.sidebar-menu button{color:var(--ink-1)!important;border:1px solid transparent;}
-.sidebar-menu button i{color:var(--ink-3)!important;}
-.sidebar-menu button:hover{
-    background:linear-gradient(135deg,var(--surface-3),var(--surface-2))!important;
-    color:var(--blue-2)!important;
-    border-color:var(--line)!important;
-    transform:translateX(3px);
-}
-.sidebar-menu button:hover i{color:var(--blue-2)!important;}
-.sidebar-menu button.active{
-    background:linear-gradient(135deg,#0f1c40 0%,#1d4ed8 58%,#2563eb 100%)!important;
-    color:#fff!important;
-    border-color:transparent!important;
-    box-shadow:0 8px 24px rgba(37,99,235,.25);
-}
-.sidebar-menu button.active i{color:#fff!important;}
-.dev-badge{background:var(--surface-2)!important;border-color:var(--line)!important;}
-.dev-badge p{color:var(--ink-2)!important;}
-.dev-badge h4{color:var(--blue-2)!important;}
-
-/* Header buttons */
-.header-icon{
-    background:linear-gradient(145deg,var(--surface-1),var(--surface-2))!important;
-    color:var(--ink-2)!important;
-    border-color:var(--line)!important;
-    box-shadow:0 6px 18px rgba(15,23,42,.08);
-}
-body.dark-theme .header-icon{box-shadow:0 7px 20px rgba(0,0,0,.28);}
-.header-icon:hover{color:var(--blue-2)!important;border-color:var(--blue-3)!important;transform:translateY(-2px) scale(1.04);}
-#installAppBtn{color:var(--green-1)!important;border-color:rgba(16,185,129,.42)!important;}
-.header-icon[style*="#1877F2"]{color:#1877F2!important;border-color:rgba(24,119,242,.55)!important;}
-.header-icon[style*="var(--danger)"]{color:var(--danger-1)!important;border-color:rgba(244,63,94,.50)!important;}
-
-/* Slider theme switch */
-.theme-switch{
-    position:relative;
-    width:92px;
-    height:43px;
-    min-width:92px;
-    border:none;
-    border-radius:999px;
-    cursor:pointer;
-    padding:0;
-    background:linear-gradient(135deg,#dbeafe,#f8fafc)!important;
-    box-shadow:inset 0 0 0 1px var(--line),0 6px 18px rgba(15,23,42,.10);
-    overflow:hidden;
-    transition:background .35s ease,box-shadow .35s ease,transform .2s ease;
-}
-.theme-switch:hover{transform:translateY(-1px);}
-.theme-switch:active{transform:scale(.98);}
-.theme-switch-track-label{
-    position:absolute;top:50%;transform:translateY(-50%);z-index:1;
-    font-size:9px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
-    pointer-events:none;transition:opacity .25s ease,color .25s ease;
-}
-.theme-switch .label-light{right:8px;color:#334155;opacity:1;}
-.theme-switch .label-dark{left:8px;color:#cbd5e1;opacity:.25;}
-.theme-switch-knob{
-    position:absolute;left:4px;top:4px;width:35px;height:35px;border-radius:50%;z-index:2;
-    display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(145deg,#ffffff,#e2e8f0);
-    color:#f59e0b;
-    box-shadow:0 5px 14px rgba(15,23,42,.18);
-    transition:transform .35s cubic-bezier(.22,.8,.2,1),background .35s ease,color .35s ease;
-}
-.theme-switch-knob i{font-size:15px;transition:transform .35s ease;}
-body.dark-theme .theme-switch{
-    background:linear-gradient(135deg,#111827,#1e293b)!important;
-    box-shadow:inset 0 0 0 1px #334155,0 7px 20px rgba(0,0,0,.32);
-}
-body.dark-theme .theme-switch-knob{
-    transform:translateX(49px);
-    background:linear-gradient(145deg,#172554,#1e3a8a);
-    color:#bfdbfe;
-    box-shadow:0 5px 16px rgba(0,0,0,.35);
-}
-body.dark-theme .theme-switch-knob i{transform:rotate(18deg);}
-body.dark-theme .theme-switch .label-light{opacity:.25;color:#94a3b8;}
-body.dark-theme .theme-switch .label-dark{opacity:1;color:#e2e8f0;}
-
-/* Forms and data surfaces */
-.input-group input,.search-box,.comment-input,.sgpa-inputs select,.sgpa-result,.att-btn{
-    background:var(--surface-2)!important;
-    color:var(--ink-1)!important;
-    border-color:var(--line)!important;
-}
-.input-group input:focus,.search-box:focus-within,.comment-input:focus,.sgpa-inputs select:focus{
-    background:var(--surface-1)!important;
-    border-color:var(--blue-3)!important;
-    box-shadow:0 0 0 4px rgba(59,130,246,.12)!important;
-}
-.input-group input[readonly]{background:var(--surface-3)!important;color:var(--green-1)!important;}
-.suggestions-box{background:var(--surface-glass)!important;}
-.suggestion-item{color:var(--ink-1)!important;}
-.suggestion-item span{color:var(--ink-2)!important;}
-
-/* Professional button gradients */
-.login-btn,.routine-refresh-btn,.sgpa-inputs button,.day-tab.active,.btn-drive-album{
-    background:linear-gradient(135deg,#0f1c40 0%,#1d4ed8 58%,#2563eb 100%)!important;
-    color:#fff!important;
-    border-color:transparent!important;
-    box-shadow:0 8px 22px rgba(37,99,235,.22);
-}
-.login-btn:hover,.routine-refresh-btn:hover,.sgpa-inputs button:hover,.btn-drive-album:hover{
-    background:linear-gradient(135deg,#172554,#2563eb,#3b82f6)!important;
-    box-shadow:0 12px 28px rgba(37,99,235,.32);
-}
-.btn-drive{
-    background:linear-gradient(135deg,#c2410c,#f97316)!important;
-    color:#fff!important;
-    box-shadow:0 8px 22px rgba(249,115,22,.24)!important;
-}
-.btn-drive:hover{background:linear-gradient(135deg,#9a3412,#ea580c)!important;}
-.btn-send{
-    background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(34,197,94,.08))!important;
-    color:var(--green-1)!important;
-    border-color:rgba(16,185,129,.40)!important;
-}
-.btn-send:hover{background:linear-gradient(135deg,#059669,#22c55e)!important;color:#fff!important;}
-.att-btn.present:hover{background:rgba(16,185,129,.14)!important;border-color:#10b981!important;}
-.att-btn.absent:hover{background:rgba(244,63,94,.14)!important;border-color:#fb7185!important;}
-.student-print-btn{background:linear-gradient(145deg,var(--surface-1),var(--surface-2))!important;color:var(--ink-1)!important;border-color:var(--line)!important;}
-.student-print-btn:hover{border-color:var(--blue-3)!important;color:var(--blue-2)!important;transform:translateY(-1px);}
-
-/* Dashboard cards */
-.dash-card:not(.active-blue):not(.live-alert):not(.live-upcoming):not(.live-finished):not(.pwa-download-card){
-    background:linear-gradient(145deg,var(--surface-1),var(--surface-2))!important;
-}
-.dash-card:hover{box-shadow:var(--shadow-float)!important;}
-.dash-card.active-blue{
-    background:linear-gradient(135deg,#0f1c40,#1d4ed8 58%,#2563eb)!important;
-    color:#fff!important;
-}
-.dash-card.active-blue .card-title,.dash-card.active-blue .card-sub,.dash-card.active-blue .btn-deadline,.dash-card.active-blue .line-progress-text{color:#fff!important;}
-.dash-card.live-alert .card-title,.dash-card.live-alert .card-sub,
-.dash-card.live-upcoming .card-title,.dash-card.live-upcoming .card-sub,
-.dash-card.live-finished .card-title,.dash-card.live-finished .card-sub{color:#fff!important;}
-
-/* Tables */
-.table-container{border-color:var(--line)!important;background:var(--surface-1);}
-table{background:var(--surface-1);}
-th{background:var(--surface-2)!important;color:var(--ink-2)!important;border-color:var(--line)!important;}
-td{color:var(--ink-1)!important;border-color:var(--line)!important;}
-tbody tr:hover{background:var(--surface-2)!important;}
-
-/* Student role rows — dedicated dark gradients, no white-screen glitch */
-body.dark-theme #regularTbody tr.row-cr td,
-body.dark-theme #reTbody tr.row-cr td{
-    background:linear-gradient(105deg,rgba(30,64,175,.62),rgba(15,23,42,.96) 55%,rgba(11,18,32,.98))!important;
-}
-body.dark-theme #regularTbody tr.row-xcr td,
-body.dark-theme #reTbody tr.row-xcr td{
-    background:linear-gradient(105deg,rgba(8,145,178,.48),rgba(15,23,42,.96) 55%,rgba(11,18,32,.98))!important;
-}
-body.dark-theme #regularTbody tr.row-core td,
-body.dark-theme #reTbody tr.row-core td{
-    background:linear-gradient(105deg,rgba(180,83,9,.50),rgba(15,23,42,.96) 55%,rgba(11,18,32,.98))!important;
-}
-body.dark-theme #regularTbody tr.row-notetaker td,
-body.dark-theme #reTbody tr.row-notetaker td{
-    background:linear-gradient(105deg,rgba(109,40,217,.54),rgba(15,23,42,.96) 55%,rgba(11,18,32,.98))!important;
-}
-body.dark-theme #regularTbody tr.row-advisor td,
-body.dark-theme #reTbody tr.row-advisor td{
-    background:linear-gradient(105deg,rgba(4,120,87,.52),rgba(15,23,42,.96) 55%,rgba(11,18,32,.98))!important;
-}
-body.dark-theme #regularTbody tr.row-activated td,
-body.dark-theme #reTbody tr.row-activated td{
-    background:linear-gradient(105deg,rgba(5,150,105,.42),rgba(15,23,42,.96) 55%,rgba(11,18,32,.98))!important;
-}
-body.dark-theme #regularTbody tr.student-highlight td,
-body.dark-theme #reTbody tr.student-highlight td{color:#f8fafc!important;border-bottom-color:rgba(148,163,184,.18)!important;}
-body.dark-theme #regularTbody tr.student-highlight:hover td,
-body.dark-theme #reTbody tr.student-highlight:hover td{filter:brightness(1.10);}
-
-/* Role badges: high contrast in both modes */
-.badge{display:inline-flex;align-items:center;vertical-align:middle;line-height:1.25;color:#fff!important;border:1px solid rgba(255,255,255,.35)!important;}
-.badge-cr{background:linear-gradient(135deg,#1d4ed8,#3b82f6)!important;color:#fff!important;box-shadow:0 5px 14px rgba(37,99,235,.28)!important;}
-.badge-advisor{background:linear-gradient(135deg,#047857,#10b981)!important;color:#fff!important;}
-.badge-core{background:linear-gradient(135deg,#b45309,#f59e0b)!important;color:#fff!important;}
-.badge-notetaker{background:linear-gradient(135deg,#5b21b6,#8b5cf6)!important;color:#fff!important;}
-.badge-activated{background:linear-gradient(135deg,#059669,#22c55e)!important;color:#fff!important;}
-
-/* Moderator cards and CR badge visibility */
-#members .dash-card{
-    background:linear-gradient(145deg,var(--surface-1),var(--surface-2))!important;
-    color:var(--ink-1)!important;
-    border-color:var(--line)!important;
-}
-#members .dash-card:hover{transform:translateY(-7px) scale(1.012)!important;box-shadow:var(--shadow-float)!important;}
-body.dark-theme #members .dash-card{
-    background:
-      radial-gradient(circle at 18% 5%,rgba(59,130,246,.11),transparent 30%),
-      linear-gradient(145deg,#111a2d,#0b1220)!important;
-}
-body.dark-theme #members .dash-card:nth-child(4){
-    background:linear-gradient(145deg,rgba(120,53,15,.34),#0b1220 58%)!important;
-}
-body.dark-theme #members .dash-card:nth-child(5){
-    background:linear-gradient(145deg,rgba(76,29,149,.34),#0b1220 58%)!important;
-}
-#members .badge-cr,#members .badge-core,#members .badge-advisor,#members .badge-notetaker{font-weight:800!important;letter-spacing:.15px;}
-
-/* Routine: never cover status text with a generic white panel */
-.routine-card:not(.status-upcoming):not(.status-live):not(.status-ended){
-    background:linear-gradient(145deg,var(--surface-1),var(--surface-2))!important;
-    border-color:var(--line)!important;
-    border-left-color:var(--blue-2)!important;
-}
-.routine-card:not(.status-upcoming):not(.status-live):not(.status-ended) .time-block{border-color:var(--line)!important;}
-.routine-card:not(.status-upcoming):not(.status-live):not(.status-ended) .time-block .time{color:var(--orange-1)!important;}
-.routine-card:not(.status-upcoming):not(.status-live):not(.status-ended) .info-block h4{color:var(--blue-2)!important;}
-.routine-card:not(.status-upcoming):not(.status-live):not(.status-ended) .info-block p{color:var(--ink-2)!important;}
-.routine-status.neutral{background:var(--surface-3)!important;color:var(--blue-2)!important;}
-/* Explicit semantic contrast for routine state cards in both themes */
-.routine-card.status-upcoming .time-block .time,
-.routine-card.status-upcoming .info-block h4{color:#92400e!important;}
-.routine-card.status-upcoming .info-block p{color:#78350f!important;}
-.routine-card.status-upcoming .routine-status{background:#f59e0b!important;color:#fff!important;}
-.routine-card.status-live .time-block .time,
-.routine-card.status-live .info-block h4,
-.routine-card.status-live .info-block p{color:#fff!important;}
-.routine-card.status-live .routine-status{background:#fff!important;color:#b91c1c!important;}
-.routine-card.status-ended .time-block .time,
-.routine-card.status-ended .info-block h4{color:#991b1b!important;}
-.routine-card.status-ended .info-block p{color:#7f1d1d!important;}
-.routine-card.status-ended .routine-status{background:#b91c1c!important;color:#fff!important;}
-body.dark-theme .routine-card.status-upcoming{
-    background:linear-gradient(135deg,#3a2a0a,#5a3a08 52%,#784b08)!important;
-    border-color:#d97706!important;border-left-color:#f59e0b!important;
-}
-body.dark-theme .routine-card.status-upcoming .time-block .time,
-body.dark-theme .routine-card.status-upcoming .info-block h4{color:#fde68a!important;}
-body.dark-theme .routine-card.status-upcoming .info-block p{color:#fef3c7!important;}
-body.dark-theme .routine-card.status-live{
-    background:linear-gradient(135deg,#450a0a,#991b1b 52%,#dc2626)!important;
-}
-body.dark-theme .routine-card.status-ended{
-    background:linear-gradient(135deg,#291016,#3f1620 55%,#5b1b24)!important;
-    border-color:#be123c!important;border-left-color:#fb7185!important;
-}
-body.dark-theme .routine-card.status-ended .time-block .time,
-body.dark-theme .routine-card.status-ended .info-block h4{color:#fecdd3!important;}
-body.dark-theme .routine-card.status-ended .info-block p{color:#fda4af!important;}
-#routineContent > .routine-empty-state{background:var(--surface-1)!important;color:var(--ink-1)!important;border-color:var(--line)!important;}
-
-/* Other dark-safe components */
-.calendar-header button{background:var(--surface-2)!important;color:var(--ink-1)!important;}
-.calendar-header button:hover{background:linear-gradient(135deg,#1d4ed8,#3b82f6)!important;color:#fff!important;}
-.calendar-date{color:var(--ink-1)!important;}
-.calendar-date:hover:not(.empty){background:var(--surface-3)!important;color:var(--blue-2)!important;}
-.engine-card{background:linear-gradient(145deg,var(--surface-1),var(--surface-2))!important;}
-.circle-chart-sm::before,.circle-chart-lg::before{background:var(--surface-1)!important;}
-.community-main{background:rgba(37,211,102,.055)!important;}
-.fb-link-card{background:var(--surface-1)!important;border-color:rgba(24,119,242,.35)!important;}
-.profile-modal-body{background:var(--surface-1)!important;}
-.profile-info-row{background:var(--surface-2)!important;border-color:var(--line)!important;}
-.profile-security-note{background:rgba(16,185,129,.10)!important;border-color:rgba(16,185,129,.28)!important;color:var(--green-1)!important;}
-.profile-security-note span{color:inherit!important;}
-body.dark-theme .profile-modal-top{background:linear-gradient(135deg,#071225,#172554 58%,#0c4a6e)!important;}
-body.dark-theme .slider-container{border-color:var(--line)!important;}
-body.dark-theme .slider-nav button{background:rgba(15,23,42,.90)!important;color:#bfdbfe!important;border:1px solid #334155!important;}
-
-/* Important mobile notices under DEP:CSE 65-C */
-.mobile-important-notice{display:none;margin:-4px 0 18px;}
-.mobile-notice-shell{
-    position:relative;overflow:hidden;border-radius:18px;padding:14px 14px 13px;
-    background:linear-gradient(135deg,rgba(255,247,237,.96),rgba(255,255,255,.96));
-    border:1px solid rgba(249,115,22,.24);box-shadow:0 10px 28px rgba(194,65,12,.08);
-}
-.mobile-notice-shell::after{content:'';position:absolute;width:96px;height:96px;right:-38px;top:-48px;border-radius:50%;background:rgba(249,115,22,.09);}
-.mobile-notice-head{display:flex;align-items:center;gap:9px;margin-bottom:7px;color:#c2410c;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.35px;}
-.mobile-notice-head .pulse{width:9px;height:9px;border-radius:50%;background:#f97316;box-shadow:0 0 0 0 rgba(249,115,22,.45);animation:noticePulse 1.7s infinite;}
-@keyframes noticePulse{70%{box-shadow:0 0 0 8px rgba(249,115,22,0)}100%{box-shadow:0 0 0 0 rgba(249,115,22,0)}}
-.mobile-notice-title{position:relative;z-index:1;color:var(--ink-1);font-size:15px;font-weight:800;line-height:1.42;margin-bottom:3px;}
-.mobile-notice-body{position:relative;z-index:1;color:var(--ink-2);font-size:12.5px;font-weight:600;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.mobile-notice-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px;color:var(--ink-3);font-size:10px;font-weight:700;}
-body.dark-theme .mobile-notice-shell{
-    background:linear-gradient(135deg,rgba(67,31,7,.88),rgba(15,23,42,.96))!important;
-    border-color:rgba(251,146,60,.34);box-shadow:0 14px 34px rgba(0,0,0,.25);
-}
-body.dark-theme .mobile-notice-title{color:#fff7ed!important;}
-body.dark-theme .mobile-notice-body{color:#fed7aa!important;}
-body.dark-theme .mobile-notice-meta{color:#fdba74!important;}
-body.dark-theme .mobile-notice-head{color:#fb923c!important;}
-
-/* Refined transitions and individual section motion */
-.section.active{animation:sectionRevealV5 .62s cubic-bezier(.2,.78,.22,1);}
-@keyframes sectionRevealV5{
-    0%{opacity:0;transform:translateY(20px) scale(.987);filter:blur(4px)}
-    65%{opacity:1;filter:blur(0)}
-    100%{transform:none}
-}
-.content-card-main,.dash-card,.routine-card,.traffic-card,.calendar-container,.chat-container,.engine-card,.album-card,.sub-card,.community-box{
-    will-change:transform;transition:transform .32s cubic-bezier(.2,.8,.2,1),box-shadow .32s ease,border-color .3s ease,background .35s ease;
-}
-.content-card-main:hover,.traffic-card:hover,.calendar-container:hover,.chat-container:hover,.engine-card:hover,.album-card:hover,.sub-card:hover,.community-box:hover{
-    transform:translateY(-5px);box-shadow:var(--shadow-float)!important;
-}
-body.dark-theme .content-card-main::before,body.dark-theme .dash-card::before,body.dark-theme .routine-card::before,body.dark-theme .chat-container::before,body.dark-theme .progress-banner-card::before{
-    background:linear-gradient(115deg,transparent 20%,rgba(96,165,250,.10) 48%,transparent 72%)!important;
-}
-
-/* Mobile student table: no Serial column, readable role badges */
-@media(max-width:700px){
-    .mobile-important-notice{display:block;}
-    #students .table-container{overflow-x:hidden;border-radius:16px;}
-    #students table{min-width:0!important;width:100%!important;table-layout:fixed;}
-    #regularTable th:first-child,#regularTable td:first-child,
-    #reTable th:first-child,#reTable td:first-child{display:none!important;}
-    #regularTable th:nth-child(2),#regularTable td:nth-child(2),
-    #reTable th:nth-child(2),#reTable td:nth-child(2){width:39%;padding-left:13px;padding-right:8px;font-size:12px;word-break:break-word;}
-    #regularTable th:nth-child(3),#regularTable td:nth-child(3),
-    #reTable th:nth-child(3),#reTable td:nth-child(3){width:61%;padding-left:8px;padding-right:11px;font-size:12.5px;line-height:1.5;}
-    #students .badge{margin:5px 4px 0 0;font-size:9.5px;padding:4px 7px;white-space:normal;text-align:center;}
-    #regularTbody tr.student-highlight td:nth-child(2),#reTbody tr.student-highlight td:nth-child(2){border-left:4px solid transparent;font-weight:800;}
-    #regularTbody tr.row-cr td:nth-child(2),#reTbody tr.row-cr td:nth-child(2){border-left-color:#3b82f6;}
-    #regularTbody tr.row-xcr td:nth-child(2),#reTbody tr.row-xcr td:nth-child(2){border-left-color:#06b6d4;}
-    #regularTbody tr.row-core td:nth-child(2),#reTbody tr.row-core td:nth-child(2){border-left-color:#f59e0b;}
-    #regularTbody tr.row-notetaker td:nth-child(2),#reTbody tr.row-notetaker td:nth-child(2){border-left-color:#8b5cf6;}
-    #regularTbody tr.row-advisor td:nth-child(2),#reTbody tr.row-advisor td:nth-child(2),
-    #regularTbody tr.row-activated td:nth-child(2),#reTbody tr.row-activated td:nth-child(2){border-left-color:#10b981;}
-    .theme-switch{width:82px;min-width:82px;height:42px;}
-    .theme-switch-knob{width:34px;height:34px;}
-    body.dark-theme .theme-switch-knob{transform:translateX(40px);}
-    .theme-switch-track-label{font-size:8px;}
-    .theme-switch .label-light{right:6px}.theme-switch .label-dark{left:6px}
-}
-
-@media(max-width:420px){
-    .top-header{padding-left:10px!important;padding-right:10px!important;}
-    .header-icons{gap:6px!important;}
-    .header-icon{width:40px!important;height:40px!important;min-width:40px!important;}
-    #headerProfilePic{width:44px!important;height:44px!important;min-width:44px!important;}
-    .theme-switch{width:78px;min-width:78px;}
-    body.dark-theme .theme-switch-knob{transform:translateX(36px);}
-}
-
-@media(prefers-reduced-motion:reduce){
-    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
-}
-</style>
+    </style>
 </head>
 <body>
 
@@ -1724,7 +1281,7 @@ body.dark-theme .content-card-main::before,body.dark-theme .dash-card::before,bo
                 <li><button onclick="switchTab('notices')"><i class="fas fa-bell"></i> Notices</button></li>
             </ul>
             
-            <div class="dev-badge">
+            <div style="margin: 15px; padding: 15px; background: #f8fafc; border: 2px solid var(--border-light); border-radius: 16px; text-align: center;">
                 <p style="font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px;"><i class="fas fa-code"></i> Developed by</p>
                 <h4 style="font-size: 14px; color: var(--primary-blue); font-weight: 900; line-height: 1.4;">Nayeem, Sabbir, Sabah, Amirul</h4>
             </div>
@@ -1741,11 +1298,6 @@ body.dark-theme .content-card-main::before,body.dark-theme .dash-card::before,bo
                     <div class="header-icon" onclick="window.open('https://www.facebook.com/profile.php?id=61590490967600', '_blank')" style="color: #1877F2; border-color: #1877F2;"><i class="fab fa-facebook-f"></i></div>
                     <div class="header-icon" onclick="switchTab('notices')" title="Notices"><i class="fas fa-bell"></i></div>
                     <div class="header-icon" id="installAppBtn" onclick="installPortalApp()" title="Install App"><i class="fas fa-download"></i></div>
-<button class="theme-switch" id="themeSwitch" type="button" onclick="toggleTheme()" title="Light / Dark Theme" aria-label="Switch between light and dark theme" aria-pressed="false">
-                        <span class="theme-switch-track-label label-dark">Dark</span>
-                        <span class="theme-switch-track-label label-light">Light</span>
-                        <span class="theme-switch-knob"><i id="themeIcon" class="fas fa-sun"></i></span>
-                    </button>
                     <!-- User & Logout -->
                     <div class="header-icon" id="headerProfilePic" onclick="openProfilePopup()" title="View Profile"><i class="fas fa-user"></i></div>
                     <div class="header-icon" onclick="logoutSystem()" title="Logout" style="color:var(--danger); border-color:var(--danger);"><i class="fas fa-sign-out-alt"></i></div>
@@ -1759,9 +1311,6 @@ body.dark-theme .content-card-main::before,body.dark-theme .dash-card::before,bo
                     <div class="dept-hero" style="padding-top: 0;">
                         <h1>Dep : CSE 65 C</h1>
                     </div>
-
-                    <!-- Mobile Important Notice Preview (API powered) -->
-                    <div id="mobileImportantNotice" class="mobile-important-notice" aria-live="polite"></div>
 
                     <div class="cards-grid">
                         <div class="dash-card active-blue" id="liveClassCard" onclick="switchTab('routineTab')" style="cursor: pointer;">
@@ -1954,13 +1503,13 @@ body.dark-theme .content-card-main::before,body.dark-theme .dash-card::before,bo
                                         <i class="fas fa-search"></i>
                                         <input type="text" id="searchInput" onkeyup="searchTables()" placeholder="Search by ID or Name..." autocomplete="off">
                                     </div>
-                                    <button class="student-print-btn" onclick="window.print()" style="padding: 10px 18px; border-radius: 10px; border: 2px solid var(--border-light); cursor: pointer; font-weight: 800; transition: 0.3s;"><i class="fas fa-print"></i></button>
+                                    <button onclick="window.print()" style="padding: 10px 18px; border-radius: 10px; border: 2px solid var(--border-light); background: #fff; cursor: pointer; font-weight: 800; color: var(--text-dark); transition: 0.3s;"><i class="fas fa-print"></i></button>
                                 </div>
                             </div>
 
                             <div class="table-container">
                                 <table id="regularTable">
-                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <thead><tr><th class="serial-col">Serial</th><th>Student ID</th><th>Name</th></tr></thead>
                                     <tbody id="regularTbody">
                                         <!-- Populated dynamically via JS -->
                                     </tbody>
@@ -1972,7 +1521,7 @@ body.dark-theme .content-card-main::before,body.dark-theme .dash-card::before,bo
                             <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px;">Re-Admission Students</h2>
                             <div class="table-container">
                                 <table id="reTable">
-                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <thead><tr><th class="serial-col">Serial</th><th>Student ID</th><th>Name</th></tr></thead>
                                     <tbody id="reTbody">
                                         <!-- Populated dynamically via JS -->
                                     </tbody>
@@ -2276,52 +1825,7 @@ body.dark-theme .content-card-main::before,body.dark-theme .dash-card::before,bo
     </div>
 
     <script>
-        
-// ================= BANGLADESH TIME ENGINE =================
-function getBDTime(){
-    return new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Dhaka"}));
-}
-
-
-function formatBDDateTime(date = new Date()){
-    try{
-        return new Intl.DateTimeFormat('en-BD',{
-            timeZone:'Asia/Dhaka', year:'numeric', month:'short', day:'2-digit',
-            hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true
-        }).format(date);
-    }catch(e){
-        return getBDTime().toLocaleString();
-    }
-}
-
-// ================= SINGLE THEME ENGINE =================
-function applyTheme(theme = localStorage.getItem('portal_theme') || 'light'){
-    const dark = theme === 'dark';
-    document.body.classList.toggle('dark-theme', dark);
-    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
-
-    const icon = document.getElementById('themeIcon');
-    const sw = document.getElementById('themeSwitch');
-    if(icon) icon.className = dark ? 'fas fa-moon' : 'fas fa-sun';
-    if(sw){
-        sw.setAttribute('aria-pressed', dark ? 'true' : 'false');
-        sw.title = dark ? 'Dark Mode — slide for Light' : 'Light Mode — slide for Dark';
-    }
-
-    const metaTheme = document.querySelector('meta[name="theme-color"]');
-    if(metaTheme) metaTheme.setAttribute('content', dark ? '#050816' : '#0f1c40');
-}
-
-function toggleTheme(){
-    const next = document.body.classList.contains('dark-theme') ? 'light' : 'dark';
-    localStorage.setItem('portal_theme', next);
-    applyTheme(next);
-}
-
-applyTheme();
-
-
-// ================= GLOBAL DATA VARIABLES =================
+        // ================= GLOBAL DATA VARIABLES =================
         let studentDatabase = []; 
         let routineData = {0: [], 1: [], 2: [], 3: [], 4: []};
         let coursesData = [];
@@ -2345,7 +1849,6 @@ applyTheme();
         let bypassLogin = false;
 
         window.onload = () => {
-            loadPortalTheme();
             checkSession(); 
 
             // প্রি-লোডার সাথে সাথে সরিয়ে ফেলছি
@@ -2494,7 +1997,7 @@ applyTheme();
 
         function formatSyncClock(date) {
             try {
-                return new Intl.DateTimeFormat('en-BD', { timeZone:'Asia/Dhaka', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true }).format(date);
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             } catch (e) {
                 return date.toLocaleTimeString();
             }
@@ -3074,7 +2577,6 @@ applyTheme();
             loadComments();
             renderCourses(); 
             renderNotices(); 
-            renderDashboardImportantNotices();
             initRoutine(); 
             loadAttendance();
             renderCalendar(); 
@@ -3109,7 +2611,7 @@ applyTheme();
             document.getElementById('activeUsersCount').innerHTML = `<span class="live-dot"></span> ${Math.floor(Math.random() * (28 - 12 + 1)) + 12}`;
         }
 
-        let currDate = getBDTime();
+        let currDate = new Date();
         let currMonth = currDate.getMonth();
         let currYear = currDate.getFullYear();
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -3124,7 +2626,7 @@ applyTheme();
                 datesHtml += `<div class="calendar-date empty"></div>`;
             }
             
-            let today = getBDTime();
+            let today = new Date();
             for (let i = 1; i <= lastDate; i++) {
                 let isToday = i === today.getDate() && currMonth === today.getMonth() && currYear === today.getFullYear() ? "today" : "";
                 datesHtml += `<div class="calendar-date ${isToday}">${i}</div>`;
@@ -3234,10 +2736,10 @@ applyTheme();
 
                 if (studentType === 're' || studentType === 're-admission' || studentType === 'readmission') {
                     reCount++;
-                    reTbody.innerHTML += `<tr class="${rowClass}"><td>${reCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
+                    reTbody.innerHTML += `<tr class="${rowClass}"><td class="serial-col">${reCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
                 } else {
                     regCount++;
-                    regTbody.innerHTML += `<tr class="${rowClass}"><td>${regCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
+                    regTbody.innerHTML += `<tr class="${rowClass}"><td class="serial-col">${regCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
                 }
             });
 
@@ -3316,7 +2818,7 @@ applyTheme();
             if(!tabsContainer) return;
             tabsContainer.innerHTML = '';
             
-            let currentDay = getBDTime().getDay();
+            let currentDay = new Date().getDay();
             if (currentDay === 5 || currentDay === 6) currentDay = 0;
 
             const validSelectedDay = activeDays.some(d => d.index === selectedRoutineDay);
@@ -3339,7 +2841,7 @@ applyTheme();
             content.innerHTML = '';
             
             if(!routineData[dayIndex] || routineData[dayIndex].length === 0) {
-                content.innerHTML = `<div class="routine-empty-state" style="text-align:center; padding:40px; border-radius:16px; border:2px dashed var(--border-light);"><p style="color:var(--text-muted); font-size:16px; font-weight:600;">No classes scheduled for this day.</p></div>`;
+                content.innerHTML = `<div style="text-align:center; padding: 40px; background:#fff; border-radius:16px; border:2px dashed var(--border-light);"><p style="color:var(--text-muted); font-size:16px; font-weight:600;">No classes scheduled for this day.</p></div>`;
                 return;
             }
 
@@ -3362,7 +2864,7 @@ applyTheme();
                 </div>`;
             });
 
-            updateRoutineCardStates(getBDTime());
+            updateRoutineCardStates(new Date());
         }
 
         function formatDurationHuman(ms, includeSeconds = true) {
@@ -3436,7 +2938,7 @@ applyTheme();
             return { status: 'finished' };
         }
 
-        function updateRoutineCardStates(now = getBDTime()) {
+        function updateRoutineCardStates(now = new Date()) {
             const cards = document.querySelectorAll('.routine-card[data-routine-day]');
             if (!cards.length) return;
 
@@ -3480,7 +2982,7 @@ applyTheme();
         }
 
         function updateLiveTimer() {
-            const now = getBDTime();
+            const now = new Date();
             const modernCard = document.getElementById('liveClassCard');
             const countdownEl = document.getElementById('classCountdown');
             const subjectEl = document.getElementById('classSubject');
@@ -3538,73 +3040,9 @@ applyTheme();
             });
         }
 
-        // ================= MOBILE IMPORTANT NOTICE PREVIEW =================
-        let mobileNoticeIndex = 0;
-        let mobileNoticeTimer = null;
-
-        function noticeFlagIsImportant(notice) {
-            notice = notice || {};
-            const fields = [
-                notice.important, notice.Important, notice.IMPORTANT,
-                notice.priority, notice.Priority, notice.PRIORITY,
-                notice.pinned, notice.Pinned, notice.PINNED,
-                notice.urgent, notice.Urgent, notice.URGENT,
-                notice.type, notice.Type, notice.TYPE
-            ].map(v => String(v ?? '').trim().toLowerCase());
-            return fields.some(v => ['1','true','yes','y','important','high','urgent','pin','pinned'].includes(v));
-        }
-
-        function getDashboardImportantNotices() {
-            if (!Array.isArray(noticesData) || noticesData.length === 0) return [];
-            const flagged = noticesData.filter(noticeFlagIsImportant);
-            // Backward compatible: if the Sheet has no priority column yet, show newest notices.
-            return (flagged.length ? flagged : noticesData).slice(0, 5);
-        }
-
-        function renderDashboardImportantNotices() {
-            const host = document.getElementById('mobileImportantNotice');
-            if (!host) return;
-            const items = getDashboardImportantNotices();
-            if (!items.length) {
-                host.innerHTML = '';
-                host.style.display = 'none';
-                if (mobileNoticeTimer) clearInterval(mobileNoticeTimer);
-                return;
-            }
-
-            host.style.display = '';
-            mobileNoticeIndex = Math.min(mobileNoticeIndex, items.length - 1);
-
-            const paint = () => {
-                const n = items[mobileNoticeIndex] || items[0] || {};
-                const title = escapeHtml(n.title ?? n.Title ?? 'Important Notice');
-                const body = escapeHtml(n.body ?? n.Body ?? n.message ?? n.Message ?? 'Tap the Notices section for details.');
-                host.innerHTML = `
-                    <div class="mobile-notice-shell" onclick="switchTab('notices')" role="button" tabindex="0">
-                        <div class="mobile-notice-head"><span class="pulse"></span><i class="fas fa-bell"></i> Important Notice</div>
-                        <div class="mobile-notice-title">${title}</div>
-                        <div class="mobile-notice-body">${body}</div>
-                        <div class="mobile-notice-meta">
-                            <span>${items.length > 1 ? `${mobileNoticeIndex + 1} / ${items.length}` : 'Latest update'}</span>
-                            <span>View Notices <i class="fas fa-chevron-right" style="margin-left:4px"></i></span>
-                        </div>
-                    </div>`;
-            };
-
-            paint();
-            if (mobileNoticeTimer) clearInterval(mobileNoticeTimer);
-            if (items.length > 1) {
-                mobileNoticeTimer = setInterval(() => {
-                    mobileNoticeIndex = (mobileNoticeIndex + 1) % items.length;
-                    paint();
-                }, 5500);
-            }
-        }
-
         // ================= DYNAMIC NOTICES =================
         function renderNotices() {
             const noticeContainer = document.getElementById('notices');
-            renderDashboardImportantNotices();
             if(!noticeContainer) return;
             noticeContainer.innerHTML = `<h2 style="font-size: 26px; font-weight: 900; margin-bottom: 25px; color: var(--text-dark);">Notice Board</h2>`;
             
@@ -3684,7 +3122,7 @@ applyTheme();
             let phone = target === 'advisor' ? "8801609360033" : target === 'cr1' ? "8801334966474" : "8801727489737";
             
             let comments = JSON.parse(localStorage.getItem('portalComments_v7')) || [];
-            comments.unshift({ text, time: formatBDDateTime(new Date()), author: loggedInUser });
+            comments.unshift({ text, time: new Date().toLocaleString(), author: loggedInUser });
             localStorage.setItem('portalComments_v7', JSON.stringify(comments));
 
             loadComments();
@@ -3786,8 +3224,6 @@ applyTheme();
                 updateInstallButtons(false);
             });
         }
-
-
 
     </script>
 </body>
