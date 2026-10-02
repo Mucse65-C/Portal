@@ -1014,148 +1014,6 @@
             }
         }
 
-
-
-        /* ================= 2026 ARCHITECTURAL PORTAL UPGRADE ================= */
-        body::before {
-            content: ''; position: fixed; inset: 0; z-index: -3; pointer-events: none;
-            background:
-              linear-gradient(rgba(15,28,64,.035) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(15,28,64,.035) 1px, transparent 1px),
-              radial-gradient(circle at 12% 18%, rgba(37,99,235,.13), transparent 26%),
-              radial-gradient(circle at 88% 78%, rgba(194,65,12,.10), transparent 28%),
-              linear-gradient(135deg, #f8fbff 0%, #eef4ff 46%, #fff8f3 100%);
-            background-size: 34px 34px, 34px 34px, auto, auto, auto;
-        }
-        body::after {
-            content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: .5;
-            background:
-              linear-gradient(120deg, transparent 0 47%, rgba(15,28,64,.055) 47% 47.35%, transparent 47.35% 100%),
-              linear-gradient(60deg, transparent 0 67%, rgba(37,99,235,.045) 67% 67.3%, transparent 67.3% 100%);
-        }
-        .main-wrapper { position: relative; isolation: isolate; }
-        .main-wrapper::before {
-            content: ''; position: fixed; right: -90px; bottom: -90px; width: 360px; height: 360px;
-            border: 1px solid rgba(37,99,235,.09); border-radius: 38% 62% 55% 45%; z-index: -1;
-            box-shadow: 0 0 0 34px rgba(37,99,235,.025), 0 0 0 68px rgba(194,65,12,.018);
-            animation: architectureFloat 14s ease-in-out infinite alternate; pointer-events: none;
-        }
-        @keyframes architectureFloat { to { transform: translate(-28px,-24px) rotate(9deg); } }
-
-        .top-header { background: rgba(255,255,255,.82); backdrop-filter: blur(18px) saturate(145%); -webkit-backdrop-filter: blur(18px) saturate(145%); box-shadow: 0 8px 30px rgba(15,28,64,.055); }
-        .dashboard-container { position: relative; }
-        .section.active { animation: sectionReveal .58s cubic-bezier(.2,.75,.25,1); transform-origin: top center; }
-        @keyframes sectionReveal { from { opacity:0; transform:translateY(18px) scale(.988); filter:blur(3px); } to { opacity:1; transform:none; filter:none; } }
-
-        .content-card-main, .dash-card, .routine-card, .chat-container, .progress-banner-card, .profile-info-row {
-            position: relative; overflow: hidden; transform: translateZ(0);
-        }
-        .content-card-main::before, .dash-card::before, .routine-card::before, .chat-container::before, .progress-banner-card::before {
-            content:''; position:absolute; inset:0; pointer-events:none; opacity:0;
-            background:linear-gradient(115deg, transparent 20%, rgba(255,255,255,.62) 48%, transparent 72%);
-            transform:translateX(-115%); transition:opacity .25s ease;
-        }
-        .content-card-main:hover::before, .dash-card:hover::before, .routine-card:hover::before, .chat-container:hover::before, .progress-banner-card:hover::before {
-            opacity:1; animation:cardLightSweep .85s ease;
-        }
-        @keyframes cardLightSweep { to { transform:translateX(115%); } }
-        .content-card-main:hover, .routine-card:hover, .chat-container:hover, .progress-banner-card:hover {
-            transform: translateY(-5px); border-color: rgba(37,99,235,.34); box-shadow: 0 18px 42px rgba(15,28,64,.11); transition: transform .32s ease, box-shadow .32s ease, border-color .32s ease;
-        }
-        .cards-grid .dash-card:nth-child(3n+1) { animation: cardArrivalA .55s both; }
-        .cards-grid .dash-card:nth-child(3n+2) { animation: cardArrivalB .65s both; }
-        .cards-grid .dash-card:nth-child(3n) { animation: cardArrivalC .72s both; }
-        @keyframes cardArrivalA { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
-        @keyframes cardArrivalB { from{opacity:0;transform:translateX(18px)} to{opacity:1;transform:none} }
-        @keyframes cardArrivalC { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:none} }
-
-        .dept-hero { position: relative; padding: 16px 12px 28px !important; }
-        .dept-hero::before { content:''; position:absolute; width:min(520px,78vw); height:72px; border-radius:50%; background:rgba(37,99,235,.08); filter:blur(26px); z-index:-1; }
-
-        @media screen and (max-width: 992px) {
-            body { overflow-x:hidden; }
-            .dashboard-container { padding: 18px 14px 92px; }
-            .top-header { padding: 12px 13px; min-height: 68px; }
-            .header-icons { gap: 9px; }
-            .header-icon { width: 43px; height: 43px; min-width:43px; font-size:16px; border-width:1.5px; box-shadow:0 5px 14px rgba(15,28,64,.08); background:rgba(255,255,255,.88); }
-            .header-icon:active { transform:scale(.91); }
-            #headerProfilePic { width:48px; height:48px; min-width:48px; border:2px solid rgba(37,99,235,.38); box-shadow:0 6px 18px rgba(37,99,235,.18); }
-            .mobile-toggle { width:43px; height:43px; border-radius:13px; background:#eef2ff; font-size:20px; }
-            .dept-hero h1 { font-size: clamp(25px,8vw,34px); }
-            .cards-grid { grid-template-columns:1fr; gap:16px; }
-            .dash-card, .content-card-main, .chat-container, .progress-banner-card { border-radius:20px; padding:20px; box-shadow:0 10px 28px rgba(15,28,64,.075); }
-            .dash-card:hover, .content-card-main:hover, .routine-card:hover, .chat-container:hover, .progress-banner-card:hover { transform:translateY(-3px) scale(1.006); }
-            .sidebar { width:min(86vw,310px); background:rgba(255,255,255,.96); backdrop-filter:blur(18px); }
-            .sidebar-menu button { min-height:48px; border-radius:15px; font-size:15px; }
-            .sidebar-menu button i { font-size:18px; }
-            .profile-modal-card { border-radius:26px; box-shadow:0 30px 70px rgba(2,6,23,.28); }
-            .profile-popup-avatar { width:104px; height:104px; }
-            .profile-info-row { min-height:64px; border-radius:16px; }
-        }
-        @media screen and (max-width: 560px) {
-            .header-icons { gap:7px; max-width:calc(100vw - 72px); overflow-x:auto; scrollbar-width:none; padding:4px 1px; }
-            .header-icons::-webkit-scrollbar { display:none; }
-            .header-icon { width:42px; height:42px; min-width:42px; }
-            #headerProfilePic { width:47px; height:47px; min-width:47px; }
-            .dept-hero { padding-top:10px !important; }
-            .section > h2 { font-size:24px !important; }
-            .content-card-main { margin-bottom:17px; }
-        }
-
-        /* ================= MOBILE STUDENT TABLE: HIDE REDUNDANT SERIAL ================= */
-        @media screen and (max-width: 700px) {
-            #regularTable .serial-col,
-            #reTable .serial-col {
-                display: none !important;
-            }
-
-            #regularTable,
-            #reTable {
-                min-width: 0 !important;
-                width: 100%;
-                table-layout: auto;
-            }
-
-            #regularTable th,
-            #regularTable td,
-            #reTable th,
-            #reTable td {
-                padding: 14px 12px;
-            }
-
-            #regularTable th:nth-child(2),
-            #regularTable td:nth-child(2),
-            #reTable th:nth-child(2),
-            #reTable td:nth-child(2) {
-                width: 42%;
-                white-space: nowrap;
-            }
-
-            #regularTable th:nth-child(3),
-            #regularTable td:nth-child(3),
-            #reTable th:nth-child(3),
-            #reTable td:nth-child(3) {
-                width: 58%;
-            }
-
-            /* Serial column is hidden, so move the role/accent stripe to Student ID. */
-            #regularTbody tr.student-highlight td:nth-child(2),
-            #reTbody tr.student-highlight td:nth-child(2) {
-                border-left: 5px solid transparent;
-                font-weight: 900;
-            }
-            #regularTbody tr.row-cr td:nth-child(2), #reTbody tr.row-cr td:nth-child(2) { border-left-color:#2563eb; }
-            #regularTbody tr.row-xcr td:nth-child(2), #reTbody tr.row-xcr td:nth-child(2) { border-left-color:#0891b2; }
-            #regularTbody tr.row-core td:nth-child(2), #reTbody tr.row-core td:nth-child(2) { border-left-color:#f59e0b; }
-            #regularTbody tr.row-notetaker td:nth-child(2), #reTbody tr.row-notetaker td:nth-child(2) { border-left-color:#7c3aed; }
-            #regularTbody tr.row-advisor td:nth-child(2), #reTbody tr.row-advisor td:nth-child(2) { border-left-color:#16a34a; }
-            #regularTbody tr.row-activated td:nth-child(2), #reTbody tr.row-activated td:nth-child(2) { border-left-color:#22c55e; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
-        }
-
     </style>
 </head>
 <body>
@@ -1296,7 +1154,7 @@
                 <div class="header-icons">
                     <div class="header-icon"><i class="fas fa-edit"></i></div>
                     <div class="header-icon" onclick="window.open('https://www.facebook.com/profile.php?id=61590490967600', '_blank')" style="color: #1877F2; border-color: #1877F2;"><i class="fab fa-facebook-f"></i></div>
-                    <div class="header-icon" onclick="switchTab('notices')" title="Notices"><i class="fas fa-bell"></i></div>
+                    <div class="header-icon"><i class="fas fa-bell"></i></div>
                     <div class="header-icon" id="installAppBtn" onclick="installPortalApp()" title="Install App"><i class="fas fa-download"></i></div>
                     <!-- User & Logout -->
                     <div class="header-icon" id="headerProfilePic" onclick="openProfilePopup()" title="View Profile"><i class="fas fa-user"></i></div>
@@ -1509,7 +1367,7 @@
 
                             <div class="table-container">
                                 <table id="regularTable">
-                                    <thead><tr><th class="serial-col">Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
                                     <tbody id="regularTbody">
                                         <!-- Populated dynamically via JS -->
                                     </tbody>
@@ -1521,7 +1379,7 @@
                             <h2 style="font-size: 22px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px;">Re-Admission Students</h2>
                             <div class="table-container">
                                 <table id="reTable">
-                                    <thead><tr><th class="serial-col">Serial</th><th>Student ID</th><th>Name</th></tr></thead>
+                                    <thead><tr><th>Serial</th><th>Student ID</th><th>Name</th></tr></thead>
                                     <tbody id="reTbody">
                                         <!-- Populated dynamically via JS -->
                                     </tbody>
@@ -1668,8 +1526,8 @@
                         </div>
 
                         <div class="dash-card" style="text-align: center; padding: 40px 20px; box-shadow: 0 10px 30px rgba(124,58,237,0.10); border: 2px solid #7c3aed; background: linear-gradient(145deg, #ffffff 0%, #f5f3ff 100%);">
-                            <img src="Tarin%20Peer%20Notetaker.jpeg" alt="Khadiza Akther Tarin" class="member-img" style="border-color: #7c3aed;">
-                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Khadiza Akther Tarin</div>
+                            <img src="" alt="Upcoming" class="member-img" style="border-color: #7c3aed;">
+                            <div class="card-title" style="font-size: 18px; margin-bottom: 5px;">Upcoming</div>
                             <div class="card-sub" style="font-weight: 700; color: var(--text-muted);">ID: 261-115-124</div>
                             <div style="margin-top: 15px;">
                                 <span class="badge badge-notetaker" style="font-size: 13px; padding: 7px 15px;">
@@ -1837,7 +1695,7 @@
         
         // *************************************************************************
         // Google Apps Script API: Students + Routine + Courses + Notices
-        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbx0UgUgU6xF8kwzCG3rxMiolv0xfic-rJ0zoTbiY4HFHhhfaYAc0mxOCHp1tWBkBVVI/exec";
+        const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxqZtxIhOyCDjOKkwygyxsIUIk_iPJBQAfS41KZdRTkt7ajWrJNavJUVN-sVMMZ944X/exec";
         const PORTAL_AUTO_REFRESH_MS = 60 * 1000; // 60 seconds
         const PORTAL_CACHE_KEY = "portal_data_cache_v7_students_api_sync";
         const OFFLINE_CACHE_KEY = "CSE65C_OFFLINE_DATABASE_V1";
@@ -2004,40 +1862,16 @@
         }
 
 
-        let onlineStatusAlreadyShown = false;
-        let onlineStatusHideTimer = null;
-
         function updateOfflineStatus(isOffline, message) {
             let el = document.getElementById('offlineStatusBadge');
             if (!el) {
                 el = document.createElement('div');
                 el.id = 'offlineStatusBadge';
-                el.style.cssText = "display:none;width:max-content;max-width:calc(100% - 30px);margin:0 auto 18px;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:800;color:#fff;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.12);position:relative;z-index:5;";
-                const dashboard = document.getElementById('dashboard');
-                const hero = dashboard ? dashboard.querySelector('.dept-hero') : null;
-                if (hero) hero.insertAdjacentElement('afterend', el);
-                else if (dashboard) dashboard.prepend(el);
-                else document.body.appendChild(el);
+                el.style.cssText = "position:fixed;top:12px;right:12px;z-index:999999;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:800;color:white;background:#047857;box-shadow:0 5px 15px rgba(0,0,0,.2);";
+                document.body.appendChild(el);
             }
-
-            if (isOffline) {
-                if (onlineStatusHideTimer) clearTimeout(onlineStatusHideTimer);
-                el.style.background = '#b45309';
-                el.innerText = message || 'Offline Mode - Last Synced Data';
-                el.style.display = 'block';
-                return;
-            }
-
-            if (onlineStatusAlreadyShown) {
-                el.style.display = 'none';
-                return;
-            }
-
-            onlineStatusAlreadyShown = true;
-            el.style.background = '#047857';
-            el.innerText = message || 'Online - Live Database';
-            el.style.display = 'block';
-            onlineStatusHideTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
+            el.style.background = isOffline ? '#b45309' : '#047857';
+            el.innerText = message || (isOffline ? 'Offline Mode - Saved Data' : 'Online - Live Sync');
         }
 
         function saveOfflineDatabase(data) {
@@ -2233,29 +2067,13 @@
                 const badge = String(s.badge ?? s.Badge ?? s.BADGE ?? s.badage ?? s.Badage ?? s.BADAGE ?? '').trim();
                 const type = String(s.type ?? s.Type ?? s.TYPE ?? s.student_type ?? '').trim();
                 const password = String(s.password ?? s.Password ?? s.PASSWORD ?? '').trim();
-                const activate = String(s.activate ?? s.Activate ?? s.ACTIVATE ?? s.activated ?? s.Activated ?? s.ACTIVATED ?? s.status ?? s.Status ?? s.STATUS ?? '').trim();
-                return { id, name, badge, type, password, activate };
+                return { id, name, badge, type, password };
             }).filter(s => {
                 // Remove the duplicate header row and the blank "re" row.
                 if (!s.id || !s.name || isHeaderLikeStudent(s.id, s.name)) return false;
                 if (seenStudentIds.has(s.id)) return false;
                 seenStudentIds.add(s.id);
                 return true;
-            });
-
-            // Merge activation data from login-request/login-log sheets when the API exposes them.
-            // This keeps ACTIVATED visible for every student who has logged in, not only the current device user.
-            const loginRows = getApiCollection(data, ['Login Requests', 'Login Request', 'LoginRequests', 'LoginRequest', 'Logins', 'Login']);
-            const activatedIds = new Set();
-            loginRows.forEach(row => {
-                row = row || {};
-                const rowId = normalizeStudentId(row.studentId ?? row.student_id ?? row.id ?? row.ID ?? row['Student ID'] ?? '');
-                const activationValue = String(row.activate ?? row.Activate ?? row.ACTIVATE ?? row.activated ?? row.Activated ?? row.status ?? row.Status ?? '').trim().toLowerCase();
-                if (rowId && ['activate','activated','active','yes','true','1'].includes(activationValue)) activatedIds.add(rowId);
-            });
-            studentDatabase.forEach(student => {
-                const activationValue = String(student.activate || '').trim().toLowerCase();
-                student.isActivated = activatedIds.has(student.id) || ['activate','activated','active','yes','true','1'].includes(activationValue);
             });
 
             // ================= 2. CLASS ROUTINE =================
@@ -2517,42 +2335,22 @@
         }
 
         async function saveLoginRequest(user){
-            const payload = {
-                action:"loginRequest",
-                timestamp:new Date().toISOString(),
-                studentId:user.id,
-                id:user.id,
-                name:user.name,
-                phone:user.phone,
-                photo:user.pic,
-                status:"Activated",
-                activate:"Activate"
-            };
-
-            // Show ACTIVATED immediately after a successful local login.
-            const localStudent = studentDatabase.find(s => normalizeStudentId(s.id) === normalizeStudentId(user.id));
-            if (localStudent) {
-                localStudent.activate = 'Activate';
-                localStudent.isActivated = true;
-                if (typeof populateTables === 'function') populateTables();
-            }
-
             try{
-                const response = await fetch(SHEET_API_URL,{
+                await fetch(SHEET_API_URL,{
                     method:"POST",
-                    headers:{"Content-Type":"text/plain;charset=utf-8"},
-                    body:JSON.stringify(payload),
-                    redirect:"follow"
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({
+                        action:"loginRequest",
+                        timestamp:new Date().toISOString(),
+                        studentId:user.id,
+                        name:user.name,
+                        phone:user.phone,
+                        photo:user.pic,
+                        status:"Pending",
+                        activate:"Activate"
+                    })
                 });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-                // Pull the shared database again so all activation states come from the API.
-                setTimeout(() => fetchPortalData({ useCache:false, silent:true }), 1200);
-                return true;
-            }catch(e){
-                console.warn("Login request sync failed",e);
-                return false;
-            }
+            }catch(e){ console.warn("Login request sync failed",e); }
         }
 
         function checkAdminAccess() {
@@ -2717,9 +2515,9 @@
 
                 const safeId = escapeHtml(s.id);
                 const safeName = escapeHtml(s.name);
-                const isActivated = !!s.isActivated;
+                const isActivated = (String(s.id).trim() === String(loggedInId).trim());
                 const loginBadge = isActivated
-                    ? `<span class="badge badge-activated"><i class="fas fa-check-circle" aria-hidden="true" style="margin-right:4px;"></i>ACTIVATED</span>`
+                    ? `<span class="badge badge-activated">ACTIVATED</span>`
                     : '';
 
                 // Rows with a visible badge receive a premium role-based gradient.
@@ -2736,10 +2534,10 @@
 
                 if (studentType === 're' || studentType === 're-admission' || studentType === 'readmission') {
                     reCount++;
-                    reTbody.innerHTML += `<tr class="${rowClass}"><td class="serial-col">${reCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
+                    reTbody.innerHTML += `<tr class="${rowClass}"><td>${reCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
                 } else {
                     regCount++;
-                    regTbody.innerHTML += `<tr class="${rowClass}"><td class="serial-col">${regCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
+                    regTbody.innerHTML += `<tr class="${rowClass}"><td>${regCount}</td><td>${safeId}</td><td>${safeName} ${visibleBadges}</td></tr>`;
                 }
             });
 
